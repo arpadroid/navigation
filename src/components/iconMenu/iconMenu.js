@@ -44,6 +44,11 @@ class IconMenu extends ArpaElement {
         this._initializeInputCombo();
     }
 
+    setLinks(links) {
+        this._config.links = links;
+        this.navigation?.setLinks(links);
+    }
+
     renderButton() {
         const buttonAttr = attrString({ label: this.getProperty('label'), icon: this.getProperty('icon') });
         return html`<button is="icon-button" class="iconMenu__button" ${buttonAttr}></button>`;
