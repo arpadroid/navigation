@@ -40,7 +40,9 @@ class IconMenu extends ArpaElement {
         this.navigation.preProcessNode(this.preProcessNode);
         this.navigation.addItemNodes(listItems);
         this.navigation.setLinks(this._config.links);
-        this.navigation.prepend(...this._childNodes);
+        this.navigation.onRendered(() => {
+            this.navigation.prepend(...this._childNodes);
+        });
         this._initializeInputCombo();
     }
 
@@ -50,12 +52,16 @@ class IconMenu extends ArpaElement {
     }
 
     renderButton() {
-        const buttonAttr = attrString({ label: this.getProperty('label'), icon: this.getProperty('icon') });
+        const buttonAttr = attrString(this.getProperties('icon', 'label'));
         return html`<button is="icon-button" class="iconMenu__button" ${buttonAttr}></button>`;
     }
 
     renderNav() {
-        return html`<nav-list class="iconMenu__navigation comboBox" id="${this.getId()}-navList"></nav-list>`;
+        const navClass = this.getProperty('nav-class');
+        return html`<nav-list
+            class="iconMenu__navigation comboBox${navClass ? ` ${navClass}` : ''}"
+            id="${this.getId()}-navList"
+        ></nav-list>`;
     }
 
     async preProcessNode(node) {
@@ -67,10 +73,15 @@ class IconMenu extends ArpaElement {
     }
 
     _initializeInputCombo() {
+        const { inputComboConfig = {} } = this._config;
+        const defaultConfig = {
+            closeOnClick: this.hasProperty('close-on-click') ?? true,
+            position: this.getProperty('menu-position')
+        };
+        const config = mergeObjects(defaultConfig, inputComboConfig);
         this.inputCombo = new InputCombo(this.button, this.navigation, {
-            position: this.getProperty('menu-position'),
-            containerSelector: 'nav-link',
-            ...(this._config.inputComboConfig ?? {})
+            ...config,
+            containerSelector: 'nav-link'
         });
     }
 
