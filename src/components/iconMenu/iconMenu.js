@@ -18,6 +18,7 @@ class IconMenu extends ArpaElement {
             icon: 'more_horiz',
             hasTabIndex: false,
             links: [],
+            tooltip: '',
             navComboClasses: 'selectCombo'
         });
     }
@@ -28,7 +29,7 @@ class IconMenu extends ArpaElement {
         return true;
     }
 
-    async render() {
+    render() {
         const template = html`${this.renderButton()}${this.renderNav()}`;
         this.innerHTML = template;
         this.navigation = this.querySelector('.iconMenu__navigation');
@@ -44,6 +45,15 @@ class IconMenu extends ArpaElement {
             this.navigation.prepend(...this._childNodes);
         });
         this._initializeInputCombo();
+        this._initializeTooltip();
+        return true;
+    }
+
+    async _initializeTooltip() {
+        this.tooltip = this.button.querySelector('arpa-tooltip');
+        await customElements.whenDefined('arpa-tooltip');
+        this.tooltip?.promise && (await this.tooltip.promise);
+        this.tooltip?.contentNode?.setAttribute('slot', 'menu-tooltip');
     }
 
     setLinks(links) {
@@ -52,8 +62,11 @@ class IconMenu extends ArpaElement {
     }
 
     renderButton() {
-        const buttonAttr = attrString(this.getProperties('icon', 'label'));
-        return html`<button is="icon-button" class="iconMenu__button" ${buttonAttr}></button>`;
+        const props = {
+            icon: this.getProperty('icon'),
+            label: this.getProperty('tooltip')
+        };
+        return html`<button is="icon-button" class="iconMenu__button" ${attrString(props)}></button>`;
     }
 
     renderNav() {
@@ -64,7 +77,7 @@ class IconMenu extends ArpaElement {
         ></nav-list>`;
     }
 
-    async preProcessNode(node) {
+    preProcessNode(node) {
         node.classList.add('comboBox__item');
         !this.getProperty('has-tab-index') &&
             Array.from(node.querySelectorAll('a, button')).forEach(node =>
@@ -87,6 +100,14 @@ class IconMenu extends ArpaElement {
 
     getId() {
         return this.getProperty('id') || 'IconMenu-' + Math.random().toString(36).substr(2, 9);
+    }
+
+    setTooltip(content) {
+        this.querySelector('arpa-tooltip')?.setContent(content);
+    }
+
+    setIcon(icon) {
+        this.querySelector('.iconMenu__button arpa-icon')?.setIcon(icon);
     }
 }
 customElements.define('icon-menu', IconMenu);
