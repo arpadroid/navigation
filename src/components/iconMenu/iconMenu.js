@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 /** @typedef {import('./iconMenuInterface').IconMenuInterface} IconMenuInterface */
 
 import { mergeObjects, attrString } from '@arpadroid/tools';
@@ -36,7 +37,7 @@ class IconMenu extends ArpaElement {
         this.button = this.querySelector('.iconMenu__button');
     }
 
-    _onConnected() {
+    async _onConnected() {
         const listItems = this._childNodes.filter(node => node.tagName === 'NAV-LINK');
         this.navigation.preProcessNode(this.preProcessNode);
         this.navigation.addItemNodes(listItems);
@@ -45,7 +46,7 @@ class IconMenu extends ArpaElement {
             this.navigation.prepend(...this._childNodes);
         });
         this._initializeInputCombo();
-        this._initializeTooltip();
+        await this._initializeTooltip();
         return true;
     }
 
