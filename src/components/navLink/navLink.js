@@ -36,10 +36,11 @@ class NavLink extends ListItem {
     _initializeNodes() {
         super._initializeNodes();
         this.linkNode = this.mainNode;
-        !this._hasRendered && attr(this.linkNode, {
-            ...(this._config.handlerAttributes ?? {}),
-            'aria-current': this.getAriaCurrent()
-        });
+        !this._hasRendered &&
+            attr(this.linkNode, {
+                ...(this._config.handlerAttributes ?? {}),
+                'aria-current': this.getAriaCurrent()
+            });
     }
 
     // #endregion
@@ -78,12 +79,16 @@ class NavLink extends ListItem {
 
     getDivider() {
         if (this.list) {
-            return (
-                this.list.getVariant() === 'horizontal' &&
-                (this.list._slots.find(slot => slot.name === 'divider') || this.list?.getProperty('divider'))
-            );
+            return this.list.getVariant() === 'horizontal' && this.getListDivider();
         }
         return this._config?.divider;
+    }
+
+    getListDivider() {
+        return (
+            Object.values(this.list.slotsByName ?? {}).find(slot => slot.name === 'divider') ||
+            this.list?.getProperty('divider')
+        );
     }
 
     // #endregion
