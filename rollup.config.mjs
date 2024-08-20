@@ -1,5 +1,5 @@
 import { getBuild, isSlim } from '@arpadroid/arpadroid/src/rollup/builds/rollup-builds.mjs';
-const { build, buildConfig, appBuild } = getBuild('navigation', 'uiComponent', {
-    external: isSlim() && ['lists']
+const { build } = getBuild('navigation', 'uiComponent', {
+    external: isSlim() ? ['lists', 'forms'] : []
 });
 export default build;
