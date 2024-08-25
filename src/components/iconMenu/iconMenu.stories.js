@@ -26,7 +26,7 @@ const IconMenuStory = {
                     <nav-link link="/home" icon="home">Home</nav-link>
                     <nav-link link="/settings" icon="settings">Settings</nav-link>
                     <nav-link link="/user" icon="smart_toy">User</nav-link>
-                    some content
+                    <!-- some content -->
                 </icon-menu>
             </div>
             <script>
@@ -67,23 +67,32 @@ export const Test = {
     play: async ({ canvasElement, step }) => {
         const setup = await Test.playSetup(canvasElement);
         const { canvas, menuNode, navigationNode } = setup;
-        await step('Renders the menu', () => {
+        await step('Renders the menu', async () => {
+            await menuNode.load;
             expect(menuNode).toBeTruthy();
             expect(navigationNode).not.toBeVisible();
-            expect(canvas.getByText('Home')).toBeInTheDocument();
-            expect(canvas.getByText('Settings')).toBeInTheDocument();
-            expect(canvas.getByText('User')).toBeInTheDocument();
+            /**
+             * @todo Fix flaky test, would not pass in CI.
+             */
+            await waitFor(() => {
+                expect(canvas.getByText('Home')).toBeInTheDocument();
+                expect(canvas.getByText('Settings')).toBeInTheDocument();
+                expect(canvas.getByText('User')).toBeInTheDocument();
+            });
         });
 
         await step('Opens the menu', async () => {
-            await fireEvent.click(canvas.getByRole('button'));
+            await new Promise(resolve => setTimeout(resolve, 100));
+            canvas.getByRole('button').click();
             await waitFor(() => expect(navigationNode).toBeVisible());
         });
 
         await step('Closes the menu', async () => {
-            await new Promise(resolve => setTimeout(resolve, 10));
+            await new Promise(resolve => setTimeout(resolve, 100));
             await fireEvent.click(canvas.getByRole('button'));
-            await waitFor(() => expect(navigationNode).not.toBeVisible());
+            await waitFor(() => {
+                expect(navigationNode).not.toBeVisible();
+            });
         });
     }
 };

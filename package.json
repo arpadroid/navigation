@@ -9,9 +9,8 @@
         "build": "node ./node_modules/@arpadroid/arpadroid/scripts/build-project.mjs --project=navigation --minify",
         "storybook:build": "storybook build",
         "prepublish": "npm run build",
-        "storybook": "npm run build -- --storybook=6009 --watch",
-        "test": "npm run storybook:test",
-        "test:storybook": "test-storybook"
+        "storybook": "npm run build -- --storybook=6002 --watch",
+        "test": "node ./node_modules/@arpadroid/arpadroid/scripts/test-project.mjs --project=navigation --storybook --jest --port=6002"
     },
     "repository": {
         "type": "git",
