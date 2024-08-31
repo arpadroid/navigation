@@ -86,7 +86,7 @@ class NavLink extends ListItem {
 
     getListDivider() {
         return (
-            Object.values(this.list.slotsByName ?? {}).find(slot => slot.name === 'divider') ||
+            this.list?._slots.find(slot => slot.name === 'divider') ||
             this.list?.getProperty('divider')
         );
     }
