@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 /** @typedef {import('./iconMenuInterface').IconMenuInterface} IconMenuInterface */
 
-import { mergeObjects, attrString } from '@arpadroid/tools';
+import { mergeObjects, attrString, classNames } from '@arpadroid/tools';
 import { ArpaElement, InputCombo } from '@arpadroid/ui';
 // import { ArpaElement, InputCombo } from '../../../../exports.js';
 
@@ -17,6 +17,8 @@ class IconMenu extends ArpaElement {
             className: 'iconMenu',
             menuPosition: 'bottom',
             icon: 'more_horiz',
+            closeOnClick: true,
+            closeOnBlur: true,
             hasTabIndex: false,
             links: [],
             tooltip: '',
@@ -46,15 +48,7 @@ class IconMenu extends ArpaElement {
             this.navigation.prepend(...this._childNodes);
         });
         this._initializeInputCombo();
-        await this._initializeTooltip();
         return true;
-    }
-
-    async _initializeTooltip() {
-        this.tooltip = this.button.querySelector('arpa-tooltip');
-        await customElements.whenDefined('arpa-tooltip');
-        this.tooltip?.promise && (await this.tooltip.promise);
-        this.tooltip?.contentNode?.setAttribute('slot', 'menu-tooltip');
     }
 
     setLinks(links) {
@@ -65,15 +59,15 @@ class IconMenu extends ArpaElement {
     renderButton() {
         const props = {
             icon: this.getProperty('icon'),
-            label: this.getProperty('tooltip')
+            label: this.getProperty('tooltip'),
+            ariaLabel: this.getProperty('tooltip'),
         };
         return html`<button is="icon-button" class="iconMenu__button" ${attrString(props)}></button>`;
     }
 
     renderNav() {
-        const navClass = this.getProperty('nav-class');
         return html`<nav-list
-            class="iconMenu__navigation comboBox${navClass ? ` ${navClass}` : ''}"
+            class="${classNames('iconMenu__navigation', 'comboBox', this.getProperty('nav-class'))}"
             id="${this.getId()}-navList"
         ></nav-list>`;
     }
@@ -89,7 +83,8 @@ class IconMenu extends ArpaElement {
     _initializeInputCombo() {
         const { inputComboConfig = {} } = this._config;
         const defaultConfig = {
-            closeOnClick: this.hasProperty('close-on-click') ?? true,
+            closeOnClick: this.hasProperty('close-on-click'),
+            closeOnBlur: this.hasProperty('close-on-blur'),
             position: this.getProperty('menu-position')
         };
         const config = mergeObjects(defaultConfig, inputComboConfig);
