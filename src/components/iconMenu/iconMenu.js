@@ -68,7 +68,7 @@ class IconMenu extends ArpaElement {
     renderNav() {
         return html`<nav-list
             class="${classNames('iconMenu__navigation', 'comboBox', this.getProperty('nav-class'))}"
-            id="${this.getId()}-navList"
+            id="navList-${this.getId()}"
         ></nav-list>`;
     }
 
