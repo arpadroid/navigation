@@ -13,7 +13,7 @@ class NavList extends List {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             className: 'navList',
-            hasResource: true,
+            hasResource: false,
             divider: undefined,
             links: [],
             variant: '',
