@@ -23,7 +23,7 @@ class IconMenu extends ArpaElement {
             hasTabIndex: false,
             links: [],
             tooltip: '',
-            navComboClasses: 'selectCombo'
+            navClass: ''
         });
     }
 
