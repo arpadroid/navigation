@@ -97,12 +97,15 @@ class IconMenu extends ArpaElement {
     }
 
     renderButton() {
-        const props = {
-            icon: this.getProperty('icon'),
-            label: this.getProperty('tooltip'),
-            ariaLabel: this.getProperty('tooltip')
-        };
-        return html`<button is="icon-button" class="iconMenu__button" ${attrString(props)}></button>`;
+        return html`<button
+            is="icon-button"
+            class="iconMenu__button"
+            ${attrString({
+                icon: this.getProperty('icon'),
+                label: this.getProperty('tooltip'),
+                ariaLabel: this.getProperty('tooltip')
+            })}
+        ></button>`;
     }
 
     renderNav() {

@@ -5,6 +5,12 @@ icon-menu {
         right: 0;
         margin-right: -14px;
     }
+
+    .inputCombo__input--active {
+        arpa-icon {
+            color: var(--color-primary);
+        }
+    }
 }
 
 .iconMenu__button:hover {
@@ -17,3 +23,4 @@ icon-menu {
     z-index: 10;
     overflow: visible;
 }
+

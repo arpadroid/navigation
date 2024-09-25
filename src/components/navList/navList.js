@@ -1,11 +1,16 @@
 /**
  * @typedef {import('./navigationInterface.js').NavigationInterface} NavigationInterface
  */
-import { mergeObjects } from '@arpadroid/tools';
+import { mergeObjects, ObserverTool } from '@arpadroid/tools';
 import NavLink from '../navLink/navLink.js';
 import { List } from '@arpadroid/lists';
 
 class NavList extends List {
+
+    _initialize() {
+        super._initialize();
+        ObserverTool.mixin(this);
+    }
     /**
      * Default component config.
      * @returns {NavigationInterface}
@@ -31,6 +36,10 @@ class NavList extends List {
         this.addItems(this._config.links);
         this._config.links = [];
         this.itemsNode.setAttribute('role', 'navigation');
+    }
+
+    onSelected(link) {
+        this.signal('onSelected', link);
     }
 }
 
