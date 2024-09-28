@@ -28,7 +28,7 @@ class NavLink extends ListItem {
 
     _initialize() {
         this.cleanup = [
-            Context?.Router?.listen('ROUTE_CHANGE', () => {
+            Context?.Router?.on('route_change', () => {
                 this._handleSelected();
                 this.updateAriaCurrent();
             })

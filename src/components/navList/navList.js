@@ -39,7 +39,7 @@ class NavList extends List {
     }
 
     onSelected(link) {
-        this.signal('onSelected', link);
+        this.signal('selected', link);
     }
 }
 
