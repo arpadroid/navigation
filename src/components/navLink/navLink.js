@@ -145,7 +145,7 @@ class NavLink extends ListItem {
     }
 
     getListDivider() {
-        return this.list?._slots.find(slot => slot.name === 'divider') || this.list?.getProperty('divider');
+        return this.list?._zones.find(zone => zone.name === 'divider') || this.list?.getProperty('divider');
     }
 
     // #endregion Accessors
@@ -163,16 +163,16 @@ class NavLink extends ListItem {
             this.linkNode.addEventListener('click', this._onClick);
         }
         const tooltip = this.getProperty('tooltip') || '';
-        const tooltipSlot = this.getSlot('tooltip');
-        if (tooltipSlot || tooltip) {
+        const tooltipZone = this.getZone('tooltip');
+        if (tooltipZone || tooltip) {
             const position = this.getProperty('tooltip-position') || 'left';
             this.tooltip = renderNode(html`
                 <arpa-tooltip handler="a" class="navLink__tooltip" position="${position}">
-                    <slot name="tooltip-content"> ${tooltip} </slot>
+                    <arpa-zone name="tooltip-content">${tooltip}</arpa-zone>
                 </arpa-tooltip>
             `);
-            const slot = this.tooltip.querySelector('slot');
-            slot && slot.append(...Array.from(tooltipSlot.childNodes));
+            const zone = this.tooltip.querySelector('arpa-zone');
+            zone && zone.append(...Array.from(tooltipZone.childNodes));
             this.mainNode?.append(this.tooltip);
         }
     }

@@ -62,7 +62,7 @@ export const Horizontal = {
     }
 };
 
-export const HorizontalWithSlottedDivider = {
+export const HorizontalWithZoneDivider = {
     parameters: {},
     argTypes: NavListStory.getArgTypes(),
     args: {
@@ -77,9 +77,9 @@ export const HorizontalWithSlottedDivider = {
         const userURL = editURL(url, { section: 'user' }, false);
         return html`
             <nav-list ${attrString(args)}>
-                <slot name="divider">
+                <arpa-zone name="divider">
                     <arpa-icon style="font-size: 22px;">more_vert</arpa-icon>
-                </slot>
+                </arpa-zone>
                 <nav-link link="${homeURL}" icon="home">Home</nav-link>
                 <nav-link link="${settingsURL}" icon="settings">Settings</nav-link>
                 <nav-link link="${userURL}" icon="person">User</nav-link>
