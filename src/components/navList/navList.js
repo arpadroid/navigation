@@ -6,10 +6,9 @@ import NavLink from '../navLink/navLink.js';
 import { List } from '@arpadroid/lists';
 
 class NavList extends List {
-
     _initialize() {
-        super._initialize();
         ObserverTool.mixin(this);
+        super._initialize();
     }
     /**
      * Default component config.

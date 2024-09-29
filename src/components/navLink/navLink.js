@@ -26,19 +26,8 @@ class NavLink extends ListItem {
         });
     }
 
-    _initialize() {
-        this.cleanup = [
-            Context?.Router?.on('route_change', () => {
-                this._handleSelected();
-                this.updateAriaCurrent();
-            })
-        ];
-    }
-
     _handleSelected() {
-        if (this.nav && this.isSelectedLink()) {
-            this.nav?.onSelected(this);
-        }
+        this.isSelectedLink() && this.nav?.onSelected(this);
     }
 
     // #endregion
@@ -48,6 +37,14 @@ class NavLink extends ListItem {
     ////////////////////
 
     _initializeNodes() {
+        Context?.Router?.on(
+            'route_change',
+            () => {
+                this._handleSelected();
+                this.updateAriaCurrent();
+            },
+            this._unsubscribes
+        );
         this.nav = this.closest('.navList');
         super._initializeNodes();
         this.linkNode = this.mainNode;
@@ -56,10 +53,6 @@ class NavLink extends ListItem {
                 ...(this._config.handlerAttributes ?? {}),
                 'aria-current': this.getAriaCurrent()
             });
-    }
-
-    disconnectedCallback() {
-        this.cleanup?.forEach(cleanup => typeof cleanup === 'function' && cleanup());
     }
 
     // #endregion Lifecycle
@@ -160,6 +153,7 @@ class NavLink extends ListItem {
         this.insertDivider();
         this._handleSelected();
         if (this.hasRouter()) {
+            this.linkNode.removeEventListener('click', this._onClick);
             this.linkNode.addEventListener('click', this._onClick);
         }
         const tooltip = this.getProperty('tooltip') || '';
