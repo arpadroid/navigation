@@ -157,7 +157,7 @@ class NavLink extends ListItem {
             this.linkNode.addEventListener('click', this._onClick);
         }
         const tooltip = this.getProperty('tooltip') || '';
-        const tooltipZone = this.getZone('tooltip');
+        const tooltipZone = this.getZone('tooltip-content');
         if (tooltipZone || tooltip) {
             const position = this.getProperty('tooltip-position') || 'left';
             this.tooltip = renderNode(html`
@@ -165,8 +165,6 @@ class NavLink extends ListItem {
                     <arpa-zone name="tooltip-content">${tooltip}</arpa-zone>
                 </arpa-tooltip>
             `);
-            const zone = this.tooltip.querySelector('arpa-zone');
-            zone && zone.append(...Array.from(tooltipZone.childNodes));
             this.mainNode?.append(this.tooltip);
         }
     }
