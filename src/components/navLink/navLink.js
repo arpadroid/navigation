@@ -162,7 +162,7 @@ class NavLink extends ListItem {
             const position = this.getProperty('tooltip-position') || 'left';
             this.tooltip = renderNode(html`
                 <arpa-tooltip handler="a" class="navLink__tooltip" position="${position}">
-                    <arpa-zone name="tooltip-content">${tooltip}</arpa-zone>
+                    <zone name="tooltip-content">${tooltip}</zone>
                 </arpa-tooltip>
             `);
             this.mainNode?.append(this.tooltip);
