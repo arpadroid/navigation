@@ -1,4 +1,9 @@
-/** @typedef {import('./iconMenuInterface').IconMenuInterface} IconMenuInterface */
+/**
+ * @typedef {import('./iconMenuInterface').IconMenuInterface} IconMenuInterface
+ * @typedef {import('@arpadroid/tools/src/zoneTool.type').ZoneToolType} ZoneToolType
+ * @typedef {import('@arpadroid/ui/src/arpaElement').ArpaElement} ArpaElement
+ * @typedef {import('@arpadroid/ui/src/inputCombo').InputCombo} InputCombo
+ */
 import { mergeObjects, attrString, classNames, appendNodes } from '@arpadroid/tools';
 import { ArpaElement, InputCombo } from '@arpadroid/ui';
 // import { ArpaElement, InputCombo } from '../../../../exports.js';
@@ -79,6 +84,10 @@ class IconMenu extends ArpaElement {
         this.button = this.querySelector('.iconMenu__button');
     }
 
+    /**
+     * Transfers the links from the icon menu component zone to the navigation component.
+     * @param {ZoneToolType} payload - The payload object passed by the ZoneTool.
+     */
     async _onPlaceZone(payload) {
         const { zone } = payload;
         const children = [...zone.childNodes];
@@ -91,6 +100,10 @@ class IconMenu extends ArpaElement {
             });
     }
 
+    /**
+     * Renders the button that opens the navigation.
+     * @returns {string}
+     */
     renderButton() {
         return html`<button
             is="icon-button"
@@ -103,13 +116,17 @@ class IconMenu extends ArpaElement {
         ></button>`;
     }
 
+    /**
+     * Renders the navigation component.
+     * @returns {string}
+     */
     renderNav() {
         const attr = attrString({
             itemTag: 'nav-link',
             id: `navList-${this.getId()}`,
             class: classNames('iconMenu__navigation', 'comboBox', this.getProperty('nav-class'))
         });
-        return html`<nav-list ${attr}> </nav-list>`;
+        return html`<nav-list ${attr}></nav-list>`;
     }
 
     // #endregion Rendering
@@ -123,6 +140,9 @@ class IconMenu extends ArpaElement {
         return true;
     }
 
+    /**
+     * Initializes the input combo functionality.
+     */
     _initializeInputCombo() {
         const { inputComboConfig = {} } = this._config;
         const defaultConfig = {
@@ -131,6 +151,8 @@ class IconMenu extends ArpaElement {
             position: this.getProperty('menu-position')
         };
         const config = mergeObjects(defaultConfig, inputComboConfig);
+
+        /** @type {InputCombo} */
         this.inputCombo = new InputCombo(this.button, this.navigation, {
             ...config,
             containerSelector: 'nav-link'
