@@ -1,5 +1,5 @@
 /** @typedef {import('./iconMenuInterface').IconMenuInterface} IconMenuInterface */
-import { mergeObjects, attrString, classNames } from '@arpadroid/tools';
+import { mergeObjects, attrString, classNames, appendNodes } from '@arpadroid/tools';
 import { ArpaElement, InputCombo } from '@arpadroid/ui';
 // import { ArpaElement, InputCombo } from '../../../../exports.js';
 
@@ -27,26 +27,6 @@ class IconMenu extends ArpaElement {
         });
     }
 
-    async onReady() {
-        await customElements.whenDefined('icon-menu');
-        await customElements.whenDefined('nav-list');
-        return true;
-    }
-
-    _initializeInputCombo() {
-        const { inputComboConfig = {} } = this._config;
-        const defaultConfig = {
-            closeOnClick: this.hasProperty('close-on-click'),
-            closeOnBlur: this.hasProperty('close-on-blur'),
-            position: this.getProperty('menu-position')
-        };
-        const config = mergeObjects(defaultConfig, inputComboConfig);
-        this.inputCombo = new InputCombo(this.button, this.navigation, {
-            ...config,
-            containerSelector: 'nav-link'
-        });
-    }
-
     // #endregion Initialization
 
     ////////////////////
@@ -55,7 +35,6 @@ class IconMenu extends ArpaElement {
 
     setLinks(links) {
         this._config.links = links;
-        this.navigation?.setItems(links);
     }
 
     /**
@@ -89,11 +68,27 @@ class IconMenu extends ArpaElement {
     /////////////////////
 
     render() {
+        const { links = [] } = this._config;
         const template = html`${this.renderButton()}${this.renderNav()}`;
         this.innerHTML = template;
         this.navigation = this.querySelector('.iconMenu__navigation');
         this.navigation.setPreProcessNode(this.preProcessNode);
+        links?.length && this.navigation.setItems(links);
+        this.navigation._childNodes = [...this.navigation._childNodes, ...this._childNodes];
+        this._childNodes = [];
         this.button = this.querySelector('.iconMenu__button');
+    }
+
+    async _onPlaceZone(payload) {
+        const { zone } = payload;
+        const children = [...zone.childNodes];
+        const links = children.filter(node => node.tagName === 'NAV-LINK');
+        links.forEach(link => link.remove());
+        links.length &&
+            this.onRenderReady(() => {
+                this.navigation = this.querySelector('.iconMenu__navigation');
+                this.navigation.onRenderReady(() => appendNodes(this.navigation, links));
+            });
     }
 
     renderButton() {
@@ -109,11 +104,12 @@ class IconMenu extends ArpaElement {
     }
 
     renderNav() {
-        return html`<nav-list
-            class="${classNames('iconMenu__navigation', 'comboBox', this.getProperty('nav-class'))}"
-            item-tag="nav-link"
-            id="navList-${this.getId()}"
-        ></nav-list>`;
+        const attr = attrString({
+            itemTag: 'nav-link',
+            id: `navList-${this.getId()}`,
+            class: classNames('iconMenu__navigation', 'comboBox', this.getProperty('nav-class'))
+        });
+        return html`<nav-list ${attr}> </nav-list>`;
     }
 
     // #endregion Rendering
@@ -123,12 +119,22 @@ class IconMenu extends ArpaElement {
     ////////////////////
 
     async _onConnected() {
-        const listItems = this._childNodes.filter(node => node.tagName === 'NAV-LINK');
-        this.navigation.addItemNodes(listItems);
-        this.navigation.setLinks(this._config.links);
-        this.navigation.onRendered(() => this.navigation.prepend(...this._childNodes));
         this._initializeInputCombo();
         return true;
+    }
+
+    _initializeInputCombo() {
+        const { inputComboConfig = {} } = this._config;
+        const defaultConfig = {
+            closeOnClick: this.hasProperty('close-on-click'),
+            closeOnBlur: this.hasProperty('close-on-blur'),
+            position: this.getProperty('menu-position')
+        };
+        const config = mergeObjects(defaultConfig, inputComboConfig);
+        this.inputCombo = new InputCombo(this.button, this.navigation, {
+            ...config,
+            containerSelector: 'nav-link'
+        });
     }
 
     // #endregion Lifecycle

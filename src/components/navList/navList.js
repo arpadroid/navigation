@@ -25,15 +25,8 @@ class NavList extends List {
             itemComponent: NavLink
         });
     }
-
-    setLinks(links) {
-        this._config.links = links;
-    }
-
     _onConnected() {
         super._onConnected();
-        this.addItems(this._config.links);
-        this._config.links = [];
         this.itemsNode.setAttribute('role', 'navigation');
     }
 

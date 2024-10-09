@@ -116,7 +116,7 @@ export const Test = {
     createTestLinks: list => {
         const url = window.parent.location.href;
         const logoutAction = fn();
-        list.setLinks([
+        list.setItems([
             {
                 content: 'Settings',
                 icon: 'settings',

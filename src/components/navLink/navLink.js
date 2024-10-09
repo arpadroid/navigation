@@ -6,7 +6,7 @@ import { ListItem } from '@arpadroid/lists';
 const html = String.raw;
 class NavLink extends ListItem {
     cleanup;
-    _bindings = ['_onClick'];
+
     //////////////////////////
     // #region INITIALIZATION
     //////////////////////////
@@ -15,6 +15,10 @@ class NavLink extends ListItem {
      * @returns {NavLinkInterface}
      */
     getDefaultConfig() {
+        this._onRouteChange = this._onRouteChange.bind(this);
+        this._onHandleRouter = this._onHandleRouter.bind(this);
+        /** @todo - Handle removing event listener for _onRouteChange.  */
+        Context?.Router?.on('route_changed', this._onRouteChange, this._unsubscribes);
         return mergeObjects(super.getDefaultConfig(), {
             link: '',
             action: undefined,
@@ -26,41 +30,14 @@ class NavLink extends ListItem {
         });
     }
 
-    _handleSelected() {
-        this.isSelectedLink() && this.nav?.onSelected(this);
-    }
-
     // #endregion
-
-    ////////////////////
-    // #region Lifecycle
-    ////////////////////
-
-    _initializeNodes() {
-        Context?.Router?.on(
-            'route_change',
-            () => {
-                this._handleSelected();
-                this.updateAriaCurrent();
-            },
-            this._unsubscribes
-        );
-        this.nav = this.closest('.navList');
-        super._initializeNodes();
-        this.linkNode = this.mainNode;
-        !this._hasRendered &&
-            attr(this.linkNode, {
-                ...(this._config.handlerAttributes ?? {}),
-                'aria-current': this.getAriaCurrent()
-            });
-    }
-
-    // #endregion Lifecycle
 
     // #region Accessors
 
-    updateAriaCurrent() {
-        this.linkNode && attr(this.linkNode, { 'aria-current': this.getAriaCurrent() });
+    async updateAriaCurrent() {
+        this.promise.then(() => {
+            this.linkNode && attr(this.linkNode, { 'aria-current': this.getAriaCurrent() });
+        });
     }
 
     getTagName() {
@@ -138,7 +115,10 @@ class NavLink extends ListItem {
     }
 
     getListDivider() {
-        return this.list?._zones.find(zone => zone.name === 'divider') || this.list?.getProperty('divider');
+        return (
+            [...this.list?._zones].find(zone => zone.getAttribute('name') === 'divider') ||
+            this.list?.getProperty('divider')
+        );
     }
 
     // #endregion Accessors
@@ -147,15 +127,39 @@ class NavLink extends ListItem {
     // #region Render
     /////////////////
 
-    async render() {
-        super.render();
-        await this.onReady();
-        this.insertDivider();
-        this._handleSelected();
-        if (this.hasRouter()) {
-            this.linkNode.removeEventListener('click', this._onClick);
-            this.linkNode.addEventListener('click', this._onClick);
+    _initializeNodes() {
+        this.nav = this.closest('.navList');
+        super._initializeNodes();
+        this.linkNode = this.mainNode;
+        attr(this.linkNode, {
+            ...(this._config.handlerAttributes ?? {}),
+            'aria-current': this.getAriaCurrent()
+        });
+
+        this._addTooltip();
+        this._handleRouter();
+        this._insertDivider();
+        this.promise.then(() => this._handleSelected());
+    }
+
+    _insertDivider() {
+        const isLastNode = this.nextElementSibling === null;
+        if (!isLastNode && this.getDivider() && !this.dividerNode) {
+            this.dividerNode = this._renderDivider();
+            this.after(this.dividerNode);
         }
+    }
+
+    _renderDivider() {
+        const divider = this.getDivider();
+        const node = document.createElement('span');
+        node.classList.add('navLink__divider');
+        typeof divider === 'string' && (node.textContent = divider);
+        divider instanceof HTMLElement && (node.innerHTML = divider.innerHTML);
+        return node;
+    }
+
+    _addTooltip() {
         const tooltip = this.getProperty('tooltip') || '';
         const tooltipZone = this.getZone('tooltip-content');
         if (tooltipZone || tooltip) {
@@ -169,26 +173,35 @@ class NavLink extends ListItem {
         }
     }
 
-    _onClick(event) {
-        event.preventDefault();
-        Context.Router.go(this.getLink());
-    }
+    // #endregion
 
-    renderDivider() {
-        const divider = this.getDivider();
-        const node = document.createElement('span');
-        node.classList.add('navLink__divider');
-        typeof divider === 'string' && (node.textContent = divider);
-        divider instanceof HTMLElement && (node.innerHTML = divider.innerHTML);
-        return node;
-    }
+    //////////////////
+    // #region Events
+    /////////////////
 
-    insertDivider() {
-        const isLastNode = this.nextElementSibling === null;
-        if (!isLastNode && this.getDivider() && !this.dividerNode) {
-            this.dividerNode = this.renderDivider();
-            this.after(this.dividerNode);
+    _handleRouter() {
+        if (this.hasRouter()) {
+            this.linkNode?.removeEventListener('click', this._onHandleRouter);
+            this.linkNode?.addEventListener('click', this._onHandleRouter);
         }
+    }
+
+    _handleSelected() {
+        this.promise.then(() => {
+            this.isSelectedLink() && this.nav?.onSelected(this);
+        });
+    }
+
+    _onRouteChange() {
+        console.log('_onRouteChange');
+        this._handleSelected();
+        this.updateAriaCurrent();
+    }
+
+    async _onHandleRouter(event) {
+        event.preventDefault();
+        await this.promise;
+        Context.Router.go(this.getLink());
     }
 
     // #endregion
