@@ -35,9 +35,8 @@ class NavLink extends ListItem {
     // #region Accessors
 
     async updateAriaCurrent() {
-        this.promise.then(() => {
-            this.linkNode && attr(this.linkNode, { 'aria-current': this.getAriaCurrent() });
-        });
+        await this.promise;
+        this.linkNode && attr(this.linkNode, { 'aria-current': this.getAriaCurrent() });
     }
 
     getTagName() {
@@ -186,21 +185,18 @@ class NavLink extends ListItem {
         }
     }
 
-    _handleSelected() {
-        this.promise.then(() => {
-            this.isSelectedLink() && this.nav?.onSelected(this);
-        });
+    async _handleSelected() {
+        await this.promise;
+        this.isSelectedLink() && this.nav?.onSelected(this);
     }
 
     _onRouteChange() {
-        console.log('_onRouteChange');
         this._handleSelected();
         this.updateAriaCurrent();
     }
 
     async _onHandleRouter(event) {
         event.preventDefault();
-        await this.promise;
         Context.Router.go(this.getLink());
     }
 

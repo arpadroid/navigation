@@ -126,7 +126,7 @@ class IconMenu extends ArpaElement {
             id: `navList-${this.getId()}`,
             class: classNames('iconMenu__navigation', 'comboBox', this.getProperty('nav-class'))
         });
-        return html`<nav-list ${attr}></nav-list>`;
+        return html`<nav-list ${attr}> </nav-list>`;
     }
 
     // #endregion Rendering
@@ -141,7 +141,7 @@ class IconMenu extends ArpaElement {
     }
 
     /**
-     * Initializes the input combo functionality.
+     * Initializes the input combo component.
      */
     _initializeInputCombo() {
         const { inputComboConfig = {} } = this._config;
