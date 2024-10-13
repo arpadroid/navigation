@@ -1,5 +1,5 @@
 /** @typedef {import('./navLinkInterface.js').NavLinkInterface} NavLinkInterface */
-import { renderNode, editURL, mergeObjects, attr, sanitizeURL } from '@arpadroid/tools';
+import { renderNode, editURL, mergeObjects, attr, sanitizeURL, getURLParam } from '@arpadroid/tools';
 import { Context } from '@arpadroid/application';
 import { ListItem } from '@arpadroid/lists';
 
@@ -43,12 +43,8 @@ class NavLink extends ListItem {
         return 'nav-link';
     }
 
-    getNav() {
-        return this.nav || this.closest('nav-list');
-    }
-
     getParamName() {
-        return this.getNav()?.getProperty('param-name') || this.getProperty('param-name');
+        return this.grabList()?.getProperty('param-name') || this.getProperty('param-name');
     }
 
     getParamValue() {
@@ -56,20 +52,18 @@ class NavLink extends ListItem {
     }
 
     getParamClear() {
-        return this.getNav()?.getArrayProperty('param-clear') || this.getArrayProperty('param-clear');
+        return this.grabList()?.getArrayProperty('param-clear') || this.getArrayProperty('param-clear');
     }
 
     hasRouter() {
-        return this.getNav()?.hasProperty('use-router') || this.hasAttribute('use-router');
+        return this.grabList()?.hasProperty('use-router') || this.hasAttribute('use-router');
     }
 
     getLink() {
         const param = this.getParamName();
         const value = this.getParamValue();
         const clear = this.getParamClear();
-        if (!value) {
-            return this.getProperty('link');
-        }
+        if (!value) return this.getProperty('link');
         if (param && value) {
             const params = { [param]: value };
             clear?.forEach(param => (params[param] = undefined));
@@ -79,12 +73,8 @@ class NavLink extends ListItem {
     }
 
     getAriaCurrent() {
-        if (this.isSelected()) {
-            return 'location';
-        }
-        if (this.isSelectedLink()) {
-            return 'page';
-        }
+        if (this.isSelected()) return 'location';
+        if (this.isSelectedLink()) return 'page';
     }
 
     isSelected() {
@@ -92,11 +82,12 @@ class NavLink extends ListItem {
     }
 
     isSelectedLink() {
+        /** @todo - Memoize this. */
         if (this.link) {
             const paramName = this.getParamName();
             const paramValue = this.getParamValue();
             if (paramName && paramValue) {
-                const currentParam = new URLSearchParams(window.location.search).get(paramName);
+                const currentParam = getURLParam(paramName);
                 return currentParam === paramValue || (!currentParam && this.hasAttribute('default'));
             }
             const path = sanitizeURL(this.link);
@@ -127,25 +118,26 @@ class NavLink extends ListItem {
     /////////////////
 
     _initializeNodes() {
-        this.nav = this.closest('.navList');
+        this.nav = this.grabList();
         super._initializeNodes();
         this.linkNode = this.mainNode;
         attr(this.linkNode, {
             ...(this._config.handlerAttributes ?? {}),
             'aria-current': this.getAriaCurrent()
         });
-
         this._addTooltip();
         this._handleRouter();
         this._insertDivider();
-        this.promise.then(() => this._handleSelected());
+        this._handleSelected();
     }
 
     _insertDivider() {
-        const isLastNode = this.nextElementSibling === null;
-        if (!isLastNode && this.getDivider() && !this.dividerNode) {
-            this.dividerNode = this._renderDivider();
-            this.after(this.dividerNode);
+        if (this.getDivider() && !this.dividerNode) {
+            const isLastNode = this.nextElementSibling === null;
+            if (!isLastNode) {
+                this.dividerNode = this._renderDivider();
+                this.after(this.dividerNode);
+            }
         }
     }
 
@@ -186,7 +178,6 @@ class NavLink extends ListItem {
     }
 
     async _handleSelected() {
-        await this.promise;
         this.isSelectedLink() && this.nav?.onSelected(this);
     }
 

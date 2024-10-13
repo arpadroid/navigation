@@ -25,8 +25,8 @@ class NavList extends List {
             itemComponent: NavLink
         });
     }
-    _onConnected() {
-        super._onConnected();
+
+    _initializeNodes() {
         this.itemsNode.setAttribute('role', 'navigation');
     }
 

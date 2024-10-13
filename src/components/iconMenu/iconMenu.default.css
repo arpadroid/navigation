@@ -21,6 +21,6 @@ icon-menu {
 .iconMenu__navigation {
     position: relative;
     z-index: 10;
-    overflow: visible;
+    overflow: auto;
 }
 
