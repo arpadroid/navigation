@@ -18,7 +18,6 @@ class NavLink extends ListItem {
         this._onRouteChange = this._onRouteChange.bind(this);
         this._onHandleRouter = this._onHandleRouter.bind(this);
         /** @todo - Handle removing event listener for _onRouteChange.  */
-        Context?.Router?.on('route_changed', this._onRouteChange, this._unsubscribes);
         return mergeObjects(super.getDefaultConfig(), {
             link: '',
             action: undefined,
@@ -98,9 +97,7 @@ class NavLink extends ListItem {
     }
 
     getDivider() {
-        if (this.list) {
-            return this.list.getVariant() === 'horizontal' && this.getListDivider();
-        }
+        if (this.list) return this.list.getVariant() === 'horizontal' && this.getListDivider();
         return this._config?.divider;
     }
 
@@ -129,15 +126,15 @@ class NavLink extends ListItem {
         this._handleRouter();
         this._insertDivider();
         this._handleSelected();
+        Context?.Router?.on('route_changed', this._onRouteChange);
     }
 
     _insertDivider() {
-        if (this.getDivider() && !this.dividerNode) {
-            const isLastNode = this.nextElementSibling === null;
-            if (!isLastNode) {
-                this.dividerNode = this._renderDivider();
-                this.after(this.dividerNode);
-            }
+        if (this.dividerNode || !this.getDivider()) return;
+        const isLastNode = this.nextElementSibling === null;
+        if (!isLastNode) {
+            this.dividerNode = this._renderDivider();
+            this.after(this.dividerNode);
         }
     }
 
