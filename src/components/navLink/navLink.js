@@ -117,8 +117,8 @@ class NavLink extends ListItem {
         super._initializeNodes();
         this.linkNode = this.mainNode;
         attr(this.linkNode, {
-            ...(this._config.handlerAttributes ?? {})
-            // 'aria-current': this.getAriaCurrent()
+            ...(this._config.handlerAttributes ?? {}),
+            'aria-current': this.getAriaCurrent()
         });
         this._addTooltip();
         this._handleRouter();
