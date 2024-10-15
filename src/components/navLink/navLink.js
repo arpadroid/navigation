@@ -8,7 +8,7 @@ class NavLink extends ListItem {
     cleanup;
 
     //////////////////////////
-    // #region INITIALIZATION
+    // #region Initialization
     //////////////////////////
     /**
      * Gets the default config for the component.
@@ -31,12 +31,9 @@ class NavLink extends ListItem {
 
     // #endregion
 
-    // #region Accessors
-
-    async updateAriaCurrent() {
-        await this.promise;
-        this.linkNode && attr(this.linkNode, { 'aria-current': this.getAriaCurrent() });
-    }
+    //////////////////
+    // #region get
+    /////////////////
 
     getTagName() {
         return 'nav-link';
@@ -52,10 +49,6 @@ class NavLink extends ListItem {
 
     getParamClear() {
         return this.grabList()?.getArrayProperty('param-clear') || this.getArrayProperty('param-clear');
-    }
-
-    hasRouter() {
-        return this.grabList()?.hasProperty('use-router') || this.hasAttribute('use-router');
     }
 
     getLink() {
@@ -76,12 +69,18 @@ class NavLink extends ListItem {
         if (this.isSelectedLink()) return 'page';
     }
 
+    // #endregion
+
+    hasRouter() {
+        return this.grabList()?.hasProperty('use-router') || this.hasAttribute('use-router');
+    }
+
     isSelected() {
         return this.getProperty('selected');
     }
 
-    isSelectedLink() {
-        /** @todo - Memoize this. */
+    isSelectedLink(memoized = true) {
+        if (memoized && this._isSelectedLink) return this._isSelectedLink;
         if (this.link) {
             const paramName = this.getParamName();
             const paramValue = this.getParamValue();
@@ -91,8 +90,10 @@ class NavLink extends ListItem {
             }
             const path = sanitizeURL(this.link);
             const currentPath = sanitizeURL(window.parent.location.href);
-            return path === currentPath;
+            this._isSelectedLink = path === currentPath;
+            return this._isSelectedLink;
         }
+        this._isSelectedLink = false;
         return false;
     }
 
@@ -102,10 +103,7 @@ class NavLink extends ListItem {
     }
 
     getListDivider() {
-        return (
-            [...this.list?._zones].find(zone => zone.getAttribute('name') === 'divider') ||
-            this.list?.getProperty('divider')
-        );
+        return this.list.hasZone('divider') || this.list?.getProperty('divider');
     }
 
     // #endregion Accessors
@@ -119,8 +117,8 @@ class NavLink extends ListItem {
         super._initializeNodes();
         this.linkNode = this.mainNode;
         attr(this.linkNode, {
-            ...(this._config.handlerAttributes ?? {}),
-            'aria-current': this.getAriaCurrent()
+            ...(this._config.handlerAttributes ?? {})
+            // 'aria-current': this.getAriaCurrent()
         });
         this._addTooltip();
         this._handleRouter();
@@ -163,8 +161,12 @@ class NavLink extends ListItem {
 
     // #endregion
 
+    updateAriaCurrent() {
+        this.linkNode && attr(this.linkNode, { 'aria-current': this.getAriaCurrent() });
+    }
+
     //////////////////
-    // #region Events
+    // #region events
     /////////////////
 
     _handleRouter() {
@@ -174,8 +176,8 @@ class NavLink extends ListItem {
         }
     }
 
-    async _handleSelected() {
-        this.isSelectedLink() && this.nav?.onSelected(this);
+    _handleSelected() {
+        this.isSelectedLink(false) && this.nav?.onSelected(this);
     }
 
     _onRouteChange() {
@@ -183,7 +185,7 @@ class NavLink extends ListItem {
         this.updateAriaCurrent();
     }
 
-    async _onHandleRouter(event) {
+    _onHandleRouter(event) {
         event.preventDefault();
         Context.Router.go(this.getLink());
     }
