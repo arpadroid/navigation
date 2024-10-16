@@ -13,12 +13,13 @@ class IconMenu extends ArpaElement {
     //////////////////////////
     // #region Initialization
     /////////////////////////
-    _bindings = ['preProcessNode'];
+
     /**
      * Returns default config.
      * @returns {IconMenuInterface}
      */
     getDefaultConfig() {
+        this.bind('preProcessNode');
         return mergeObjects(super.getDefaultConfig(), {
             className: 'iconMenu',
             menuPosition: 'bottom',
