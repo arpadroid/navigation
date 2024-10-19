@@ -15,9 +15,7 @@ class NavLink extends ListItem {
      * @returns {NavLinkInterface}
      */
     getDefaultConfig() {
-        this._onRouteChange = this._onRouteChange.bind(this);
-        this._onHandleRouter = this._onHandleRouter.bind(this);
-        /** @todo - Handle removing event listener for _onRouteChange.  */
+        this.bind('_onRouteChange', '_onHandleRouter');
         return mergeObjects(super.getDefaultConfig(), {
             link: '',
             action: undefined,
@@ -188,6 +186,11 @@ class NavLink extends ListItem {
     _onHandleRouter(event) {
         event.preventDefault();
         Context.Router.go(this.getLink());
+    }
+
+    _onDestroy() {
+        this.linkNode?.removeEventListener('click', this._onHandleRouter);
+        Context.Router?.off('route_changed', this._onRouteChange);
     }
 
     // #endregion
