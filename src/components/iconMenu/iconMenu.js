@@ -145,19 +145,24 @@ class IconMenu extends ArpaElement {
      * Initializes the input combo component.
      */
     _initializeInputCombo() {
-        const { inputComboConfig = {} } = this._config;
-        const defaultConfig = {
-            closeOnClick: this.hasProperty('close-on-click'),
-            closeOnBlur: this.hasProperty('close-on-blur'),
-            position: this.getProperty('menu-position')
-        };
-        const config = mergeObjects(defaultConfig, inputComboConfig);
+        if (!this.inputCombo) {
+            const { inputComboConfig = {} } = this._config;
+            const defaultConfig = {
+                closeOnClick: this.hasProperty('close-on-click'),
+                closeOnBlur: this.hasProperty('close-on-blur'),
+                position: this.getProperty('menu-position')
+            };
+            const config = mergeObjects(defaultConfig, inputComboConfig);
 
-        /** @type {InputCombo} */
-        this.inputCombo = new InputCombo(this.button, this.navigation, {
-            ...config,
-            containerSelector: 'nav-link'
-        });
+            /** @type {InputCombo} */
+            this.inputCombo = new InputCombo(this.button, this.navigation, {
+                ...config,
+                containerSelector: 'nav-link'
+            });
+        } else {
+            this.inputCombo.input = this.button;
+            this.inputCombo.combo = this.navigation;
+        }
     }
 
     // #endregion Lifecycle

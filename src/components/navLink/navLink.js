@@ -189,6 +189,7 @@ class NavLink extends ListItem {
     }
 
     _onDestroy() {
+        super._onDestroy();
         this.linkNode?.removeEventListener('click', this._onHandleRouter);
         Context.Router?.off('route_changed', this._onRouteChange);
     }
