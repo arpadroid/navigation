@@ -1,5 +1,8 @@
 nav-list.navList {
     gap: 0;
+    .listItem__icon {
+        align-self: center;
+    }
 }
 .navList[variant='horizontal'] {
     display: flex;
