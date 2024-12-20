@@ -150,7 +150,7 @@ class IconMenu extends ArpaElement {
             const defaultConfig = {
                 closeOnClick: this.hasProperty('close-on-click'),
                 closeOnBlur: this.hasProperty('close-on-blur'),
-                position: this.getProperty('menu-position')
+                position: this.hasProperty('menu-position') && this.getProperty('menu-position')
             };
             const config = mergeObjects(defaultConfig, inputComboConfig);
 
