@@ -6,10 +6,11 @@
     "module": "./dist/arpadroid-navigation.js",
     "type": "module",
     "scripts": {
-        "build": "node ./node_modules/@arpadroid/arpadroid/scripts/build-project.mjs --project=navigation --minify",
+        "build": "node ./node_modules/@arpadroid/arpadroid/scripts/build-project.mjs --project=navigation --deps=lists --minify",
+        "build:slim": "node ./node_modules/@arpadroid/arpadroid/scripts/build-project.mjs --project=navigation --slim",
         "storybook:build": "storybook build",
         "prepublish": "npm run build",
-        "storybook": "npm run build -- --storybook=6002 --watch",
+        "storybook": "npm run build -- --storybook=6002 --watch --deps=lists",
         "test": "node ./node_modules/@arpadroid/arpadroid/scripts/test-project.mjs --project=navigation --storybook --jest --port=6002"
     },
     "repository": {
@@ -39,10 +40,11 @@
         "typescript": "^5.4.2"
     },
     "peerDependencies": {
-        "@arpadroid/application": "file:../application",
         "@arpadroid/tools": "file:../tools",
+        "@arpadroid/context": "file:../context",
         "@arpadroid/lists": "file:../lists",
         "@arpadroid/ui": "file:../ui",
-        "@arpadroid/i18n": "file:../i18n"
+        "@arpadroid/i18n": "file:../i18n",
+        "@arpadroid/services": "file:../services"
     }
 }

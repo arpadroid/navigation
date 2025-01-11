@@ -1,7 +1,10 @@
-/** @typedef {import('./navLinkInterface.js').NavLinkInterface} NavLinkInterface */
+/**
+ * @typedef {import('./navLinkInterface.js').NavLinkInterface} NavLinkInterface
+ * @typedef {import('@arpadroid/services').Router} Router
+ */
 import { renderNode, editURL, mergeObjects, attr, sanitizeURL, getURLParam } from '@arpadroid/tools';
-import { Context } from '@arpadroid/application';
 import { ListItem } from '@arpadroid/lists';
+import { getService } from '@arpadroid/context';
 
 const html = String.raw;
 class NavLink extends ListItem {
@@ -23,8 +26,15 @@ class NavLink extends ListItem {
             className: 'navLink',
             listSelector: '.navList',
             selected: false,
-            handlerAttributes: {}
+            handlerAttributes: {},
+            router: undefined
         });
+    }
+
+    _initialize() {
+        const { router } = this._config;
+        /** @type {Router} */
+        this.router = router || getService('router');
     }
 
     // #endregion
@@ -122,7 +132,7 @@ class NavLink extends ListItem {
         this._handleRouter();
         this._insertDivider();
         this._handleSelected();
-        Context?.Router?.on('route_changed', this._onRouteChange);
+        this.router?.on('route_changed', this._onRouteChange);
     }
 
     _insertDivider() {
@@ -185,13 +195,13 @@ class NavLink extends ListItem {
 
     _onHandleRouter(event) {
         event.preventDefault();
-        Context.Router.go(this.getLink());
+        this.router?.go(this.getLink());
     }
 
     _onDestroy() {
         super._onDestroy();
         this.linkNode?.removeEventListener('click', this._onHandleRouter);
-        Context.Router?.off('route_changed', this._onRouteChange);
+        this.router?.off('route_changed', this._onRouteChange);
     }
 
     // #endregion
