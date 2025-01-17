@@ -22,6 +22,7 @@ class NavList extends List {
             links: [],
             variant: '',
             renderMode: 'minimal',
+            isItemSelected: undefined,
             itemComponent: NavLink
         });
     }

@@ -27,7 +27,8 @@ class NavLink extends ListItem {
             listSelector: '.navList',
             selected: false,
             handlerAttributes: {},
-            router: undefined
+            router: undefined,
+            isSelected: undefined
         });
     }
 
@@ -88,21 +89,41 @@ class NavLink extends ListItem {
     }
 
     isSelectedLink(memoized = true) {
+        this.nav = this.grabList();
+
         if (memoized && this._isSelectedLink) return this._isSelectedLink;
         if (this.link) {
             const paramName = this.getParamName();
+            const currentParam = paramName && getURLParam(paramName);
             const paramValue = this.getParamValue();
+            const navCallbackResult = this._getIsSelectedCallbackResult({
+                paramName,
+                paramValue,
+                currentParam
+            });
             if (paramName && paramValue) {
-                const currentParam = getURLParam(paramName);
-                return currentParam === paramValue || (!currentParam && this.hasAttribute('default'));
+                return (
+                    navCallbackResult ??
+                    (currentParam === paramValue || (!currentParam && this.hasAttribute('default')))
+                );
             }
             const path = sanitizeURL(this.link);
             const currentPath = sanitizeURL(window.parent.location.href);
             this._isSelectedLink = path === currentPath;
-            return this._isSelectedLink;
+            return navCallbackResult ?? this._isSelectedLink;
         }
         this._isSelectedLink = false;
         return false;
+    }
+
+    _getIsSelectedCallbackResult(payload = {}) {
+        const navCallback = this.nav?._config?.isItemSelected;
+        if (typeof navCallback !== 'function') return;
+        return navCallback({
+            ...payload,
+            linkNode: this.link,
+            node: this
+        });
     }
 
     getDivider() {
@@ -124,9 +145,13 @@ class NavLink extends ListItem {
         this.nav = this.grabList();
         super._initializeNodes();
         this.linkNode = this.mainNode;
+        this.getParamName() && (this.linkNode.href = this.getLink());
+        const label = this.getProperty('label');
+        label && this.removeAttribute('label');
         attr(this.linkNode, {
             ...(this._config.handlerAttributes ?? {}),
-            'aria-current': this.getAriaCurrent()
+            'aria-current': this.getAriaCurrent(),
+            'aria-label': label
         });
         this._addTooltip();
         this._handleRouter();
