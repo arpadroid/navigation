@@ -60,7 +60,8 @@ class IconMenu extends ArpaElement {
     }
 
     setTooltip(content) {
-        this.querySelector('arpa-tooltip')?.setContent(content);
+        const tooltip = this.querySelector('arpa-tooltip');
+        tooltip?.setContent(content);
     }
 
     setIcon(icon) {
@@ -112,7 +113,7 @@ class IconMenu extends ArpaElement {
             ${attrString({
                 icon: this.getProperty('icon'),
                 label: this.getProperty('tooltip'),
-                ariaLabel: this.getProperty('tooltip')
+                ariaLabel: this.getProperty('button-label') || this.getProperty('tooltip')
             })}
         ></button>`;
     }
