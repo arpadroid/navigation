@@ -1,13 +1,14 @@
 /**
  * @typedef {import('./navigationInterface.js').NavigationInterface} NavigationInterface
  */
-import { mergeObjects, ObserverTool } from '@arpadroid/tools';
+import { mergeObjects, observerMixin, dummySignal } from '@arpadroid/tools';
 import NavLink from '../navLink/navLink.js';
 import { List } from '@arpadroid/lists';
 
 class NavList extends List {
     _initialize() {
-        ObserverTool.mixin(this);
+        observerMixin(this);
+        this.signal = dummySignal;
         super._initialize();
     }
     /**
