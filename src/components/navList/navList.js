@@ -7,8 +7,8 @@ import { List } from '@arpadroid/lists';
 
 class NavList extends List {
     _initialize() {
-        observerMixin(this);
         this.signal = dummySignal;
+        observerMixin(this);
         super._initialize();
     }
     /**
