@@ -1,37 +1,54 @@
 /**
- * @typedef {import('./navigationInterface.js').NavigationInterface} NavigationInterface
+ * @typedef {import('./navList.types').NavListConfigType} NavListConfigType
  */
-import { mergeObjects, observerMixin, dummySignal } from '@arpadroid/tools';
-import NavLink from '../navLink/navLink.js';
+import { mergeObjects, observerMixin, dummySignal, dummyListener } from '@arpadroid/tools';
+
 import { List } from '@arpadroid/lists';
+import NavLink from '../navLink/navLink.js';
 
 class NavList extends List {
-    _initialize() {
+    /** @type {NavListConfigType} */ // @ts-ignore
+    _config = this._config;
+
+
+    /**
+     * Creates a new NavList.
+     * @param {NavListConfigType} [config]
+     */
+    constructor(config = {}) {
+        super(config);
         this.signal = dummySignal;
+        this.on = dummyListener;
         observerMixin(this);
-        super._initialize();
     }
     /**
      * Default component config.
-     * @returns {NavigationInterface}
+     * @returns {NavListConfigType}
      */
     getDefaultConfig() {
-        return mergeObjects(super.getDefaultConfig(), {
+        /** @type {NavListConfigType} */
+        const conf = {
             className: 'navList',
             hasResource: false,
             divider: undefined,
             links: [],
-            variant: '',
+            variant: 'default',
             renderMode: 'minimal',
             isItemSelected: undefined,
             itemComponent: NavLink
-        });
+        };
+        return mergeObjects(super.getDefaultConfig(), conf);
     }
 
     _initializeNodes() {
-        this.itemsNode.setAttribute('role', 'navigation');
+        this.itemsNode?.setAttribute('role', 'navigation');
     }
 
+
+    /**
+     * Sends a signal when a link is selected.
+     * @param {NavLink} link
+     */
     onSelected(link) {
         this.signal('selected', link);
     }

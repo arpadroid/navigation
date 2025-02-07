@@ -1,6 +1,7 @@
 /**
- * @typedef {import('./navLinkInterface.js').NavLinkInterface} NavLinkInterface
+ * @typedef {import('./navLink.types').NavLinkConfigType} NavLinkConfigType
  * @typedef {import('@arpadroid/services').Router} Router
+ * @typedef {import('../navList/navList.js').default} NavList
  */
 import { renderNode, editURL, mergeObjects, attr, sanitizeURL, getURLParam } from '@arpadroid/tools';
 import { ListItem } from '@arpadroid/lists';
@@ -8,18 +9,22 @@ import { getService } from '@arpadroid/context';
 
 const html = String.raw;
 class NavLink extends ListItem {
-    cleanup;
+    /** @type {NavLinkConfigType} */ // @ts-ignore
+    _config = this._config;
+    /** @type {NavList} */ // @ts-ignore
+    list = this.list;
 
-    //////////////////////////
+    /////////////////////////////////
     // #region Initialization
-    //////////////////////////
+    ////////////////////////////////
     /**
      * Gets the default config for the component.
-     * @returns {NavLinkInterface}
+     * @returns {NavLinkConfigType}
      */
     getDefaultConfig() {
         this.bind('_onRouteChange', '_onHandleRouter');
-        return mergeObjects(super.getDefaultConfig(), {
+        /** @type {NavLinkConfigType} */
+        const conf = {
             link: '',
             action: undefined,
             role: '',
@@ -27,9 +32,10 @@ class NavLink extends ListItem {
             listSelector: '.navList',
             selected: false,
             handlerAttributes: {},
-            router: undefined,
-            isSelected: undefined
-        });
+            router: undefined
+            // isSelected: undefined
+        };
+        return mergeObjects(super.getDefaultConfig(), conf);
     }
 
     _initialize() {
@@ -40,24 +46,37 @@ class NavLink extends ListItem {
 
     // #endregion
 
-    //////////////////
-    // #region get
-    /////////////////
+    ////////////////////////////////
+    // #region Get
+    ////////////////////////////////
 
     getTagName() {
         return 'nav-link';
     }
 
+    /**
+     * Gets the name of the parameter to set when the link is clicked.
+     * @returns {string} The name of the parameter.
+     */
     getParamName() {
         return this.grabList()?.getProperty('param-name') || this.getProperty('param-name');
     }
 
+    /**
+     * Gets the value of the parameter to set when the link is clicked.
+     * @returns {string} The value of the parameter.
+     */
     getParamValue() {
         return this.getProperty('param-value');
     }
 
+    /**
+     * Gets the list of parameters to clear when the link is clicked.
+     * @returns {string[]} The list of parameters to clear.
+     */
     getParamClear() {
-        return this.grabList()?.getArrayProperty('param-clear') || this.getArrayProperty('param-clear');
+        const arr = this.grabList()?.getArrayProperty('param-clear') || this.getArrayProperty('param-clear');
+        return (Array.isArray(arr) && arr) || [];
     }
 
     getLink() {
@@ -66,6 +85,7 @@ class NavLink extends ListItem {
         const clear = this.getParamClear();
         if (!value) return this.getProperty('link');
         if (param && value) {
+            /** @type {Record<string, unknown>} */
             const params = { [param]: value };
             clear?.forEach(param => (params[param] = undefined));
             return editURL(location.href, params);
@@ -78,7 +98,30 @@ class NavLink extends ListItem {
         if (this.isSelectedLink()) return 'page';
     }
 
-    // #endregion
+    _getIsSelectedCallbackResult(payload = {}) {
+        const navCallback = this.nav?._config?.isItemSelected;
+        if (typeof navCallback !== 'function') return;
+        return navCallback({
+            ...payload,
+            linkNode: this.link,
+            node: this
+        });
+    }
+
+    getDivider() {
+        if (this.list) return this.list.getVariant() === 'horizontal' && this.getListDivider();
+        return this._config?.divider;
+    }
+
+    getListDivider() {
+        return this.list.hasZone('divider') || this.list?.getProperty('divider');
+    }
+
+    // #endregion Get
+
+    ////////////////////////
+    // #region Has
+    ////////////////////////
 
     hasRouter() {
         return this.grabList()?.hasProperty('use-router') || this.hasAttribute('use-router');
@@ -88,8 +131,14 @@ class NavLink extends ListItem {
         return this.getProperty('selected');
     }
 
+    /**
+     * Checks if the link is selected.
+     * @param {boolean} [memoized] - If the result should be memoized.
+     * @returns {boolean} If the link is selected.
+     */
     isSelectedLink(memoized = true) {
-        this.nav = this.grabList();
+        /** @type {NavList} */
+        this.nav = /** @type {NavList} */ (this.grabList());
 
         if (memoized && this._isSelectedLink) return this._isSelectedLink;
         if (this.link) {
@@ -116,36 +165,19 @@ class NavLink extends ListItem {
         return false;
     }
 
-    _getIsSelectedCallbackResult(payload = {}) {
-        const navCallback = this.nav?._config?.isItemSelected;
-        if (typeof navCallback !== 'function') return;
-        return navCallback({
-            ...payload,
-            linkNode: this.link,
-            node: this
-        });
-    }
-
-    getDivider() {
-        if (this.list) return this.list.getVariant() === 'horizontal' && this.getListDivider();
-        return this._config?.divider;
-    }
-
-    getListDivider() {
-        return this.list.hasZone('divider') || this.list?.getProperty('divider');
-    }
-
-    // #endregion Accessors
+    // #endregion Has
 
     //////////////////
     // #region Render
     /////////////////
 
-    _initializeNodes() {
-        this.nav = this.grabList();
+    async _initializeNodes() {
+        /** @type {NavList} */
+        this.nav = /** @type {NavList | undefined} */ (this.grabList());
         super._initializeNodes();
-        this.linkNode = this.mainNode;
-        this.getParamName() && (this.linkNode.href = this.getLink());
+        /** @type {HTMLAnchorElement} */
+        this.linkNode = /** @type {HTMLAnchorElement} */ (this.mainNode);
+        this.getParamName() && this.linkNode && (this.linkNode.href = this.getLink());
         const label = this.getProperty('label');
         label && this.removeAttribute('label');
         attr(this.linkNode, {
@@ -194,13 +226,18 @@ class NavLink extends ListItem {
 
     // #endregion
 
+    ////////////////////////////
+    // #region Update
+    ////////////////////////////
+
     updateAriaCurrent() {
         this.linkNode && attr(this.linkNode, { 'aria-current': this.getAriaCurrent() });
     }
+    // #endregion
 
-    //////////////////
+    ////////////////////////////
     // #region events
-    /////////////////
+    ///////////////////////////
 
     _handleRouter() {
         if (this.hasRouter()) {
@@ -218,6 +255,10 @@ class NavLink extends ListItem {
         this.updateAriaCurrent();
     }
 
+    /**
+     * Handles the router.
+     * @param {MouseEvent} event
+     */
     _onHandleRouter(event) {
         event.preventDefault();
         this.router?.go(this.getLink());

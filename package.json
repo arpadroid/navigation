@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "description": "A library of web components for building navigation interfaces.",
     "exports": "./dist/arpadroid-navigation.js",
-    "module": "./dist/arpadroid-navigation.js",
+    "types": "./dist/@types/types.compiled.d.ts",
     "type": "module",
     "scripts": {
         "build": "node ./node_modules/@arpadroid/arpadroid/scripts/build-project.mjs --project=navigation --deps=lists --minify",
