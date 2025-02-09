@@ -1,6 +1,6 @@
 const config = {
     deps: ['lists'],
-    buildTypes: false
+    buildTypes: true
 };
 
 export default config;

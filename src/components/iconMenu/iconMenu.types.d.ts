@@ -1,6 +1,5 @@
-import { InputComboConfigType } from '@arpadroid/ui';
+import { ArpaElementConfigType, InputComboConfigType } from '@arpadroid/ui';
 import { NavLinkConfigType } from '../navLink/navLink.types';
-import { ArpaElementConfigType } from '@arpadroid/ui/dist/@types/components/arpaElement/arpaElement.types';
 
 export type IconMenuConfigType = ArpaElementConfigType & {
     closeOnClick?: boolean;

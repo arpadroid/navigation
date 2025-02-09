@@ -1,5 +1,5 @@
-import { ListItemConfigType } from '@arpadroid/lists/src/components/listItem/listItem.types';
-import { Router } from './navLink';
+import { ListItemConfigType } from '@arpadroid/lists';
+import type { Router } from './navLink.js';
 export type NavLinkConfigType = ListItemConfigType & {
     url?: string;
     action?: () => void;

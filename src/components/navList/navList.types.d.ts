@@ -1,4 +1,4 @@
-import { ListConfigType } from '@arpadroid/lists/src/components/list/list.types';
+import { ListConfigType } from '@arpadroid/lists';
 import { NavLinkConfigType } from '../navLink/navLink.types';
 import NavLink from '../navLink/navLink';
 

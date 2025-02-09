@@ -42,6 +42,7 @@
     "peerDependencies": {
         "@arpadroid/tools": "file:../tools",
         "@arpadroid/context": "file:../context",
+        "@arpadroid/resources": "file:../resources",
         "@arpadroid/lists": "file:../lists",
         "@arpadroid/ui": "file:../ui",
         "@arpadroid/i18n": "file:../i18n",

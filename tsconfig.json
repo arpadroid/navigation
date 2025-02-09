@@ -3,8 +3,12 @@
     "compilerOptions": {
         // "tsBuildInfoFile": ".tsbuildinfo"
         "rootDir": "./src",
-        "outDir": "./.types",
+        "outDir": "./.tmp/.types",
+        "skipLibCheck": true,
+        "paths": {
+            "@arpadroid/lists": ["../lists/.tmp/.types/types.compiled.d.ts"]
+        }
     },
     "include": ["src/**/*"],
-    "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.stories.js", "**/*.test.js", "./dist/@types"]
+    "exclude": ["node_modules", "**/*.test.ts", "**/*.stories.js", "**/*.test.js"]
 }

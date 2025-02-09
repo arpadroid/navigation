@@ -5,11 +5,11 @@
  * @typedef {import('../navLink/navLink.types').NavLinkConfigType} NavLinkConfigType
  * @typedef {import('@arpadroid/ui').Tooltip} Tooltip
  * @typedef {import('@arpadroid/ui').IconButton} IconButton
- * @typedef {import('@arpadroid/lists/src/components/listItem/listItem.js').default} ListItem
+ * @typedef {import('@arpadroid/lists').ListItem} ListItem
+ * @typedef {import('../navList/navList.js').default} NavList
  */
 import { mergeObjects, attrString, classNames, appendNodes } from '@arpadroid/tools';
 import { ArpaElement, InputCombo } from '@arpadroid/ui';
-import NavList from '../navList/navList.js';
 
 const html = String.raw;
 class IconMenu extends ArpaElement {
