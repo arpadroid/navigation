@@ -26,14 +26,11 @@ class NavLink extends ListItem {
         /** @type {NavLinkConfigType} */
         const conf = {
             link: '',
-            action: undefined,
             role: '',
             className: 'navLink',
             listSelector: '.navList',
             selected: false,
-            handlerAttributes: {},
-            router: undefined
-            // isSelected: undefined
+            handlerAttributes: {}
         };
         return mergeObjects(super.getDefaultConfig(), conf);
     }
