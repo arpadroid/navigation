@@ -154,7 +154,10 @@ class IconMenu extends ArpaElement {
             ${attrString({
                 icon: this.getProperty('icon'),
                 label: this.getProperty('tooltip'),
-                ariaLabel: this.getProperty('button-label') || this.getProperty('tooltip')
+                ariaLabel:
+                    this.getProperty('button-aria') ||
+                    this.getProperty('button-label') ||
+                    this.getProperty('tooltip')
             })}
         ></button>`;
     }
