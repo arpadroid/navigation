@@ -3,7 +3,8 @@
  * @typedef {import('@arpadroid/services').Router} Router
  * @typedef {import('../navList/navList.js').default} NavList
  */
-import { renderNode, editURL, mergeObjects, attr, sanitizeURL, getURLParam } from '@arpadroid/tools';
+import { renderNode, editURL, mergeObjects, attr, sanitizeURL } from '@arpadroid/tools';
+import { getURLParam, defineCustomElement } from '@arpadroid/tools';
 import { ListItem } from '@arpadroid/lists';
 import { getService } from '@arpadroid/context';
 
@@ -271,6 +272,6 @@ class NavLink extends ListItem {
     // #endregion
 }
 
-customElements.define('nav-link', NavLink);
+defineCustomElement('nav-link', NavLink);
 
 export default NavLink;

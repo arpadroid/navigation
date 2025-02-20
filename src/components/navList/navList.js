@@ -1,15 +1,14 @@
 /**
  * @typedef {import('./navList.types').NavListConfigType} NavListConfigType
  */
-import { mergeObjects, observerMixin, dummySignal, dummyListener } from '@arpadroid/tools';
-
+import { mergeObjects } from '@arpadroid/tools';
+import { observerMixin, dummySignal, dummyListener, defineCustomElement } from '@arpadroid/tools';
 import { List } from '@arpadroid/lists';
 import NavLink from '../navLink/navLink.js';
 
 class NavList extends List {
     /** @type {NavListConfigType} */ // @ts-ignore
     _config = this._config;
-
 
     /**
      * Creates a new NavList.
@@ -35,7 +34,8 @@ class NavList extends List {
             variant: 'default',
             renderMode: 'minimal',
             isItemSelected: undefined,
-            itemComponent: NavLink
+            itemComponent: NavLink,
+            itemTag: 'nav-link'
         };
         return mergeObjects(super.getDefaultConfig(), conf);
     }
@@ -43,7 +43,6 @@ class NavList extends List {
     _initializeNodes() {
         this.itemsNode?.setAttribute('role', 'navigation');
     }
-
 
     /**
      * Sends a signal when a link is selected.
@@ -54,6 +53,6 @@ class NavList extends List {
     }
 }
 
-customElements.define('nav-list', NavList);
+defineCustomElement('nav-list', NavList);
 
 export default NavList;

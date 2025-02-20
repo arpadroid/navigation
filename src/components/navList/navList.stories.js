@@ -129,6 +129,7 @@ export const Test = {
             },
             {
                 content: 'Logout',
+                label: 'logout',
                 icon: 'logout',
                 action: logoutAction
             }
@@ -156,7 +157,7 @@ export const Test = {
                 expect(canvas.getByText('User')).toBeInTheDocument();
                 expect(canvas.getByText('Logout')).toBeInTheDocument();
             });
-            const logoutButton = canvas.getByRole('button', { label: 'Logout' });
+            const logoutButton = canvas.getByText('Logout').closest('button');
             requestAnimationFrame(() => logoutButton.click());
 
             await waitFor(() => {

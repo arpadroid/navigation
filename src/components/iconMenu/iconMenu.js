@@ -8,7 +8,7 @@
  * @typedef {import('@arpadroid/lists').ListItem} ListItem
  * @typedef {import('../navList/navList.js').default} NavList
  */
-import { mergeObjects, attrString, classNames, appendNodes } from '@arpadroid/tools';
+import { mergeObjects, attrString, classNames, appendNodes, defineCustomElement } from '@arpadroid/tools';
 import { ArpaElement, InputCombo } from '@arpadroid/ui';
 
 const html = String.raw;
@@ -212,5 +212,7 @@ class IconMenu extends ArpaElement {
 
     // #endregion Lifecycle
 }
-customElements.define('icon-menu', IconMenu);
+
+defineCustomElement('icon-menu', IconMenu);
+
 export default IconMenu;
