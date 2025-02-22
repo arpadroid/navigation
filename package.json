@@ -29,8 +29,8 @@
     },
     "homepage": "https://github.com/arpadroid/navigation#readme",
     "devDependencies": {
-        "@arpadroid/stylesheet-bundler": "file:../stylesheet-bundler",
         "@arpadroid/arpadroid": "file:../arpadroid",
+        "@arpadroid/stylesheet-bundler": "file:../stylesheet-bundler",
         "@babel/core": "^7.23.9",
         "@babel/plugin-syntax-import-assertions": "^7.24.7",
         "@babel/preset-env": "^7.23.9",
@@ -40,12 +40,12 @@
         "typescript": "^5.4.2"
     },
     "peerDependencies": {
-        "@arpadroid/tools": "file:../tools",
         "@arpadroid/context": "file:../context",
-        "@arpadroid/resources": "file:../resources",
-        "@arpadroid/lists": "file:../lists",
-        "@arpadroid/ui": "file:../ui",
         "@arpadroid/i18n": "file:../i18n",
-        "@arpadroid/services": "file:../services"
+        "@arpadroid/lists": "file:../lists",
+        "@arpadroid/resources": "file:../resources",
+        "@arpadroid/services": "file:../services",
+        "@arpadroid/tools": "file:../tools",
+        "@arpadroid/ui": "file:../ui"
     }
 }
