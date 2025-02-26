@@ -1,6 +1,10 @@
 const config = {
     deps: ['lists'],
-    buildTypes: true
+    buildTypes: true,
+    logo: `           ┓    • ┓        •     •    
+  ┏┓┏┓┏┓┏┓┏┫┏┓┏┓┓┏┫  ┏┓┏┓┓┏┓┏┓┏┓╋┓┏┓┏┓
+  ┗┻┛ ┣┛┗┻┗┻┛ ┗┛┗┗┻  ┛┗┗┻┗┛┗┗┫┗┻┗┗┗┛┛┗
+------┛----------------------┛-----------`
 };
 
 export default config;
