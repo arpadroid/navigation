@@ -6,7 +6,7 @@ import { expect, fireEvent, waitFor, within } from '@storybook/test';
 
 const html = String.raw;
 const IconMenuStory = {
-    title: 'Modules/Navigation/iconMenu',
+    title: 'Navigation/Icon Menu',
     tags: [],
     getArgs: () => {
         return {

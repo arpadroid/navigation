@@ -7,8 +7,11 @@ import { expect, fn, waitFor, within } from '@storybook/test';
 
 const html = String.raw;
 const NavListStory = {
-    title: 'Modules/Navigation/NavList',
+    title: 'Navigation/Nav List',
     tags: [],
+    parameters: {
+        layout: 'padded'
+    },
     getArgs: () => {
         return {
             id: 'nav-list',
