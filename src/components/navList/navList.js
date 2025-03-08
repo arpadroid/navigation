@@ -7,7 +7,7 @@ import { List } from '@arpadroid/lists';
 import NavLink from '../navLink/navLink.js';
 
 class NavList extends List {
-    /** @type {NavListConfigType} */ // @ts-ignore
+    /** @type {NavListConfigType} */
     _config = this._config;
 
     /**

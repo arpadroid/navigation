@@ -10,9 +10,9 @@ import { getService } from '@arpadroid/context';
 
 const html = String.raw;
 class NavLink extends ListItem {
-    /** @type {NavLinkConfigType} */ // @ts-ignore
+    /** @type {NavLinkConfigType} */
     _config = this._config;
-    /** @type {NavList} */ // @ts-ignore
+    /** @type {NavList} */
     list = this.list;
 
     /////////////////////////////////

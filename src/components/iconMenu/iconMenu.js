@@ -13,7 +13,7 @@ import { ArpaElement, InputCombo } from '@arpadroid/ui';
 
 const html = String.raw;
 class IconMenu extends ArpaElement {
-    /** @type {IconMenuConfigType} */ // @ts-ignore
+    /** @type {IconMenuConfigType} */
     _config = this._config;
     //////////////////////////
     // #region Initialization
@@ -109,7 +109,6 @@ class IconMenu extends ArpaElement {
         this.innerHTML = template;
         /** @type {NavList | null} */
         this.navigation = /** @type {NavList} */ (this.querySelector('.iconMenu__navigation'));
-        // @ts-ignore
         this.navigation?.setPreProcessNode(this.preProcessNode);
         links?.length && this.navigation?.setItems(links);
         this.navigation &&
@@ -129,8 +128,10 @@ class IconMenu extends ArpaElement {
     async _onPlaceZone(payload) {
         const { zone } = payload;
         const children = [...(zone?.childNodes || [])];
-        // @ts-ignore
-        const links = children.filter((/** @type {Node} **/ node) => node?.tagName === 'NAV-LINK');
+
+        const links = children.filter(
+            (/** @type {import('@arpadroid/tools').ElementType} **/ node) => node?.tagName === 'NAV-LINK'
+        );
         links.forEach(link => link.remove());
         links.length &&
             this.onRenderReady(() => {
