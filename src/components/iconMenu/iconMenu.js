@@ -46,6 +46,12 @@ class IconMenu extends ArpaElement {
     // #region Accessors
     ////////////////////
 
+    getAriaLabel() {
+        return (
+            this.getProperty('button-aria') || this.getProperty('button-label') || this.getProperty('tooltip')
+        );
+    }
+
     /**
      * Sets the links for the navigation.
      * @param {NavLinkConfigType[]} links
@@ -117,8 +123,54 @@ class IconMenu extends ArpaElement {
                 ...(this._childNodes || [])
             ]);
         this._childNodes = [];
-        /** @type {import('@arpadroid/ui').InputComboInputType<IconButton> | null} */
-        this.button = this.querySelector('.iconMenu__button');
+        /** @type {IconButton | null} */
+        this.buttonComponent = this.querySelector('.iconMenu__button');
+    }
+
+    /**
+     * Renders the button that opens the navigation.
+     * @returns {string}
+     */
+    renderButton() {
+        return html`<icon-button
+            class="iconMenu__button"
+            ${attrString({
+                icon: this.getProperty('icon'),
+                tooltip: this.getProperty('tooltip'),
+                ariaLabel: this.getAriaLabel()
+            })}
+        ></icon-button>`;
+    }
+
+    /**
+     * Renders the navigation component.
+     * @returns {string}
+     */
+    renderNav() {
+        return html`<nav-list
+            ${attrString({
+                itemTag: 'nav-link',
+                id: `navList-${this.getId()}`,
+                class: classNames('iconMenu__navigation', 'comboBox', this.getProperty('nav-class'))
+            })}
+        >
+        </nav-list>`;
+    }
+
+    // #endregion Rendering
+
+    ////////////////////
+    // #region Lifecycle
+    ////////////////////
+
+    async _onConnected() {
+        this._initializeInputCombo();
+        return true;
+    }
+
+    async _initializeNodes() {
+        super._initializeNodes();
+        await this.buttonComponent?.promise;
     }
 
     /**
@@ -145,52 +197,11 @@ class IconMenu extends ArpaElement {
     }
 
     /**
-     * Renders the button that opens the navigation.
-     * @returns {string}
-     */
-    renderButton() {
-        return html`<button
-            is="icon-button"
-            class="iconMenu__button"
-            ${attrString({
-                icon: this.getProperty('icon'),
-                label: this.getProperty('tooltip'),
-                ariaLabel:
-                    this.getProperty('button-aria') ||
-                    this.getProperty('button-label') ||
-                    this.getProperty('tooltip')
-            })}
-        ></button>`;
-    }
-
-    /**
-     * Renders the navigation component.
-     * @returns {string}
-     */
-    renderNav() {
-        const attr = attrString({
-            itemTag: 'nav-link',
-            id: `navList-${this.getId()}`,
-            class: classNames('iconMenu__navigation', 'comboBox', this.getProperty('nav-class'))
-        });
-        return html`<nav-list ${attr}> </nav-list>`;
-    }
-
-    // #endregion Rendering
-
-    ////////////////////
-    // #region Lifecycle
-    ////////////////////
-
-    async _onConnected() {
-        this._initializeInputCombo();
-        return true;
-    }
-
-    /**
      * Initializes the input combo component.
      */
-    _initializeInputCombo() {
+    async _initializeInputCombo() {
+        await this.buttonComponent?.promise;
+        this.button = this.buttonComponent?.button;
         if (!this.inputCombo) {
             const { inputComboConfig = {} } = this._config;
             const defaultConfig = {

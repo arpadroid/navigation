@@ -38,8 +38,7 @@ class NavLink extends ListItem {
 
     _initialize() {
         const { router } = this._config;
-        /** @type {Router} */
-        this.router = router || getService('router');
+        this.router = /** @type {Router} */ (router || getService('router'));
     }
 
     // #endregion

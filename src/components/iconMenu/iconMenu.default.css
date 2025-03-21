@@ -13,7 +13,7 @@ icon-menu {
     }
 }
 
-.iconMenu__button:hover {
+.iconMenu__button button:hover {
     background-color: var(--selected-hilight);
     color: var(--color-primary);
 }
