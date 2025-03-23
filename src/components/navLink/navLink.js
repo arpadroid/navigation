@@ -171,7 +171,7 @@ class NavLink extends ListItem {
     async _initializeNodes() {
         /** @type {NavList} */
         this.nav = /** @type {NavList | undefined} */ (this.grabList());
-        super._initializeNodes();
+        await super._initializeNodes();
         /** @type {HTMLAnchorElement} */
         this.linkNode = /** @type {HTMLAnchorElement} */ (this.mainNode);
         this.getParamName() && this.linkNode && (this.linkNode.href = this.getLink());
@@ -188,6 +188,7 @@ class NavLink extends ListItem {
         this._insertDivider();
         this._handleSelected();
         this.router?.on('route_changed', this._onRouteChange);
+        return true;
     }
 
     _insertDivider() {

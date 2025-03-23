@@ -40,8 +40,10 @@ class NavList extends List {
         return mergeObjects(super.getDefaultConfig(), conf);
     }
 
-    _initializeNodes() {
+    async _initializeNodes() {
+        await super._initializeNodes();
         this.itemsNode?.setAttribute('role', 'navigation');
+        return true;
     }
 
     /**

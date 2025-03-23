@@ -171,6 +171,7 @@ class IconMenu extends ArpaElement {
     async _initializeNodes() {
         super._initializeNodes();
         await this.buttonComponent?.promise;
+        return true;
     }
 
     /**
