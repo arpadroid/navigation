@@ -35,7 +35,8 @@ class NavList extends List {
             renderMode: 'minimal',
             isItemSelected: undefined,
             itemComponent: NavLink,
-            itemTag: 'nav-link'
+            itemTag: 'nav-link',
+            tagName: 'arpa-list',
         };
         return mergeObjects(super.getDefaultConfig(), conf);
     }

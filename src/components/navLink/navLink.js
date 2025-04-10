@@ -29,7 +29,7 @@ class NavLink extends ListItem {
             link: '',
             role: '',
             className: 'navLink',
-            listSelector: '.navList',
+            listSelector: 'nav-list',
             selected: false,
             handlerAttributes: {}
         };
@@ -80,14 +80,14 @@ class NavLink extends ListItem {
         const param = this.getParamName();
         const value = this.getParamValue();
         const clear = this.getParamClear();
-        if (!value) return this.getProperty('link');
         if (param && value) {
             /** @type {Record<string, unknown>} */
             const params = { [param]: value };
             clear?.forEach(param => (params[param] = undefined));
             return editURL(location.href, params);
         }
-        return this.getProperty('link');
+        const link = this.getProperty('link');
+        return link;
     }
 
     getAriaCurrent() {
@@ -214,11 +214,13 @@ class NavLink extends ListItem {
         const tooltipZone = this.getZone('tooltip-content');
         if (tooltipZone || tooltip) {
             const position = this.getProperty('tooltip-position') || 'left';
-            this.tooltip = renderNode(html`
-                <arpa-tooltip handler="a" class="navLink__tooltip" position="${position}">
-                    <zone name="tooltip-content">${tooltip}</zone>
-                </arpa-tooltip>
-            `);
+            this.tooltip = renderNode(html`<arpa-tooltip
+                handler="a"
+                class="navLink__tooltip"
+                position="${position}"
+            >
+                <zone name="tooltip-content">${tooltip}</zone>
+            </arpa-tooltip>`);
             this.mainNode?.append(this.tooltip);
         }
     }

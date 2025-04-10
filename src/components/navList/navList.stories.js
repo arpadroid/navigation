@@ -36,9 +36,9 @@ const NavListStory = {
         return html`
             <nav-list ${attrString(args)}>
                 <nav-link link="${editURL(url, { section: 'home' }, false)}" icon="home">Home</nav-link>
-                <nav-link link="${editURL(url, { section: 'settings' }, false)}" icon="settings"
-                    >Settings</nav-link
-                >
+                <nav-link link="${editURL(url, { section: 'settings' }, false)}" icon="settings">
+                    Settings
+                </nav-link>
                 <nav-link link="${editURL(url, { section: 'user' }, false)}" icon="person">User</nav-link>
                 <nav-link icon="logout">Logout</nav-link>
                 <nav-link icon="smart_toy">No action</nav-link>

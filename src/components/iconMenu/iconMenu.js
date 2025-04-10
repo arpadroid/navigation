@@ -109,22 +109,16 @@ class IconMenu extends ArpaElement {
     // #region Rendering
     /////////////////////
 
-    render() {
-        const { links = [] } = this._config;
-        const template = html`${this.renderButton()}${this.renderNav()}`;
-        this.innerHTML = template;
-        /** @type {NavList | null} */
-        this.navigation = /** @type {NavList} */ (this.querySelector('.iconMenu__navigation'));
-        this.navigation?.setPreProcessNode(this.preProcessNode);
-        links?.length && this.navigation?.setItems(links);
-        this.navigation &&
-            (this.navigation._childNodes = [
-                ...(this.navigation._childNodes || []),
-                ...(this._childNodes || [])
-            ]);
-        this._childNodes = [];
-        /** @type {IconButton | null} */
-        this.buttonComponent = this.querySelector('.iconMenu__button');
+    getTemplateVars() {
+        return {
+            ...super.getTemplateVars(),
+            button: this.renderButton(),
+            nav: this.renderNav()
+        };
+    }
+
+    _getTemplate() {
+        return html`{button}{nav}`;
     }
 
     /**
@@ -153,8 +147,7 @@ class IconMenu extends ArpaElement {
                 id: `navList-${this.getId()}`,
                 class: classNames('iconMenu__navigation', 'comboBox', this.getProperty('nav-class'))
             })}
-        >
-        </nav-list>`;
+        ></nav-list>`;
     }
 
     // #endregion Rendering
@@ -163,38 +156,28 @@ class IconMenu extends ArpaElement {
     // #region Lifecycle
     ////////////////////
 
-    async _onConnected() {
-        this._initializeInputCombo();
-        return true;
-    }
-
     async _initializeNodes() {
+        /** @type {IconButton | null} */
+        this.buttonComponent = this.querySelector('.iconMenu__button');
         super._initializeNodes();
+        this._initializeNavigation();
+        this._initializeInputCombo();
         await this.buttonComponent?.promise;
         return true;
     }
 
-    /**
-     * Transfers the links from the icon menu component zone to the navigation component.
-     * @param {ZoneToolPlaceZoneType} payload - The payload object passed by the ZoneTool.
-     */
-    async _onPlaceZone(payload) {
-        const { zone } = payload;
-        const children = [...(zone?.childNodes || [])];
-
-        const links = children.filter(
-            (/** @type {import('@arpadroid/tools').ElementType} **/ node) => node?.tagName === 'NAV-LINK'
-        );
-        links.forEach(link => link.remove());
-        links.length &&
-            this.onRenderReady(() => {
-                /** @type {NavList | null} */
-                this.navigation = /** @type {NavList | null} */ (this.querySelector('.iconMenu__navigation'));
-                this.navigation &&
-                    this.navigation?.onRenderReady(() =>
-                        appendNodes(/** @type {HTMLElement} **/ (this.navigation), links)
-                    );
-            });
+    _initializeNavigation() {
+        const { links = [] } = this._config;
+        /** @type {NavList | null} */
+        this.navigation = /** @type {NavList} */ (this.querySelector('.iconMenu__navigation'));
+        this.navigation?.setPreProcessNode(this.preProcessNode);
+        links?.length && this.navigation?.setItems(links, true);
+        this.navigation &&
+            (this.navigation._childNodes = [
+                ...(this.navigation._childNodes || []),
+                ...(this._childNodes || [])
+            ]);
+        this._childNodes = [];
     }
 
     /**
@@ -221,6 +204,29 @@ class IconMenu extends ArpaElement {
             this.button && (this.inputCombo.input = this.button);
             this.navigation && (this.inputCombo.combo = this.navigation);
         }
+    }
+
+    /**
+     * Transfers the links from the icon menu component zone to the navigation component.
+     * @param {ZoneToolPlaceZoneType} payload - The payload object passed by the ZoneTool.
+     */
+    async _onPlaceZone(payload) {
+        const { zone } = payload;
+        const children = [...(zone?.childNodes || [])];
+
+        const links = children.filter(
+            (/** @type {import('@arpadroid/tools').ElementType} **/ node) => node?.tagName === 'NAV-LINK'
+        );
+        links.forEach(link => link.remove());
+        links.length &&
+            this.onRenderReady(() => {
+                /** @type {NavList | null} */
+                this.navigation = /** @type {NavList | null} */ (this.querySelector('.iconMenu__navigation'));
+                this.navigation &&
+                    this.navigation?.onRenderReady(() =>
+                        appendNodes(/** @type {HTMLElement} **/ (this.navigation), links)
+                    );
+            });
     }
 
     // #endregion Lifecycle
