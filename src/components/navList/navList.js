@@ -36,7 +36,7 @@ class NavList extends List {
             isItemSelected: undefined,
             itemComponent: NavLink,
             itemTag: 'nav-link',
-            tagName: 'arpa-list',
+            tagName: 'nav-list'
         };
         return mergeObjects(super.getDefaultConfig(), conf);
     }

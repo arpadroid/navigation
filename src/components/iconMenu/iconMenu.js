@@ -7,12 +7,15 @@
  * @typedef {import('@arpadroid/ui').IconButton} IconButton
  * @typedef {import('@arpadroid/lists').ListItem} ListItem
  * @typedef {import('../navList/navList.js').default} NavList
+ * @typedef {import('../navLink/navLink.js').default} NavLink
  */
-import { mergeObjects, attrString, classNames, appendNodes, defineCustomElement } from '@arpadroid/tools';
+import { mergeObjects, attrString, classNames, defineCustomElement } from '@arpadroid/tools';
 import { ArpaElement, InputCombo } from '@arpadroid/ui';
 
 const html = String.raw;
 class IconMenu extends ArpaElement {
+    /** @type {NavList | null} */
+    navigation = null;
     /** @type {IconMenuConfigType} */
     _config = this._config;
     //////////////////////////
@@ -166,9 +169,13 @@ class IconMenu extends ArpaElement {
         return true;
     }
 
-    _initializeNavigation() {
+    render() {
+        super.render();
+    }
+
+    async _initializeNavigation() {
         const { links = [] } = this._config;
-        /** @type {NavList | null} */
+        // /** @type {NavList | null} */
         this.navigation = /** @type {NavList} */ (this.querySelector('.iconMenu__navigation'));
         this.navigation?.setPreProcessNode(this.preProcessNode);
         links?.length && this.navigation?.setItems(links, true);
@@ -213,20 +220,18 @@ class IconMenu extends ArpaElement {
     async _onPlaceZone(payload) {
         const { zone } = payload;
         const children = [...(zone?.childNodes || [])];
-
-        const links = children.filter(
-            (/** @type {import('@arpadroid/tools').ElementType} **/ node) => node?.tagName === 'NAV-LINK'
+        /** @type {NavLink[]} */
+        const links = /** @type {NavLink[]} */ (
+            children.filter(
+                (/** @type {import('@arpadroid/tools').ElementType} **/ node) => node?.tagName === 'NAV-LINK'
+            )
         );
+        if (!links.length) return;
         links.forEach(link => link.remove());
-        links.length &&
-            this.onRenderReady(() => {
-                /** @type {NavList | null} */
-                this.navigation = /** @type {NavList | null} */ (this.querySelector('.iconMenu__navigation'));
-                this.navigation &&
-                    this.navigation?.onRenderReady(() =>
-                        appendNodes(/** @type {HTMLElement} **/ (this.navigation), links)
-                    );
-            });
+        this.onRenderReady(() => {
+            this.navigation = /** @type {NavList | null} */ (this.querySelector('.iconMenu__navigation'));
+            this.navigation?.addItemNodes(links);
+        });
     }
 
     // #endregion Lifecycle
