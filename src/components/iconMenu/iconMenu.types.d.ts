@@ -11,4 +11,5 @@ export type IconMenuConfigType = ArpaElementConfigType & {
     menuPosition?: 'left' | 'right' | 'top' | 'bottom';
     navClass?: string;
     inputComboConfig?: InputComboConfigType;
+    navType?: 'combo' | 'accordion';
 };

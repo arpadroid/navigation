@@ -10,12 +10,14 @@
  * @typedef {import('../navLink/navLink.js').default} NavLink
  */
 import { mergeObjects, attrString, classNames, defineCustomElement } from '@arpadroid/tools';
-import { ArpaElement, InputCombo } from '@arpadroid/ui';
+import { Accordion, ArpaElement, Button, InputCombo } from '@arpadroid/ui';
 
 const html = String.raw;
 class IconMenu extends ArpaElement {
     /** @type {NavList | null} */
     navigation = null;
+    /** @type {Accordion      | null} */
+    accordion = null;
     /** @type {IconMenuConfigType} */
     _config = this._config;
     //////////////////////////
@@ -38,7 +40,8 @@ class IconMenu extends ArpaElement {
             hasTabIndex: false,
             links: [],
             tooltip: '',
-            navClass: ''
+            navClass: '',
+            navType: 'combo'
         };
         return mergeObjects(super.getDefaultConfig(), conf);
     }
@@ -46,21 +49,13 @@ class IconMenu extends ArpaElement {
     // #endregion Initialization
 
     ////////////////////
-    // #region Accessors
+    // #region Get
     ////////////////////
 
     getAriaLabel() {
         return (
             this.getProperty('button-aria') || this.getProperty('button-label') || this.getProperty('tooltip')
         );
-    }
-
-    /**
-     * Sets the links for the navigation.
-     * @param {NavLinkConfigType[]} links
-     */
-    setLinks(links) {
-        this._config.links = links;
     }
 
     /**
@@ -73,7 +68,7 @@ class IconMenu extends ArpaElement {
         // if (!node) {
         //     throw new Error('Node is undefined');
         // }
-        node?.classList.add('comboBox__item');
+        this.hasCombo() && node?.classList.add('comboBox__item');
         !this.getProperty('has-tab-index') &&
             node &&
             Array.from(node.querySelectorAll('a, button')).forEach(node =>
@@ -85,6 +80,32 @@ class IconMenu extends ArpaElement {
     getId() {
         return this.getProperty('id') || 'IconMenu-' + Math.random().toString(36).substr(2, 9);
     }
+
+    getNavigationClass() {
+        return this.getClassName('navigation');
+    }
+
+    getButtonClass() {
+        return this.getClassName('arpaButton');
+    }
+
+    hasCombo() {
+        return this.getNavType() === 'combo';
+    }
+
+    hasAccordion() {
+        return this.getNavType() === 'accordion';
+    }
+
+    getNavType() {
+        return this.getProperty('nav-type') || 'combo';
+    }
+
+    // #endregion Get
+
+    ////////////////////
+    // #region Set
+    ////////////////////
 
     /**
      * Sets the tooltip content.
@@ -102,11 +123,18 @@ class IconMenu extends ArpaElement {
      */
     setIcon(icon) {
         /** @type {IconButton | null} */
-        const button = this.querySelector('.iconMenu__button arpa-icon');
+        const button = this.querySelector(`.${this.getButtonClass()}`);
         button?.setIcon(icon);
     }
 
-    // #endregion Accessors
+    /**
+     * Sets the links for the navigation.
+     * @param {NavLinkConfigType[]} links
+     */
+    setLinks(links) {
+        this._config.links = links;
+    }
+    // #endregion Set
 
     /////////////////////
     // #region Rendering
@@ -130,7 +158,7 @@ class IconMenu extends ArpaElement {
      */
     renderButton() {
         return html`<icon-button
-            class="iconMenu__button"
+            class="${this.getButtonClass()}"
             ${attrString({
                 icon: this.getProperty('icon'),
                 tooltip: this.getProperty('tooltip'),
@@ -148,7 +176,11 @@ class IconMenu extends ArpaElement {
             ${attrString({
                 itemTag: 'nav-link',
                 id: `navList-${this.getId()}`,
-                class: classNames('iconMenu__navigation', 'comboBox', this.getProperty('nav-class'))
+                class: classNames(
+                    this.getNavigationClass(),
+                    this.hasCombo() && 'comboBox',
+                    this.getProperty('nav-class')
+                )
             })}
         ></nav-list>`;
     }
@@ -160,24 +192,22 @@ class IconMenu extends ArpaElement {
     ////////////////////
 
     async _initializeNodes() {
-        /** @type {IconButton | null} */
-        this.buttonComponent = this.querySelector('.iconMenu__button');
-        super._initializeNodes();
+        await super._initializeNodes();
+        /** @type {IconButton | Button | null} */
+        this.buttonComponent = this.querySelector(`.${this.getButtonClass()}`);
         this._initializeNavigation();
-        this._initializeInputCombo();
-        await this.buttonComponent?.promise;
+        this.buttonComponent?.promise.then(() => {
+            this.button = this.buttonComponent?.button;
+            this.hasCombo() && this._initializeInputCombo();
+        });
         return true;
-    }
-
-    render() {
-        super.render();
     }
 
     async _initializeNavigation() {
         const { links = [] } = this._config;
         // /** @type {NavList | null} */
-        this.navigation = /** @type {NavList} */ (this.querySelector('.iconMenu__navigation'));
-        this.navigation?.setPreProcessNode(this.preProcessNode);
+        this.navigation = /** @type {NavList} */ (this.querySelector(`.${this.getNavigationClass()}`));
+        this.navigation.setPreProcessNode(this.preProcessNode);
         links?.length && this.navigation?.setItems(links, true);
         this.navigation &&
             (this.navigation._childNodes = [
@@ -191,8 +221,6 @@ class IconMenu extends ArpaElement {
      * Initializes the input combo component.
      */
     async _initializeInputCombo() {
-        await this.buttonComponent?.promise;
-        this.button = this.buttonComponent?.button;
         if (!this.inputCombo) {
             const { inputComboConfig = {} } = this._config;
             const defaultConfig = {
@@ -213,6 +241,19 @@ class IconMenu extends ArpaElement {
         }
     }
 
+    async _initializeAccordion() {
+        await this.promise;
+        this.button = this.buttonComponent?.button;
+        if (!this.accordion && this.navigation) {
+            this.accordion = new Accordion(this, {
+                contentSelector: 'nav-list',
+                itemSelector: '.navLink, .navButton',
+                handlerSelector: '.navButton__button',
+                isCollapsed: true
+            });
+        }
+    }
+
     /**
      * Transfers the links from the icon menu component zone to the navigation component.
      * @param {ZoneToolPlaceZoneType} payload - The payload object passed by the ZoneTool.
@@ -229,7 +270,9 @@ class IconMenu extends ArpaElement {
         if (!links.length) return;
         links.forEach(link => link.remove());
         this.onRenderReady(() => {
-            this.navigation = /** @type {NavList | null} */ (this.querySelector('.iconMenu__navigation'));
+            this.navigation = /** @type {NavList | null} */ (
+                this.querySelector(`.${this.getNavigationClass()}`)
+            );
             this.navigation?.addItemNodes(links);
         });
     }

@@ -5,12 +5,13 @@ import { attrString } from '@arpadroid/tools';
 import { expect, fireEvent, waitFor, within } from '@storybook/test';
 
 const html = String.raw;
-const IconMenuStory = {
-    title: 'Navigation/Icon Menu',
+const NavButtonStory = {
+    title: 'Navigation/Nav Button',
     tags: [],
     getArgs: () => {
         return {
-            id: 'test-menu'
+            id: 'test-menu',
+            buttonLabel: 'Menu',
         };
     },
     getArgTypes: (category = 'Nav List Props') => {
@@ -22,12 +23,12 @@ const IconMenuStory = {
         delete args.text;
         return html`
             <div class="container" style="display:flex; width: 100%;">
-                <icon-menu ${attrString(args)}>
+                <nav-button ${attrString(args)}>
                     <nav-link link="/home" icon="home">Home</nav-link>
                     <nav-link link="/settings" icon="settings">Settings</nav-link>
                     <nav-link link="/user" icon="smart_toy">User</nav-link>
                     <!-- some content -->
-                </icon-menu>
+                </nav-button>
             </div>
         `;
     }
@@ -36,8 +37,8 @@ const IconMenuStory = {
 export const Default = {
     name: 'Render',
     parameters: {},
-    argTypes: IconMenuStory.getArgTypes(),
-    args: { ...IconMenuStory.getArgs() }
+    argTypes: NavButtonStory.getArgTypes(),
+    args: { ...NavButtonStory.getArgs() }
 };
 
 export const Test = {
@@ -54,7 +55,7 @@ export const Test = {
     playSetup: async canvasElement => {
         const canvas = within(canvasElement);
         await waitFor(() => expect(canvasElement.querySelector('nav-list')).toBeInTheDocument());
-        const menuNode = canvasElement.querySelector('icon-menu');
+        const menuNode = canvasElement.querySelector('nav-button');
         const navigationNode = canvasElement.querySelector('nav-list');
         return { canvas, menuNode, navigationNode };
     },
@@ -91,4 +92,4 @@ export const Test = {
     }
 };
 
-export default IconMenuStory;
+export default NavButtonStory;

@@ -1,0 +1,12 @@
+nav-button.navButton {
+    
+    button.arpaButton__button {
+        box-shadow: none;
+        padding: inherit;
+        outline: none;
+
+        &:hover {
+            box-shadow: none !important;
+        }
+    }
+}
