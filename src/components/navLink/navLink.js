@@ -221,7 +221,7 @@ class NavLink extends ListItem {
             >
                 <zone name="tooltip-content">${tooltip}</zone>
             </arpa-tooltip>`);
-            this.mainNode?.append(this.tooltip);
+            this.tooltip && this.mainNode?.append(this.tooltip);
         }
     }
 

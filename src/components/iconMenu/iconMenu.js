@@ -1,16 +1,17 @@
 /**
  * @typedef {import('./iconMenu.types').IconMenuConfigType} IconMenuConfigType
- * @typedef {import('@arpadroid/tools').ZoneToolPlaceZoneType} ZoneToolPlaceZoneType
+ * @typedef {import('@arpadroid/ui').ZoneToolPlaceZoneType} ZoneToolPlaceZoneType
  * @typedef {import('@arpadroid/ui').InputComboNodeType} InputComboNodeType
  * @typedef {import('../navLink/navLink.types').NavLinkConfigType} NavLinkConfigType
  * @typedef {import('@arpadroid/ui').Tooltip} Tooltip
  * @typedef {import('@arpadroid/ui').IconButton} IconButton
+ * @typedef {import('@arpadroid/ui').Button} Button
  * @typedef {import('@arpadroid/lists').ListItem} ListItem
  * @typedef {import('../navList/navList.js').default} NavList
  * @typedef {import('../navLink/navLink.js').default} NavLink
  */
 import { mergeObjects, attrString, classNames, defineCustomElement } from '@arpadroid/tools';
-import { Accordion, ArpaElement, Button, InputCombo } from '@arpadroid/ui';
+import { Accordion, ArpaElement, InputCombo } from '@arpadroid/ui';
 
 const html = String.raw;
 class IconMenu extends ArpaElement {
@@ -257,16 +258,12 @@ class IconMenu extends ArpaElement {
     /**
      * Transfers the links from the icon menu component zone to the navigation component.
      * @param {ZoneToolPlaceZoneType} payload - The payload object passed by the ZoneTool.
-     */
+     */ // @ts-ignore
     async _onPlaceZone(payload) {
         const { zone } = payload;
         const children = [...(zone?.childNodes || [])];
-        /** @type {NavLink[]} */
-        const links = /** @type {NavLink[]} */ (
-            children.filter(
-                (/** @type {import('@arpadroid/tools').ElementType} **/ node) => node?.tagName === 'NAV-LINK'
-            )
-        );
+        /** @type {NavLink[]} */ // @ts-ignore
+        const links = /** @type {NavLink[]} */ (children.filter(node => node?.tagName === 'NAV-LINK'));
         if (!links.length) return;
         links.forEach(link => link.remove());
         this.onRenderReady(() => {
