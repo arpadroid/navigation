@@ -1,0 +1,186 @@
+:root {
+    --side-nav-child-padding: 1.7rem;
+    --side-nav-width: 320px;
+    --side-nav-gap: 0.25rem;
+    --side-nav-button-radius: 8px;
+    --side-nav-selected-bg-color: var(--lavender);
+    --side-nav-hover-bg-color: var(--lavender-light);
+
+    --side-nav-link-text-color: var(--grey-600);
+    --side-nav-link-text-color-hover: var(--grey-700);
+
+    --side-nav-link-text-weight: 600;
+    --side-nav-link-text-bold: 700;
+    --side-nav-link-padding: 0.5rem 0.75rem;
+    --side-nav-link-bg-color: transparent;
+
+    --side-nav-icon-color: var(--grey-400);
+    --side-nav-icon-size: 1.5rem;
+    --side-nav-icon-hover-color: var(--grey-600);
+    --side-nav-icon-active-color: var(--blue-neon-dark);
+
+    --side-nav-collapsed-button-width: 3rem;
+}
+
+.sideNav {
+    --icon-size: 1.7rem;
+    padding: 0.5rem;
+    max-width: var(--side-nav-width);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.1);
+    justify-content: flex-start;
+    flex: 1 1 auto;
+}
+
+.sideNav__toggleButton.sideNav__toggleButton {
+    --icon-button-size: var(--side-nav-collapsed-button-width);
+    --icon-button-hilight-border: 2px solid var(--color-primary);
+    --icon-button-border-radius: var(--side-nav-button-radius);
+}
+
+.sideNav__titleContainer {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.sideNav__title {
+    flex: 1 1 auto;
+}
+
+.sideNav__links {
+    --listItem-hover-color: var(--blue-neon-dark);
+    .navList {
+        width: 100%;
+        padding-top: var(--side-nav-gap);
+        display: flex;
+        flex-direction: column;
+    }
+    .navButton__button,
+    .navButton,
+    .navLink {
+        width: 100%;
+    }
+
+    .listItem__link,
+    .navButton__button {
+        background-color: var(--side-nav-link-bg-color);
+        border-radius: var(--side-nav-button-radius);
+        padding: var(--side-nav-link-padding);
+
+        .arpaButton__content,
+        .listItem__content {
+            color: var(--side-nav-link-text-color);
+            font-weight: var(--side-nav-link-text-weight);
+            font-family: var(--font-quicksand);
+        }
+
+        arpa-icon {
+            color: var(--side-nav-icon-color);
+        }
+
+        &:hover {
+            background-color: var(--side-nav-hover-bg-color);
+            .arpaButton__content,
+            .listItem__content {
+                color: var(--side-nav-link-text-color-hover);
+                font-family: var(--font-quicksand);
+            }
+
+            arpa-icon {
+                color: var(--side-nav-icon-hover-color);
+            }
+        }
+    }
+
+    .accordion__item--open {
+        > .navButton__arpaButton .navButton__button {
+            --side-nav-link-bg-color: var(--side-nav-selected-bg-color);
+            --side-nav-link-text-weight: var(--side-nav-link-text-bold);
+            --side-nav-link-text-color: var(--blue-neon-dark);
+
+            arpa-icon {
+                color: var(--side-nav-icon-active-color);
+            }
+        }
+    }
+}
+
+.sideNav:not(.sideNav--collapsed) {
+    .sideNav__links .navList .listItem__link {
+        padding-left: var(--side-nav-child-padding);
+    }
+}
+
+.sideNav__links,
+.sideNav__links .navList {
+    gap: var(--side-nav-gap);
+    display: flex;
+    flex-direction: column;
+}
+
+.sideNav--collapsed {
+    --side-nav-child-padding: 0;
+    --side-nav-width: fit-content;
+    gap: var(--side-nav-gap);
+
+    .sideNav__titleContainer {
+        padding: 0;
+        margin: 0;
+    }
+    .listItem__main {
+        flex: none;
+    }
+
+    .sideNav__header {
+        flex-direction: column;
+        align-items: center;
+        display: flex;
+        margin: 0;
+        padding: 0;
+    }
+
+    .sideNav__footerContent,
+    .sideNav__headerContent,
+    .sideNav__title,
+    .arpaButton__icon + .arpaButton__content,
+    nav-link .listItem__contentWrapper {
+        display: none;
+    }
+
+    .sideNav__titleContainer {
+        gap: 0;
+        padding: 0;
+    }
+
+    .navList {
+        padding: 0;
+    }
+
+    .sideNav__links {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        align-items: center;
+
+        .navButton {
+            gap: var(--side-nav-gap);
+            display: flex;
+            flex-direction: column;
+        }
+
+        a,
+        button {
+            width: var(--side-nav-collapsed-button-width);
+            height: var(--side-nav-collapsed-button-width);
+        }
+
+        .navList {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+}

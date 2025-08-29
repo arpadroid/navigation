@@ -200,6 +200,7 @@ class IconMenu extends ArpaElement {
         this.buttonComponent?.promise.then(() => {
             this.button = this.buttonComponent?.button;
             this.hasCombo() && this._initializeInputCombo();
+            this.hasAccordion() && this._initializeAccordion();
         });
         return true;
     }

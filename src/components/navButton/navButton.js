@@ -22,6 +22,7 @@ class NavButton extends IconMenu {
         const conf = {
             className: 'navButton',
             menuPosition: 'bottom',
+            navType: 'none',
             icon: ''
         };
         return mergeObjects(super.getDefaultConfig(), conf);

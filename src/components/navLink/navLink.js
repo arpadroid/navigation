@@ -1,12 +1,12 @@
 /**
  * @typedef {import('./navLink.types').NavLinkConfigType} NavLinkConfigType
  * @typedef {import('@arpadroid/services').Router} Router
- * @typedef {import('../navList/navList.js').default} NavList
  */
-import { renderNode, editURL, mergeObjects, attr, sanitizeURL } from '@arpadroid/tools';
+import { renderNode, editURL, mergeObjects, attr, sanitizeURL, mechanize } from '@arpadroid/tools';
 import { getURLParam, defineCustomElement } from '@arpadroid/tools';
 import { ListItem } from '@arpadroid/lists';
 import { getService } from '@arpadroid/context';
+import NavList from '../navList/navList.js';
 
 const html = String.raw;
 class NavLink extends ListItem {
@@ -188,7 +188,31 @@ class NavLink extends ListItem {
         this._insertDivider();
         this._handleSelected();
         this.router?.on('route_changed', this._onRouteChange);
+        this._handleInternalLinks();
         return true;
+    }
+
+    _initializeContent() {
+        /** @type {NavLink[]} */
+        this.linkNodes = [];
+        const children = Array.from(this.querySelectorAll(':scope > nav-link'));
+        for (const child of children) {
+            if (child.tagName?.toLowerCase() === 'nav-link') {
+                this.linkNodes.push(/** @type {NavLink} */ (child));
+                child.remove();
+            }
+        }
+        super._initializeContent();
+    }
+
+    _handleInternalLinks(linkNodes = this.linkNodes) {
+        if (!this.linkNode) return;
+        if (linkNodes?.length) {
+            const id = 'navLinkList-' + mechanize(linkNodes.map(node => node.innerText).join('-'));
+            const navList = new NavList({ id });
+            this.appendChild(navList);
+            navList.append(...linkNodes);
+        }
     }
 
     _insertDivider() {
