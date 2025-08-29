@@ -78,6 +78,7 @@
         }
 
         arpa-icon {
+            font-size: var(--side-nav-icon-size);
             color: var(--side-nav-icon-color);
         }
 
