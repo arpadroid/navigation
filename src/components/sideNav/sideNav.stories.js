@@ -31,56 +31,56 @@ const SideNavStory = {
                 </zone>
                 <zone name="links">
                     <nav-link link="/dashboard" icon="dashboard">Dashboard</nav-link>
-                    <nav-button icon="art_track">
+                    <side-nav-button icon="art_track">
                         Inventory
                         <nav-link link="/all-works" icon="brush">All Works</nav-link>
                         <nav-link link="/editions" icon="book">Editions</nav-link>
                         <nav-link link="/consignments" icon="inventory">Consignments</nav-link>
                         <nav-link link="/archive" icon="archive">Archive</nav-link>
-                    </nav-button>
-                    <nav-button icon="people">
+                    </side-nav-button>
+                    <side-nav-button icon="people">
                         Artists
                         <nav-link link="/artists" icon="people">All</nav-link>
                         <nav-link link="/artists/new" icon="add">New</nav-link>
                         <nav-link link="/artists/active" icon="account_circle">Active</nav-link>
                         <nav-link link="/artists/disabled" icon="account_circle_off">Disabled</nav-link>
-                    </nav-button>
-                    <nav-button icon="event">
+                    </side-nav-button>
+                    <side-nav-button icon="event">
                         Exhibitions
                         <nav-link link="/exhibitions" icon="event">All</nav-link>
                         <nav-link link="/exhibitions/new" icon="add">New</nav-link>
                         <nav-link link="/exhibitions/active" icon="check_circle">Active</nav-link>
                         <nav-link link="/exhibitions/disabled" icon="cancel">Disabled</nav-link>
-                    </nav-button>
-                    <nav-button icon="contact_mail">
+                    </side-nav-button>
+                    <side-nav-button icon="contact_mail">
                         Contacts
                         <nav-link link="/contacts" icon="contact_mail">All</nav-link>
                         <nav-link link="/contacts/new" icon="add">New</nav-link>
                         <nav-link link="/contacts/active" icon="check_circle">Active</nav-link>
                         <nav-link link="/contacts/archived" icon="cancel">Archived</nav-link>
-                    </nav-button>
-                    <nav-button icon="category">
+                    </side-nav-button>
+                    <side-nav-button icon="category">
                         Categories
                         <nav-link link="/categories" icon="category">All</nav-link>
                         <nav-link link="/categories/new" icon="add">New</nav-link>
                         <nav-link link="/categories/active" icon="check_circle">Active</nav-link>
                         <nav-link link="/categories/archived" icon="cancel">Archived</nav-link>
-                    </nav-button>
+                    </side-nav-button>
 
-                    <nav-button icon="sell">
+                    <side-nav-button icon="sell">
                         Sales
                         <nav-link link="/sales" icon="sell">All Sales</nav-link>
                         <nav-link link="/sales/new" icon="add">New</nav-link>
                         <nav-link link="/sales/active" icon="check_circle">Active</nav-link>
                         <nav-link link="/sales/archived" icon="cancel">Archived</nav-link>
-                    </nav-button>
+                    </side-nav-button>
 
-                    <nav-button icon="settings">
+                    <side-nav-button icon="settings">
                         Admin
                         <nav-link link="/admin" icon="settings">All Settings</nav-link>
                         <nav-link link="/admin/users" icon="people">Users</nav-link>
                         <nav-link link="/admin/roles" icon="security">Roles</nav-link>
-                    </nav-button>
+                    </side-nav-button>
                 </zone>
 
                 <zone name="footerContent">

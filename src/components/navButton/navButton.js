@@ -35,6 +35,7 @@ class NavButton extends Button {
         this.bind('preProcessNode');
         /** @type {NavButtonConfigType} */
         const conf = {
+            buttonClass: 'navButton__button',
             classNames: ['navButton', 'listItem__main'],
             menuPosition: 'bottom',
             navType: 'combo',
@@ -110,15 +111,13 @@ class NavButton extends Button {
     // #region Set
     ////////////////////
 
-    // /**
-    //  * Sets the tooltip content.
-    //  * @param {string | HTMLElement} content
-    //  */
-    // setTooltip(content) {
-    //     /** @type {Tooltip | null} */
-    //     const tooltip = this.querySelector('arpa-tooltip');
-    //     tooltip?.setContent(content);
-    // }
+    /**
+     * Sets the navigation type.
+     * @param {'combo' | 'accordion' | 'none'} type
+     */
+    setNavType(type) {
+        this._config.navType = type;
+    }
 
     /**
      * Sets the icon for the button.
@@ -126,7 +125,7 @@ class NavButton extends Button {
      */
     setIcon(icon) {
         /** @type {IconButton | null} */
-        const button = this.querySelector(`.${this.getButtonClass()}`);
+        const button = this.querySelector('.arpaButton__button');
         button?.setIcon(icon);
     }
 
@@ -159,11 +158,13 @@ class NavButton extends Button {
      * @returns {string}
      */
     renderNav() {
+        const btnClasses = this.getArrayProperty('button-classes') || [];
         return html`<nav-list
             ${attrString({
                 itemTag: 'nav-link',
                 id: `navList-${this.getId()}`,
                 class: classNames(
+                    ...btnClasses,
                     this.getNavigationClass(),
                     this.hasCombo() && 'comboBox',
                     this.getProperty('nav-class')
@@ -179,6 +180,7 @@ class NavButton extends Button {
     ////////////////////
 
     async _initializeNodes() {
+        /** @type {HTMLButtonElement | undefined | null} */
         this.button = this.querySelector('button');
         this._initializeNavigation();
         this.hasCombo() && this._initializeInputCombo();
@@ -239,7 +241,7 @@ class NavButton extends Button {
         this.accordion = new Accordion(this, {
             contentSelector: 'nav-list',
             itemSelector: '.navLink, .navButton',
-            handlerSelector: '.navButton__button',
+            handlerSelector: '.navButton > button',
             isCollapsed: true
         });
     }

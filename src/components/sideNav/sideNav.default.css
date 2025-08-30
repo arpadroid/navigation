@@ -1,5 +1,5 @@
 :root {
-    --side-nav-child-padding: 1.7rem;
+    --side-nav-child-padding: 0.8rem;
     --side-nav-width: 320px;
     --side-nav-gap: 0.25rem;
     --side-nav-button-radius: 8px;
@@ -7,19 +7,26 @@
     --side-nav-hover-bg-color: var(--lavender-light);
 
     --side-nav-link-text-color: var(--grey-600);
+    --side-nav-link-height: 2.7rem;
     --side-nav-link-text-color-hover: var(--grey-700);
 
     --side-nav-link-text-weight: 600;
     --side-nav-link-text-bold: 700;
-    --side-nav-link-padding: 0.5rem 0.75rem;
-    --side-nav-link-bg-color: transparent;
+    --side-nav-link-padding: 0.5rem 0.75rem 0.5rem 1rem;
+    --side-nav-link-bg-color: var(--grey-50);
 
     --side-nav-icon-color: var(--grey-400);
     --side-nav-icon-size: 1.5rem;
     --side-nav-icon-hover-color: var(--grey-600);
     --side-nav-icon-active-color: var(--blue-neon-dark);
 
-    --side-nav-collapsed-button-width: 3rem;
+    --side-nav-collapsed-button-width: 3.5rem;
+    --side-nav-collapsed-button-height: 2.5rem;
+
+    --side-nav-underline: none;
+    --side-nav-underline-color: var(--grey-600);
+    --side-nav-underline-height: 2px;
+    --side-nav-underline-offset: 2px;
 }
 
 .sideNav {
@@ -29,9 +36,93 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.1);
     justify-content: flex-start;
     flex: 1 1 auto;
+    overflow: auto;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /**
+    * Common styles for NAV LINKS and BUTTONS
+    */
+    .iconButton__button,
+    .listItem__link,
+    .navButton__button {
+        align-items: center;
+        outline: none;
+        position: relative;
+        background-color: var(--side-nav-link-bg-color);
+        border-radius: var(--side-nav-button-radius);
+        border: 0px solid transparent;
+        cursor: pointer;
+        display: flex;
+        gap: 0.5rem;
+        padding: var(--side-nav-link-padding);
+        min-height: var(--side-nav-link-height);
+
+        &::focus {
+            outline: none;
+            border: none;
+        }
+
+        .arpaButton__content,
+        .listItem__content {
+            color: var(--side-nav-link-text-color);
+            font-weight: var(--side-nav-link-text-weight);
+            font-family: var(--font-quicksand);
+            text-align: left;
+            cursor: pointer;
+
+            text-decoration-color: var(--side-nav-underline-color) !important;
+            text-underline-offset: var(--side-nav-underline-offset);
+            text-decoration-thickness: var(--side-nav-underline-height);
+        }
+
+        arpa-icon {
+            font-size: var(--side-nav-icon-size);
+            color: var(--side-nav-icon-color);
+        }
+
+        &:hover {
+            border: 0px solid transparent;
+            background-color: var(--side-nav-hover-bg-color);
+            .arpaButton__content,
+            .listItem__content {
+                color: var(--side-nav-link-text-color-hover);
+                font-weight: 700;
+            }
+
+            arpa-icon {
+                color: var(--side-nav-icon-hover-color);
+            }
+        }
+    }
+
+    .accordion__item--open {
+        > .navButton__button {
+            --side-nav-link-bg-color: var(--side-nav-selected-bg-color);
+            --side-nav-link-text-weight: var(--side-nav-link-text-bold);
+            --side-nav-link-text-color: var(--blue-neon-dark);
+
+            .arpaButton__content {
+                text-decoration: underline;
+            }
+
+            arpa-icon {
+                color: var(--side-nav-icon-active-color);
+            }
+
+            .icon--chevron_left {
+                transform: rotate(270deg);
+            }
+
+            &::before {
+                background-color: var(--lavender-medium);
+            }
+        }
+    }
 }
 
 .sideNav__toggleButton.sideNav__toggleButton {
@@ -50,68 +141,75 @@
     flex: 1 1 auto;
 }
 
+.sideNav__tooltip {
+    .tooltip__content.tooltip__content {
+        position: relative;
+        margin-top: -0.8rem;
+        padding-left: 0.5rem !important;
+        font-size: 0.875rem;
+        color: var(--grey-600);
+        font-weight: 500;
+    }
+}
+
 .sideNav__links {
+    position: relative;
     --listItem-hover-color: var(--blue-neon-dark);
     .navList {
         width: 100%;
-        padding-top: var(--side-nav-gap);
         display: flex;
         flex-direction: column;
     }
-    .navButton__button,
-    .navButton,
-    .navLink {
-        width: 100%;
+
+    .navButton {
+        gap: var(--side-nav-gap);
+        padding: 0;
     }
 
     .listItem__link,
     .navButton__button {
-        background-color: var(--side-nav-link-bg-color);
-        border-radius: var(--side-nav-button-radius);
-        padding: var(--side-nav-link-padding);
+        &::before {
+            content: '';
+            display: block;
 
-        .arpaButton__content,
-        .listItem__content {
-            color: var(--side-nav-link-text-color);
-            font-weight: var(--side-nav-link-text-weight);
-            font-family: var(--font-quicksand);
-        }
+            background-color: var(--grey-125);
+            position: absolute;
 
-        arpa-icon {
-            font-size: var(--side-nav-icon-size);
-            color: var(--side-nav-icon-color);
-        }
+            left: 4px;
+            width: 6px;
+            top: 4px;
+            bottom: 4px;
 
-        &:hover {
-            background-color: var(--side-nav-hover-bg-color);
-            .arpaButton__content,
-            .listItem__content {
-                color: var(--side-nav-link-text-color-hover);
-                font-family: var(--font-quicksand);
-            }
-
-            arpa-icon {
-                color: var(--side-nav-icon-hover-color);
-            }
+            right: auto;
+            border-radius: 10px 0px 0px 10px;
         }
     }
 
-    .accordion__item--open {
-        > .navButton__arpaButton .navButton__button {
-            --side-nav-link-bg-color: var(--side-nav-selected-bg-color);
-            --side-nav-link-text-weight: var(--side-nav-link-text-bold);
-            --side-nav-link-text-color: var(--blue-neon-dark);
-
-            arpa-icon {
-                color: var(--side-nav-icon-active-color);
-            }
+    .listItem__link {
+        &::before {
+            right: 4px;
+            left: auto;
+            border-radius: 0px 10px 10px 0px;
         }
+        arpa-icon {
+            margin-left: 2px;
+        }
+    }
+
+    .navButton__button,
+    .navButton,
+    .navLink {
+        width: 100%;
     }
 }
 
 .sideNav:not(.sideNav--collapsed) {
     .sideNav__links .navList .listItem__link {
         padding-left: var(--side-nav-child-padding);
+    }
+
+    .sideNav__tooltip {
+        display: none !important;
     }
 }
 
@@ -122,10 +220,24 @@
     flex-direction: column;
 }
 
+/**
+* Collapsed
+*/
+
 .sideNav--collapsed {
     --side-nav-child-padding: 0;
     --side-nav-width: fit-content;
+    --side-nav-icon-size: 1.3rem;
+    --side-nav-link-padding: 0.75rem;
+
+    padding: 0;
     gap: var(--side-nav-gap);
+
+    arpa-icon {
+        --icon-size: var(--side-nav-icon-size);
+        margin: 0 auto;
+        display: block;
+    }
 
     .sideNav__titleContainer {
         padding: 0;
@@ -148,6 +260,7 @@
     .sideNav__title,
     .arpaButton__icon + .arpaButton__content,
     .arpaButton__icon + .arpaIcon__content,
+    .icon--chevron_left,
     nav-link .listItem__contentWrapper {
         display: none;
     }
@@ -163,7 +276,7 @@
 
     .sideNav__links {
         display: flex;
-        flex: 1 1 auto;
+        flex: 0 1 auto;
         flex-direction: column;
         align-items: center;
 
@@ -176,7 +289,7 @@
         a,
         button {
             width: var(--side-nav-collapsed-button-width);
-            height: var(--side-nav-collapsed-button-width);
+            height: var(--side-nav-collapsed-button-height);
         }
 
         .navList {

@@ -1,9 +1,10 @@
 /**
  * @typedef {import('./sideNav.types.js').SideNavConfigType} SideNavConfigType
+ * @typedef {import('../navButton/navButton.js').default} NavButton
  */
 import { observerMixin, dummySignal, dummyListener, defineCustomElement } from '@arpadroid/tools';
 //import NavList from '../navList/navList.js';
-import { Accordion, ArpaElement } from '@arpadroid/ui';
+import { Accordion, ArpaElement, Tooltip } from '@arpadroid/ui';
 
 const html = String.raw;
 
@@ -17,6 +18,7 @@ class SideNav extends ArpaElement {
      */
     constructor(config = {}) {
         super(config);
+        this.bind('_onTooltipTargetUpdate');
         this.signal = dummySignal;
         this.on = dummyListener;
         observerMixin(this);
@@ -35,7 +37,7 @@ class SideNav extends ArpaElement {
                 config: {
                     contentSelector: '.navList',
                     itemSelector: '.navLink, .navButton',
-                    handlerSelector: '.navButton__button',
+                    handlerSelector: '.navButton > button',
                     isCollapsed: true
                 }
             },
@@ -59,6 +61,10 @@ class SideNav extends ArpaElement {
         return super.getDefaultConfig(conf);
     }
 
+    _getTemplate() {
+        return html`{header}{links}{footer}`;
+    }
+
     /**
      * Toggles the navigation menu.
      * @param {Event} _event
@@ -79,6 +85,35 @@ class SideNav extends ArpaElement {
 
     async _onComplete() {
         this._initializeAccordion();
+        this._initializeTooltip();
+    }
+
+    _initializeTooltip() {
+        const linksNode = this.getChild('links');
+        this.tooltip = new Tooltip({
+            text: 'Thumbnails tooltip',
+            className: 'sideNav__tooltip',
+            handler: linksNode,
+            position: 'cursor',
+            hasCursorPosition: true,
+            cursorTooltipPosition: 'right',
+            cursorPositionAxis: 'y',
+            onMouseTargetUpdate: this._onTooltipTargetUpdate
+        });
+        this.appendChild(this.tooltip);
+    }
+
+    /**
+     * Updates the tooltip position based on the target element.
+     * @param {HTMLElement} target
+     */
+    _onTooltipTargetUpdate(target) {
+        const tagName = target?.tagName.toLowerCase();
+        const tags = ['button', 'a'];
+        if (!tags.includes(tagName || '')) return;
+        const content =
+            target.querySelector('.arpaButton__content, .listItem__content')?.textContent?.trim() || ' ';
+        this.tooltip?.setContent(content);
     }
 
     async _initializeAccordion() {
@@ -87,12 +122,8 @@ class SideNav extends ArpaElement {
             const links = this.templateNodes.links;
             setTimeout(() => {
                 this.accordion = new Accordion(links, this._config.accordion?.config);
-            }, 0);
+            });
         }
-    }
-
-    _getTemplate() {
-        return html`{header}{links}{footer}`;
     }
 }
 
