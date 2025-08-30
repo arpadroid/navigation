@@ -10,8 +10,7 @@ const NavButtonStory = {
     tags: [],
     getArgs: () => {
         return {
-            id: 'test-menu',
-            buttonLabel: 'Menu',
+            id: 'test-menu'
         };
     },
     getArgTypes: (category = 'Nav List Props') => {
@@ -27,7 +26,6 @@ const NavButtonStory = {
                     <nav-link link="/home" icon="home">Home</nav-link>
                     <nav-link link="/settings" icon="settings">Settings</nav-link>
                     <nav-link link="/user" icon="smart_toy">User</nav-link>
-                    <!-- some content -->
                 </nav-button>
             </div>
         `;

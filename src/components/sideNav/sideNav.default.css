@@ -147,6 +147,7 @@
     .sideNav__headerContent,
     .sideNav__title,
     .arpaButton__icon + .arpaButton__content,
+    .arpaButton__icon + .arpaIcon__content,
     nav-link .listItem__contentWrapper {
         display: none;
     }

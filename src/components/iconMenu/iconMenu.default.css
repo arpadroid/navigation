@@ -1,3 +1,7 @@
+.iconMenu__content:empty {
+    display: none;
+}
+
 icon-menu {
     display: flex;
     margin-left: auto;
