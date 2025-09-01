@@ -4,7 +4,7 @@
  */
 import { observerMixin, dummySignal, dummyListener, defineCustomElement } from '@arpadroid/tools';
 //import NavList from '../navList/navList.js';
-import { Accordion, ArpaElement, Tooltip } from '@arpadroid/ui';
+import { Accordion, ArpaElement, IconButton, Tooltip } from '@arpadroid/ui';
 
 const html = String.raw;
 
@@ -31,7 +31,7 @@ class SideNav extends ArpaElement {
         /** @type {SideNavConfigType} */
         const conf = {
             className: 'sideNav',
-            collapsedClass: 'sideNav--collapsed',
+            collapsedClass: 'sideNav--collapsing',
             accordion: {
                 enabled: true,
                 config: {
@@ -47,7 +47,11 @@ class SideNav extends ArpaElement {
                 titleContainer: { content: '{title}{toggleButton}' },
                 toggleButton: {
                     tag: 'icon-button',
-                    attr: { icon: 'expand_more', onClick: ':toggleNav' },
+                    attr: {
+                        icon: 'expand_more',
+                        onClick: ':toggleNav',
+                        tooltip: this.getToggleTooltip()
+                    },
                     content: 'expand_more'
                 },
                 title: { tag: 'h2' },
@@ -71,12 +75,27 @@ class SideNav extends ArpaElement {
      */
     toggleNav(_event) {
         const className = this.getProperty('collapsed-class');
+
+        const toggleButton = /** @type {IconButton | undefined} */ (this.getChild('toggleButton'));
+
         if (!className) return;
         if (this.classList.contains(className)) {
             this.classList.remove(className);
+            this.classList.add('sideNav--expanding');
+            setTimeout(() => this.classList.remove('sideNav--expanding'), 1000);
         } else {
             this.classList.add(className);
         }
+        const tooltipText = this.getToggleTooltip();
+        toggleButton?.setTooltip(tooltipText);
+        toggleButton?.setAttribute('aria-label', tooltipText);
+        toggleButton?.setAttribute('label-text', tooltipText);
+    }
+
+    getToggleTooltip() {
+        const className = this.getProperty('collapsed-class');
+        if (!className) return 'Collapse';
+        return this.classList.contains(className) ? 'Expand' : 'Collapse';
     }
 
     hasAccordion() {

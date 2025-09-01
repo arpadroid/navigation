@@ -35,7 +35,7 @@ class NavButton extends Button {
         this.bind('preProcessNode');
         /** @type {NavButtonConfigType} */
         const conf = {
-            buttonClass: 'navButton__button',
+            buttonClass: 'navButton__button arpaButton__button',
             classNames: ['navButton', 'listItem__main'],
             menuPosition: 'bottom',
             navType: 'combo',
