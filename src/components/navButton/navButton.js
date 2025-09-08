@@ -47,7 +47,7 @@ class NavButton extends Button {
             tooltip: '',
             navClass: '',
             templateChildren: {
-                nav: { canRender: true, content: 'blah' }
+                nav: { canRender: true }
             }
         };
         return mergeObjects(super.getDefaultConfig(), conf);
@@ -183,7 +183,6 @@ class NavButton extends Button {
         /** @type {HTMLButtonElement | undefined | null} */
         this.button = this.querySelector('button');
         this._initializeNavigation();
-        this.hasCombo() && this._initializeInputCombo();
         await super._initializeNodes();
         this.hasAccordion() && this._initializeAccordion();
         this.promise.then(() => {
@@ -194,6 +193,7 @@ class NavButton extends Button {
                 // @ts-ignore
                 this.navigation?.addItemNodes(remaining);
             }
+            this.hasCombo() && this._initializeInputCombo();
         });
         return true;
     }

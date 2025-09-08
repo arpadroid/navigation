@@ -1,0 +1,16 @@
+.navMenu {
+    .arpaList__items.arpaList__items.arpaList__items {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: left;
+    }
+
+    .arpaButton {
+        flex-grow: 0;
+    }
+    .arpaButton__button {
+        width: 100%;
+    }
+}
