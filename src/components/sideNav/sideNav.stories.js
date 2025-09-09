@@ -30,7 +30,7 @@ const SideNavStory = {
                     <p>Nature is fascinating, <strong>and so is technology!</strong></p>
                 </zone>
                 <zone name="links">
-                    <template type="nav-link" icon-right="link"></template>
+                    <template template-type="nav-link" icon-right="link"></template>
                     <nav-link link="/dashboard" icon="dashboard">Dashboard</nav-link>
                     <side-nav-button icon="art_track">
                         Inventory

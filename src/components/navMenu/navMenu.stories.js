@@ -2,8 +2,7 @@
  * @typedef {import('./navList.js').default} NavList
  */
 import { attrString } from '@arpadroid/tools';
-// import { expect, fn, waitFor, within } from '@storybook/test';
-// import { waitFor, expect, within } from '@storybook/test';
+import { expect, waitFor, within } from '@storybook/test';
 
 const html = String.raw;
 const NavMenuStory = {
@@ -16,9 +15,15 @@ const NavMenuStory = {
         id: 'test-menu',
         title: 'Nav Menu'
     },
+    preprocessButton: button => {
+        console.log('preprocess', button);
+    },
     render: args => {
         return html`
-            <nav-menu ${attrString(args)}>
+            <nav-menu ${attrString(args)} preprocess-button=":preprocessButton">
+                <template template-type="nav-button" style="border: 1px solid red;"></template>
+                <template template-type="list-item" template-mode="append">
+                </template>
                 <nav-button icon="People">
                     About Us
                     <nav-link link="/about" icon="info">About</nav-link>
@@ -26,7 +31,7 @@ const NavMenuStory = {
                     <nav-link link="/careers" icon="work">Careers</nav-link>
                 </nav-button>
 
-                <nav-button icon="shopping_bag">
+                <!-- <nav-button icon="shopping_bag">
                     Catalogue
                     <nav-link link="/shop" icon="store">Shop</nav-link>
                     <nav-link link="/collections" icon="view_module">Collections</nav-link>
@@ -47,8 +52,26 @@ const NavMenuStory = {
                     <nav-link link="/settings" icon="settings">Settings</nav-link>
                     <nav-link link="/logout" icon="logout">Logout</nav-link>
                 </nav-button>
+            </nav-menu> -->
             </nav-menu>
         `;
+    },
+    playSetup: async canvasElement => {
+        const canvas = within(canvasElement);
+        await waitFor(() => expect(canvasElement.querySelector('nav-menu')).toBeInTheDocument());
+        await customElements.whenDefined('nav-menu');
+        const navMenu = canvasElement.querySelector('nav-menu');
+        await navMenu?.promise;
+        return { canvas, navMenu, resource: navMenu?.listResource };
+    },
+    play: async ({ canvasElement, step }) => {
+        const { canvas, navMenu, resource } = await NavMenuStory.playSetup(canvasElement);
+        await step('Renders the menu and items', async () => {
+            expect(canvas.getByText('Nav Menu')).toBeInTheDocument();
+            expect(navMenu).toBeInTheDocument();
+            const items = resource?.getItems();
+            await waitFor(() => expect(items && items.length).toBeGreaterThan(0));
+        });
     }
 };
 

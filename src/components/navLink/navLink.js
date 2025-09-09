@@ -29,7 +29,7 @@ class NavLink extends ListItem {
             link: '',
             role: '',
             className: 'navLink',
-            listSelector: 'nav-list',
+            listSelector: 'nav-menu, nav-list',
             selected: false,
             handlerAttributes: {}
         };
@@ -42,6 +42,18 @@ class NavLink extends ListItem {
     }
 
     // #endregion
+
+    register() {
+        this.grabList();
+        const id = this.getId();
+        const payload = { id, ...this.getPayload() };
+        this.listResource?.registerItem(payload, this);
+    }
+
+    getId() {
+        const link = this.getLink();
+        return link ? 'nav-link-' + mechanize(link) : undefined;
+    }
 
     ////////////////////////////////
     // #region Get
@@ -77,6 +89,7 @@ class NavLink extends ListItem {
     }
 
     getLink() {
+        if (this.link) return this.link;
         const param = this.getParamName();
         const value = this.getParamValue();
         const clear = this.getParamClear();
@@ -86,8 +99,8 @@ class NavLink extends ListItem {
             clear?.forEach(param => (params[param] = undefined));
             return editURL(location.href, params);
         }
-        const link = this.getProperty('link');
-        return link;
+        this.link = this.getProperty('link');
+        return this.link;
     }
 
     getAriaCurrent() {
