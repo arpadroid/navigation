@@ -1,12 +1,12 @@
 /**
  * @typedef {import('./navLink.types').NavLinkConfigType} NavLinkConfigType
  * @typedef {import('@arpadroid/services').Router} Router
+ * @typedef {import('../navList/navList.js').default} NavList
  */
 import { renderNode, editURL, mergeObjects, attr, sanitizeURL, mechanize } from '@arpadroid/tools';
 import { getURLParam, defineCustomElement } from '@arpadroid/tools';
 import { ListItem } from '@arpadroid/lists';
 import { getService } from '@arpadroid/context';
-import NavList from '../navList/navList.js';
 
 const html = String.raw;
 class NavLink extends ListItem {
@@ -88,8 +88,8 @@ class NavLink extends ListItem {
         return (Array.isArray(arr) && arr) || [];
     }
 
-    getLink() {
-        if (this.link) return this.link;
+    getLink(memoized = true) {
+        if (memoized && this.link) return this.link;
         const param = this.getParamName();
         const value = this.getParamValue();
         const clear = this.getParamClear();
@@ -219,10 +219,10 @@ class NavLink extends ListItem {
     }
 
     _handleInternalLinks(linkNodes = this.linkNodes) {
-        if (!this.linkNode) return;
-        if (linkNodes?.length) {
-            const id = 'navLinkList-' + mechanize(linkNodes.map(node => node.innerText).join('-'));
-            const navList = new NavList({ id });
+        if (!this.linkNode || !linkNodes?.length) return;
+        const id = 'nav--' + this.getId();
+        const navList = renderNode(html`<nav-list class="navLink__navList" id="${id}"></nav-list>`);
+        if (navList) {
             this.appendChild(navList);
             navList.append(...linkNodes);
         }
@@ -299,7 +299,7 @@ class NavLink extends ListItem {
      */
     _onHandleRouter(event) {
         event.preventDefault();
-        this.router?.go(this.getLink());
+        this.router?.go(this.getLink(false));
     }
 
     _onDestroy() {

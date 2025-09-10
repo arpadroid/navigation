@@ -1,10 +1,10 @@
 /**
  * @typedef {import('./sideNav.types.js').SideNavConfigType} SideNavConfigType
  * @typedef {import('../navButton/navButton.js').default} NavButton
+ * @typedef {import('@arpadroid/ui').IconButton} IconButton
  */
 import { observerMixin, dummySignal, dummyListener, defineCustomElement } from '@arpadroid/tools';
-//import NavList from '../navList/navList.js';
-import { Accordion, ArpaElement, IconButton, Tooltip } from '@arpadroid/ui';
+import { Accordion, ArpaElement, Tooltip } from '@arpadroid/ui';
 
 const html = String.raw;
 
