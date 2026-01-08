@@ -4,7 +4,8 @@
  * @typedef {import('@arpadroid/ui').IconButton} IconButton
  */
 import { observerMixin, dummySignal, dummyListener, defineCustomElement } from '@arpadroid/tools';
-import { Accordion, ArpaElement, Tooltip } from '@arpadroid/ui';
+import { ArpaElement, Tooltip } from '@arpadroid/ui';
+import Accordion from '../accordion/accordion.js';
 
 const html = String.raw;
 
