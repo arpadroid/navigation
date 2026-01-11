@@ -10,7 +10,8 @@
  * @typedef {import('../navLink/navLink.js').default} NavLink
  */
 import { mergeObjects, attrString, classNames, defineCustomElement } from '@arpadroid/tools';
-import { Accordion, Button, InputCombo } from '@arpadroid/ui';
+import { Button, InputCombo } from '@arpadroid/ui';
+import Accordion from '../accordion/accordion.js';
 
 const html = String.raw;
 class NavButton extends Button {
