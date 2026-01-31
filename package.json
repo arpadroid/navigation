@@ -11,8 +11,7 @@
         "dev": "arpadroid-build --watch --storybook=6002",
         "clean:build": "npm run clean && npm install",
         "clean": "rm -rf ./dist ./node_modules package-lock.json",
-        "test": "arpadroid-test --storybook --jest --port=6002",
-        "test:ci": "npm run test -- --ci"
+        "test": "arpadroid-test --storybook --jest --port=6002"
     },
     "repository": {
         "type": "git",
