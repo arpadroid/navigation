@@ -1,11 +1,17 @@
 /**
  * @typedef {import('./navList.js').default} NavList
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
  */
+
+import { expect, fn, waitFor, within } from 'storybook/test';
 import { attrString, editURL } from '@arpadroid/tools';
-import { expect, fn, waitFor, within } from '@storybook/test';
-// import { waitFor, expect, within } from '@storybook/test';
 
 const html = String.raw;
+
+/** @type {Meta} */
 const NavListStory = {
     title: 'Navigation/Nav List',
     tags: [],
@@ -30,7 +36,7 @@ const NavListStory = {
             }
         };
     },
-    render: args => {
+    render: (/** @type {Args} */ args) => {
         delete args.text;
         const url = window.parent.location.href;
         return html`
@@ -47,6 +53,7 @@ const NavListStory = {
     }
 };
 
+/** @type {StoryObj} */
 export const Default = {
     name: 'Vertical',
     parameters: {},
@@ -54,6 +61,7 @@ export const Default = {
     args: { ...NavListStory.getArgs(), id: 'nav-list', variant: 'vertical' }
 };
 
+/** @type {StoryObj} */
 export const Horizontal = {
     name: 'Horizontal',
     parameters: {},
@@ -65,6 +73,7 @@ export const Horizontal = {
     }
 };
 
+/** @type {StoryObj} */
 export const HorizontalWithZoneDivider = {
     parameters: {},
     argTypes: NavListStory.getArgTypes(),
@@ -72,7 +81,7 @@ export const HorizontalWithZoneDivider = {
         ...NavListStory.getArgs(),
         variant: 'horizontal'
     },
-    render: args => {
+    render: (/** @type {Args} */ args) => {
         delete args.text;
         const url = window.parent.location.href;
         const homeURL = editURL(url, { section: 'home' }, false);
@@ -91,13 +100,12 @@ export const HorizontalWithZoneDivider = {
     }
 };
 
+/** @type {StoryObj} */
 export const Test = {
-    args: Default.args,
-    parameters: {},
     args: {
         ...Default.args
     },
-    render: args => {
+    render: (/** @type {Args} */ args) => {
         delete args.text;
         const url = editURL(window.parent.location.href, { section: 'test' }, false);
         return html`
@@ -114,7 +122,7 @@ export const Test = {
     /**
      * Create test links for list.
      * @param {NavList} list
-     * @returns {void}
+     * @returns { { logoutAction: () => void} }
      */
     createTestLinks: list => {
         const url = window.parent.location.href;
@@ -132,20 +140,19 @@ export const Test = {
             },
             {
                 content: 'Logout',
-                label: 'logout',
                 icon: 'logout',
                 action: logoutAction
             }
         ]);
         return { logoutAction };
     },
-    playSetup: async canvasElement => {
+    playSetup: async (/** @type {HTMLElement} */ canvasElement) => {
         const canvas = within(canvasElement);
         await customElements.whenDefined('nav-list');
         const listNode = canvasElement.querySelector('nav-list');
         return { canvas, listNode };
     },
-    play: async ({ canvasElement, step }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
         const setup = await Test.playSetup(canvasElement);
         const { canvas, listNode } = setup;
         await step('Renders the list', () => {
@@ -170,4 +177,5 @@ export const Test = {
     }
 };
 
+/** @type {Meta} */
 export default NavListStory;

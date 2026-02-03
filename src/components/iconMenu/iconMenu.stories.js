@@ -1,10 +1,17 @@
 /**
- * @typedef {import('./navList.js').default} NavList
+ * @typedef {import('../navList/navList').default} NavList
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
  */
+
+import { expect, fireEvent, waitFor, within } from 'storybook/test';
 import { attrString } from '@arpadroid/tools';
-import { expect, fireEvent, waitFor, within } from '@storybook/test';
 
 const html = String.raw;
+
+/** @type {Meta} */
 const IconMenuStory = {
     title: 'Navigation/Icon Menu',
     tags: [],
@@ -18,7 +25,7 @@ const IconMenuStory = {
             id: { control: { type: 'text' }, table: { category } }
         };
     },
-    render: args => {
+    render: (/** @type {Args} */ args) => {
         delete args.text;
         return html`
             <div class="container" style="display:flex; width: 100%;">
@@ -33,6 +40,7 @@ const IconMenuStory = {
     }
 };
 
+/** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: {},
@@ -40,9 +48,8 @@ export const Default = {
     args: { ...IconMenuStory.getArgs() }
 };
 
+/** @type {StoryObj} */
 export const Test = {
-    args: Default.args,
-    parameters: {},
     args: {
         ...Default.args
     },
@@ -51,14 +58,14 @@ export const Test = {
         usage: { disable: true },
         options: { selectedPanel: 'storybook/interactions/panel' }
     },
-    playSetup: async canvasElement => {
+    playSetup: async (/** @type {HTMLElement} */ canvasElement) => {
         const canvas = within(canvasElement);
         await waitFor(() => expect(canvasElement.querySelector('nav-list')).toBeInTheDocument());
         const menuNode = canvasElement.querySelector('icon-menu');
         const navigationNode = canvasElement.querySelector('nav-list');
         return { canvas, menuNode, navigationNode };
     },
-    play: async ({ canvasElement, step }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
         const setup = await Test.playSetup(canvasElement);
         const { canvas, menuNode, navigationNode } = setup;
         await step('Renders the menu', async () => {
@@ -91,4 +98,5 @@ export const Test = {
     }
 };
 
+/** @type {Meta} */
 export default IconMenuStory;

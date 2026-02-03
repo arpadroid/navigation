@@ -1,10 +1,17 @@
 /**
- * @typedef {import('./navList.js').default} NavList
+ * @typedef {import('../navList/navList.js').default} NavList
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
  */
+
+import { expect, waitFor, within } from 'storybook/test';
 import { attrString } from '@arpadroid/tools';
-import { expect, waitFor, within } from '@storybook/test';
 
 const html = String.raw;
+
+/** @type {Meta} */
 const SideNavStory = {
     title: 'Navigation/Side Nav',
     tags: [],
@@ -21,7 +28,7 @@ const SideNavStory = {
             id: { control: { type: 'text' }, table: { category } }
         };
     },
-    render: args => {
+    render: (/** @type {Args} */ args) => {
         delete args.text;
         return html`
             <side-nav ${attrString(args)}>
@@ -96,6 +103,7 @@ const SideNavStory = {
     }
 };
 
+/** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: {
@@ -105,9 +113,8 @@ export const Default = {
     args: { ...SideNavStory.getArgs() }
 };
 
+/** @type {StoryObj} */
 export const Test = {
-    args: Default.args,
-    parameters: {},
     args: {
         ...Default.args
     },
@@ -116,7 +123,7 @@ export const Test = {
         usage: { disable: true },
         options: { selectedPanel: 'storybook/interactions/panel' }
     },
-    playSetup: async canvasElement => {
+    playSetup: async (/** @type {HTMLElement} */ canvasElement) => {
         const canvas = within(canvasElement);
         await waitFor(() => expect(canvasElement.querySelector('side-nav')).toBeInTheDocument());
         const navNode = canvasElement.querySelector('side-nav');

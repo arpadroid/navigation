@@ -9,7 +9,6 @@
         "build": "arpadroid-build --minify",
         "build:slim": "arpadroid-build --slim",
         "dev": "arpadroid-build --watch --storybook=6002",
-        "clean:build": "npm run clean && npm install",
         "clean": "rm -rf ./dist ./node_modules package-lock.json",
         "test": "arpadroid-test --storybook --jest --port=6002"
     },
@@ -36,6 +35,7 @@
         "@arpadroid/context": "file:../context",
         "@arpadroid/lists": "file:../lists",
         "@arpadroid/module": "file:../module",
+        "@arpadroid/services": "file:../services",
         "@arpadroid/tools": "file:../tools",
         "@arpadroid/ui": "file:../ui"
     }
