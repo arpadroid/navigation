@@ -141,7 +141,7 @@ class SideNav extends ArpaElement {
         if (!this.accordion) {
             const links = this.templateNodes.links;
             setTimeout(() => {
-                this.accordion = new Accordion(links, this._config.accordion?.config);
+                links && (this.accordion = new Accordion(links, this._config.accordion?.config));
             });
         }
     }
