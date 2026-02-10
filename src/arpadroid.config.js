@@ -3,6 +3,7 @@ const config = {
     deps: ['lists'],
     buildTypes: true,
     buildType: 'uiComponent',
+    storybook_port: 6002,
     logo: `           ┓    • ┓        •     •    
   ┏┓┏┓┏┓┏┓┏┫┏┓┏┓┓┏┫  ┏┓┏┓┓┏┓┏┓┏┓╋┓┏┓┏┓
   ┗┻┛ ┣┛┗┻┗┻┛ ┗┛┗┗┻  ┛┗┗┻┗┛┗┗┫┗┻┗┗┗┛┛┗
