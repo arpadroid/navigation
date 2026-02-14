@@ -6,7 +6,7 @@
  * @typedef {import('@storybook/web-components-vite').Args} Args
  */
 
-import { expect, fireEvent, waitFor, within } from 'storybook/test';
+import { expect, fireEvent, waitFor, within, userEvent } from 'storybook/test';
 import { attrString } from '@arpadroid/tools';
 
 const html = String.raw;
@@ -90,7 +90,7 @@ export const Test = {
 
         await step('Closes the menu', async () => {
             await new Promise(resolve => setTimeout(resolve, 100));
-            await fireEvent.click(canvas.getByRole('button'));
+            await userEvent.click(canvas.getByRole('button'));
             await waitFor(() => {
                 expect(navigationNode).not.toBeVisible();
             });
