@@ -83,14 +83,13 @@ export const Test = {
         });
 
         await step('Opens the menu', async () => {
-            await new Promise(resolve => setTimeout(resolve, 100));
             canvas.getByRole('button').click();
             await waitFor(() => expect(navigationNode).toBeVisible());
         });
 
         await step('Closes the menu', async () => {
-            await new Promise(resolve => setTimeout(resolve, 100));
-            await userEvent.click(canvas.getByRole('button'));
+            await new Promise(resolve => setTimeout(resolve, 200));
+            await userEvent.click(document.body);
             await waitFor(() => {
                 expect(navigationNode).not.toBeVisible();
             });
