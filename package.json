@@ -2,7 +2,12 @@
     "name": "@arpadroid/navigation",
     "version": "1.0.0",
     "description": "A library of web components for building navigation interfaces.",
-    "exports": "./dist/arpadroid-navigation.js",
+    "exports": {
+        ".": {
+            "types": "./dist/@types/types.compiled.d.ts",
+            "import": "./dist/arpadroid-navigation.js"
+        }
+    },
     "types": "./dist/@types/types.compiled.d.ts",
     "type": "module",
     "scripts": {
@@ -10,7 +15,9 @@
         "build:slim": "arpadroid-build --slim",
         "dev": "arpadroid-build --watch --storybook",
         "clean": "arpadroid-clean",
-        "test": "arpadroid-test --storybook --jest"
+        "test": "arpadroid-test --storybook --jest",
+        "check:types": "arpadroid-check-types",
+        "initialize": "arpadroid-initialize"
     },
     "repository": {
         "type": "git",

@@ -4,8 +4,20 @@
         "baseUrl": ".",
         "rootDir": "./src",
         "outDir": "./.tmp/.types",
-        "skipLibCheck": true
+        "moduleResolution": "bundler",
+        "skipLibCheck": true,
+        "skipDefaultLibCheck": true,
+        "preserveSymlinks": true
     },
     "include": ["src/**/*"],
-    "exclude": ["node_modules"]
+    "exclude": [
+        "node_modules",
+        "node_modules/**",
+        "dist",
+        "dist/**",
+        ".tmp",
+        ".tmp/**",
+        "**/*.stories.js",
+        "**/*.stories.util.js"
+    ]
 }
