@@ -1,5 +1,5 @@
 import { ArpaElementConfigType } from '@arpadroid/ui';
-import { AccordionConfigType } from '@arpadroid/ui';
+import { AccordionConfigType } from '../accordion/accordion.types';
 
 export type SideNavConfigType = ArpaElementConfigType & {
     collapsedClass?: string;

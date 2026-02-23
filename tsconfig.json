@@ -5,8 +5,8 @@
         "rootDir": "./src",
         "outDir": "./.tmp/.types",
         "moduleResolution": "bundler",
-        "skipLibCheck": true,
-        "skipDefaultLibCheck": true,
+        "skipLibCheck": false,
+        "skipDefaultLibCheck": false,
         "preserveSymlinks": true
     },
     "include": ["src/**/*"],
