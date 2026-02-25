@@ -1,13 +1,11 @@
 /**
- * @typedef {import('../navList/navList.js').default} NavList
  * @typedef {import('@storybook/web-components-vite').Meta} Meta
  * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
  * @typedef {import('@storybook/web-components-vite').Args} Args
  */
 
-import { expect, waitFor, within } from 'storybook/test';
 import { attrString } from '@arpadroid/tools';
+import { getArgs, getArgTypes, playSetup } from './sideNav.stories.util.js';
 
 const html = String.raw;
 
@@ -17,16 +15,6 @@ const SideNavStory = {
     tags: [],
     parameters: {
         layout: 'flexColumn'
-    },
-    getArgs: () => {
-        return {
-            id: 'test-menu'
-        };
-    },
-    getArgTypes: (category = 'Nav List Props') => {
-        return {
-            id: { control: { type: 'text' }, table: { category } }
-        };
     },
     render: (/** @type {Args} */ args) => {
         delete args.text;
@@ -109,8 +97,8 @@ export const Default = {
     parameters: {
         layout: 'flexColumn'
     },
-    argTypes: SideNavStory.getArgTypes(),
-    args: { ...SideNavStory.getArgs() }
+    argTypes: getArgTypes(),
+    args: { ...getArgs() }
 };
 
 /** @type {StoryObj} */
@@ -122,16 +110,10 @@ export const Test = {
         controls: { disable: true },
         usage: { disable: true },
         options: { selectedPanel: 'storybook/interactions/panel' }
-    },
-    playSetup: async (/** @type {HTMLElement} */ canvasElement) => {
-        const canvas = within(canvasElement);
-        await waitFor(() => expect(canvasElement.querySelector('side-nav')).toBeInTheDocument());
-        const navNode = canvasElement.querySelector('side-nav');
-        const navigationNode = canvasElement.querySelector('side-nav');
-        return { canvas, navNode, navigationNode };
     }
+    // playSetup,
     // play: async ({ canvasElement, step }) => {
-    //     const setup = await Test.playSetup(canvasElement);
+    //     const setup = await playSetup(canvasElement);
     //     // const { canvas, menuNode, navigationNode } = setup;
     //     await step('Renders the menu', async () => {
     //         // await navNode.load;

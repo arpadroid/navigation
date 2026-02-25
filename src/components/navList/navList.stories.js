@@ -1,13 +1,12 @@
 /**
- * @typedef {import('./navList.js').default} NavList
  * @typedef {import('@storybook/web-components-vite').Meta} Meta
  * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
  * @typedef {import('@storybook/web-components-vite').Args} Args
  */
 
-import { expect, fn, waitFor, within } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { attrString, editURL } from '@arpadroid/tools';
+import { getArgs, getArgTypes, playSetup, createTestLinks } from './navList.stories.util.js';
 
 const html = String.raw;
 
@@ -18,25 +17,7 @@ const NavListStory = {
     parameters: {
         layout: 'padded'
     },
-    getArgs: () => {
-        return {
-            id: 'nav-list',
-            divider: '',
-            variant: ''
-        };
-    },
-    getArgTypes: (category = 'Nav List Props') => {
-        return {
-            id: { control: { type: 'text' }, table: { category } },
-            divider: { control: { type: 'text' }, table: { category } },
-            variant: {
-                options: ['horizontal', 'vertical', ''],
-                control: { type: 'select' },
-                table: { category }
-            }
-        };
-    },
-    render: (/** @type {Args} */ args) => {
+    render: args => {
         delete args.text;
         const url = window.parent.location.href;
         return html`
@@ -57,17 +38,17 @@ const NavListStory = {
 export const Default = {
     name: 'Vertical',
     parameters: {},
-    argTypes: NavListStory.getArgTypes(),
-    args: { ...NavListStory.getArgs(), id: 'nav-list', variant: 'vertical' }
+    argTypes: getArgTypes(),
+    args: { ...getArgs(), id: 'nav-list', variant: 'vertical' }
 };
 
 /** @type {StoryObj} */
 export const Horizontal = {
     name: 'Horizontal',
     parameters: {},
-    argTypes: NavListStory.getArgTypes(),
+    argTypes: getArgTypes(),
     args: {
-        ...NavListStory.getArgs(),
+        ...getArgs(),
         variant: 'horizontal',
         divider: '|'
     }
@@ -76,9 +57,9 @@ export const Horizontal = {
 /** @type {StoryObj} */
 export const HorizontalWithZoneDivider = {
     parameters: {},
-    argTypes: NavListStory.getArgTypes(),
+    argTypes: getArgTypes(),
     args: {
-        ...NavListStory.getArgs(),
+        ...getArgs(),
         variant: 'horizontal'
     },
     render: (/** @type {Args} */ args) => {
@@ -119,49 +100,16 @@ export const Test = {
         usage: { disable: true },
         options: { selectedPanel: 'storybook/interactions/panel' }
     },
-    /**
-     * Create test links for list.
-     * @param {NavList} list
-     * @returns { { logoutAction: () => void} }
-     */
-    createTestLinks: list => {
-        const url = window.parent.location.href;
-        const logoutAction = fn();
-        list.setItems([
-            {
-                content: 'Settings',
-                icon: 'settings',
-                link: editURL(url, { section: 'settings' })
-            },
-            {
-                content: 'User',
-                icon: 'smart_toy',
-                link: editURL(url, { section: 'user' })
-            },
-            {
-                content: 'Logout',
-                icon: 'logout',
-                action: logoutAction
-            }
-        ]);
-        return { logoutAction };
-    },
-    playSetup: async (/** @type {HTMLElement} */ canvasElement) => {
-        const canvas = within(canvasElement);
-        await customElements.whenDefined('nav-list');
-        const listNode = canvasElement.querySelector('nav-list');
-        return { canvas, listNode };
-    },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const setup = await Test.playSetup(canvasElement);
-        const { canvas, listNode } = setup;
+    play: async ({ canvasElement, step }) => {
+        const { canvas, listNode } = await playSetup(canvasElement);
         await step('Renders the list', () => {
             expect(listNode).toBeTruthy();
             expect(canvas.getByText('Test Link')).toBeInTheDocument();
         });
 
         await step('Adds new links to the list and verifies logout action callback', async () => {
-            const { logoutAction } = Test.createTestLinks(listNode);
+            if (!listNode) return;
+            const { logoutAction } = createTestLinks(listNode);
             await waitFor(() => {
                 expect(canvas.getByText('Settings')).toBeInTheDocument();
                 expect(canvas.getByText('User')).toBeInTheDocument();

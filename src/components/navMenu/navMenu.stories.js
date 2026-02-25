@@ -1,14 +1,12 @@
 /**
- * @typedef {import('../navList/navList').default} NavList
  * @typedef {import('@storybook/web-components-vite').Meta} Meta
  * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
  * @typedef {import('@storybook/web-components-vite').Args} Args
- * @typedef {import('./navMenu.js').default} NavMenu
  */
 
-import { expect, waitFor, within } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { attrString } from '@arpadroid/tools';
+import { playSetup } from './navMenu.stories.util.js';
 
 const html = String.raw;
 
@@ -23,9 +21,9 @@ const NavMenuStory = {
         id: 'test-menu',
         title: 'Nav Menu'
     },
-    preprocessButton: (/** @type {HTMLButtonElement} */ button) => {
-        console.log('preprocess', button);
-    },
+    // preprocessButton: (/** @type {HTMLButtonElement} */ button) => {
+    //     console.log('preprocess', button);
+    // },
     render: (/** @type {Args} */ args) => {
         return html`
             <nav-menu ${attrString(args)} preprocess-button=":preprocessButton">
@@ -62,23 +60,6 @@ const NavMenuStory = {
             </nav-menu> -->
             </nav-menu>
         `;
-    },
-    playSetup: async (/** @type {HTMLElement} */ canvasElement) => {
-        const canvas = within(canvasElement);
-        await waitFor(() => expect(canvasElement.querySelector('nav-menu')).toBeInTheDocument());
-        await customElements.whenDefined('nav-menu');
-        const navMenu = /** @type {NavMenu} */ (canvasElement.querySelector('nav-menu'));
-        await navMenu?.promise;
-        return { canvas, navMenu, resource: navMenu?.listResource };
-    },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { canvas, navMenu, resource } = await NavMenuStory.playSetup(canvasElement);
-        await step('Renders the menu and items', async () => {
-            expect(canvas.getByText('Nav Menu')).toBeInTheDocument();
-            expect(navMenu).toBeInTheDocument();
-            const items = resource?.getItems();
-            await waitFor(() => expect(items && items.length).toBeGreaterThan(0));
-        });
     }
 };
 
@@ -87,6 +68,15 @@ export const Default = {
     name: 'Render',
     parameters: {
         layout: 'padded'
+    },
+    play: async ({ canvasElement, step }) => {
+        const { canvas, navMenu, resource } = await playSetup(canvasElement);
+        await step('Renders the menu and items', async () => {
+            expect(canvas.getByText('Nav Menu')).toBeInTheDocument();
+            expect(navMenu).toBeInTheDocument();
+            const items = resource?.getItems();
+            await waitFor(() => expect(items && items.length).toBeGreaterThan(0));
+        });
     }
 };
 

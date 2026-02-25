@@ -182,7 +182,6 @@ class NavLink extends ListItem {
     /////////////////
 
     async _initializeNodes() {
-        /** @type {NavList} */
         this.nav = /** @type {NavList | undefined} */ (this.grabList());
         await super._initializeNodes();
         /** @type {HTMLAnchorElement} */
@@ -251,13 +250,11 @@ class NavLink extends ListItem {
         const tooltipZone = this.getZone('tooltip-content');
         if (tooltipZone || tooltip) {
             const position = this.getProperty('tooltip-position') || 'left';
-            this.tooltip = renderNode(html`<arpa-tooltip
-                handler="a"
-                class="navLink__tooltip"
-                position="${position}"
-            >
-                <zone name="tooltip-content">${tooltip}</zone>
-            </arpa-tooltip>`);
+            this.tooltip = renderNode(
+                html`<arpa-tooltip handler="a" class="navLink__tooltip" position="${position}">
+                    <zone name="tooltip-content">${tooltip}</zone>
+                </arpa-tooltip>`
+            );
             this.tooltip && this.mainNode?.append(this.tooltip);
         }
     }

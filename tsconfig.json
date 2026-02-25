@@ -10,14 +10,5 @@
         "preserveSymlinks": true
     },
     "include": ["src/**/*"],
-    "exclude": [
-        "node_modules",
-        "node_modules/**",
-        "dist",
-        "dist/**",
-        ".tmp",
-        ".tmp/**",
-        "**/*.stories.js",
-        "**/*.stories.util.js"
-    ]
+    "exclude": ["node_modules", "dist", ".tmp"]
 }

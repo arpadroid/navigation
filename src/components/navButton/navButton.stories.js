@@ -1,37 +1,26 @@
 /**
- * @typedef {import('../navList/navList').default} NavList
  * @typedef {import('@storybook/web-components-vite').Meta} Meta
  * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
  * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
  * @typedef {import('@storybook/web-components-vite').Args} Args
  */
 
-import { expect, fireEvent, waitFor, within } from 'storybook/test';
+import { expect, fireEvent, waitFor } from 'storybook/test';
 import { attrString } from '@arpadroid/tools';
+import { getArgs, getArgTypes, playSetup } from './navButton.stories.util.js';
 
 const html = String.raw;
-
 
 /** @type {Meta} */
 const NavButtonStory = {
     title: 'Navigation/Nav Button',
     tags: [],
-    getArgs: () => {
-        return {
-            id: 'test-menu'
-        };
-    },
-    getArgTypes: (category = 'Nav List Props') => {
-        return {
-            id: { control: { type: 'text' }, table: { category } }
-        };
-    },
-    render: (/** @type {Args} */ args) => {
+    render: args => {
         delete args.text;
         return html`
             <div class="container" style="display:flex; width: 100%;">
                 <nav-button ${attrString(args)}>
-                    Button Menu 
+                    Button Menu
                     <nav-link link="/home" icon="home">Home</nav-link>
                     <nav-link link="/settings" icon="settings">Settings</nav-link>
                     <nav-link link="/user" icon="smart_toy">User</nav-link>
@@ -45,8 +34,8 @@ const NavButtonStory = {
 export const Default = {
     name: 'Render',
     parameters: {},
-    argTypes: NavButtonStory.getArgTypes(),
-    args: { ...NavButtonStory.getArgs() }
+    argTypes: getArgTypes(),
+    args: { ...getArgs() }
 };
 
 /** @type {StoryObj} */
@@ -59,18 +48,11 @@ export const Test = {
         usage: { disable: true },
         options: { selectedPanel: 'storybook/interactions/panel' }
     },
-    playSetup: async (/** @type {HTMLElement} */ canvasElement) => {
-        const canvas = within(canvasElement);
-        await waitFor(() => expect(canvasElement.querySelector('nav-list')).toBeInTheDocument());
-        const menuNode = canvasElement.querySelector('nav-button');
-        const navigationNode = canvasElement.querySelector('nav-list');
-        return { canvas, menuNode, navigationNode };
-    },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const setup = await Test.playSetup(canvasElement);
+    play: async ({ canvasElement, step }) => {
+        const setup = await playSetup(canvasElement);
         const { canvas, menuNode, navigationNode } = setup;
         await step('Renders the menu', async () => {
-            await menuNode.load;
+            await menuNode?.promise;
             expect(menuNode).toBeTruthy();
             expect(navigationNode).not.toBeVisible();
             /**

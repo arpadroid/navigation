@@ -187,11 +187,10 @@ class NavButton extends Button {
         await super._initializeNodes();
         this.hasAccordion() && this._initializeAccordion();
         this.promise.then(() => {
-            const remaining = this._childNodes?.filter(
-                child => child instanceof HTMLElement && !child.isConnected
+            const remaining = /** @type {ListItem[]} */ (
+                this._childNodes?.filter(child => child instanceof HTMLElement && !child.isConnected)
             );
             if (remaining?.length) {
-                // @ts-ignore
                 this.navigation?.addItemNodes(remaining);
             }
             this.hasCombo() && this._initializeInputCombo();
@@ -250,12 +249,14 @@ class NavButton extends Button {
     /**
      * Transfers the links from the icon menu component zone to the navigation component.
      * @param {ZoneToolPlaceZoneType} payload - The payload object passed by the ZoneTool.
-     */ // @ts-ignore
+     */
     async _onPlaceZone(payload) {
         const { zone } = payload;
         const children = [...(zone?.childNodes || [])];
-        /** @type {NavLink[]} */ // @ts-ignore
-        const links = /** @type {NavLink[]} */ (children.filter(node => node?.tagName === 'NAV-LINK'));
+
+        const links = /** @type {ListItem[]} */ (
+            children.filter(node => node instanceof HTMLElement && node.tagName === 'NAV-LINK')
+        );
         if (!links.length) return;
         links.forEach(link => link.remove());
         this.onRenderReady(() => {
@@ -268,8 +269,7 @@ class NavButton extends Button {
 
     getContentNodes() {
         return this._childNodes?.filter(
-            // @ts-ignore
-            child => child.tagName?.toLowerCase() !== 'nav-link'
+            child => child instanceof HTMLElement && child.tagName?.toLowerCase() !== 'nav-link'
         );
     }
 }

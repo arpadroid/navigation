@@ -1,13 +1,13 @@
 /**
- * @typedef {import('../navList/navList').default} NavList
  * @typedef {import('@storybook/web-components-vite').Meta} Meta
  * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
  * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
  * @typedef {import('@storybook/web-components-vite').Args} Args
  */
 
-import { expect, fireEvent, waitFor, within, userEvent } from 'storybook/test';
+import { expect, waitFor, userEvent } from 'storybook/test';
 import { attrString } from '@arpadroid/tools';
+import { getArgs, getArgTypes, playSetup } from './iconMenu.stories.util.js';
 
 const html = String.raw;
 
@@ -15,16 +15,6 @@ const html = String.raw;
 const IconMenuStory = {
     title: 'Navigation/Icon Menu',
     tags: [],
-    getArgs: () => {
-        return {
-            id: 'test-menu'
-        };
-    },
-    getArgTypes: (category = 'Nav List Props') => {
-        return {
-            id: { control: { type: 'text' }, table: { category } }
-        };
-    },
     render: (/** @type {Args} */ args) => {
         delete args.text;
         return html`
@@ -44,8 +34,8 @@ const IconMenuStory = {
 export const Default = {
     name: 'Render',
     parameters: {},
-    argTypes: IconMenuStory.getArgTypes(),
-    args: { ...IconMenuStory.getArgs() }
+    argTypes: getArgTypes(),
+    args: { ...getArgs() }
 };
 
 /** @type {StoryObj} */
@@ -58,18 +48,10 @@ export const Test = {
         usage: { disable: true },
         options: { selectedPanel: 'storybook/interactions/panel' }
     },
-    playSetup: async (/** @type {HTMLElement} */ canvasElement) => {
-        const canvas = within(canvasElement);
-        await waitFor(() => expect(canvasElement.querySelector('nav-list')).toBeInTheDocument());
-        const menuNode = canvasElement.querySelector('icon-menu');
-        const navigationNode = canvasElement.querySelector('nav-list');
-        return { canvas, menuNode, navigationNode };
-    },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const setup = await Test.playSetup(canvasElement);
-        const { canvas, menuNode, navigationNode } = setup;
+    play: async ({ canvasElement, step }) => {
+        const { canvas, menuNode, navigationNode } = await playSetup(canvasElement);
         await step('Renders the menu', async () => {
-            await menuNode.load;
+            await menuNode?.promise;
             expect(menuNode).toBeTruthy();
             expect(navigationNode).not.toBeVisible();
             /**

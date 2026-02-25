@@ -1,5 +1,6 @@
 import { ListConfigType } from '@arpadroid/lists';
+import NavLink from '../navLink/navLink';
 
-export type NavMenuConfigType = ListConfigType & {
-    prop?: string;
+export type NavMenuConfigType = Partial<ListConfigType> & {
+    itemComponent?: typeof NavLink;
 };
