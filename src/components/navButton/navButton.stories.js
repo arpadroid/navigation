@@ -20,7 +20,7 @@ const NavButtonStory = {
         return html`
             <div class="container" style="display:flex; width: 100%;">
                 <nav-button ${attrString(args)}>
-                    Button Menu
+                    Menu
                     <nav-link link="/home" icon="home">Home</nav-link>
                     <nav-link link="/settings" icon="settings">Settings</nav-link>
                     <nav-link link="/user" icon="smart_toy">User</nav-link>

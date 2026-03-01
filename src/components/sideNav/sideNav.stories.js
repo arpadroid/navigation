@@ -16,7 +16,7 @@ const SideNavStory = {
     parameters: {
         layout: 'flexColumn'
     },
-    render: (/** @type {Args} */ args) => {
+    render: args => {
         delete args.text;
         return html`
             <side-nav ${attrString(args)}>

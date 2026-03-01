@@ -6,7 +6,6 @@
         "outDir": "./.tmp/.types",
         "moduleResolution": "bundler",
         "skipLibCheck": false,
-        "skipDefaultLibCheck": false,
         "preserveSymlinks": true
     },
     "include": ["src/**/*"],
