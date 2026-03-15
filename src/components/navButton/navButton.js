@@ -210,6 +210,7 @@ class NavButton extends Button {
         const { links = [] } = this._config;
         const navClass = this.getNavigationClass();
         this.navigation = /** @type {NavList} */ (this.querySelector(`.${navClass}`));
+        // @ts-ignore
         this.navigation.setPreProcessNode(this.preProcessNode);
         links?.length && this.navigation?.setItems(links, true);
     }
