@@ -151,7 +151,7 @@ class NavButton extends Button {
     }
 
     _getTemplate() {
-        return html`${super.renderButton()}{nav}`;
+        return html`${super._getTemplate()}{nav}`;
     }
 
     /**
