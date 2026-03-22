@@ -220,7 +220,10 @@ class NavLink extends ListItem {
     _handleInternalLinks(linkNodes = this.linkNodes) {
         if (!this.linkNode || !linkNodes?.length) return;
         const id = 'nav--' + this.getId();
-        const navList = renderNode(html`<nav-list class="navLink__navList" id="${id}"></nav-list>`);
+
+        const navList = /** @type {NavList} */ (
+            renderNode(html`<nav-list class="navLink__navList" id="${id}"></nav-list>`)
+        );
         if (navList) {
             this.appendChild(navList);
             navList.append(...linkNodes);

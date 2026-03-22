@@ -4,7 +4,7 @@
  * @typedef {import('@storybook/web-components-vite').Args} Args
  */
 
-import { expect, waitFor } from 'storybook/test';
+import { expect, waitFor, userEvent } from 'storybook/test';
 import { attrString, editURL } from '@arpadroid/tools';
 import { getArgs, getArgTypes, playSetup, createTestLinks } from './navList.stories.util.js';
 
@@ -115,9 +115,8 @@ export const Test = {
                 expect(canvas.getByText('User')).toBeInTheDocument();
                 expect(canvas.getByText('Logout')).toBeInTheDocument();
             });
-            const logoutButton = canvas.getByText('Logout').closest('button');
-            requestAnimationFrame(() => logoutButton.click());
-
+            const logoutButton = await waitFor(() => canvas.getByRole('button'));
+            await userEvent.click(logoutButton);
             await waitFor(() => {
                 expect(logoutAction).toHaveBeenCalled();
             });

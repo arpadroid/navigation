@@ -90,7 +90,7 @@ class SideNav extends ArpaElement {
         const tooltipText = this.getToggleTooltip();
         toggleButton?.setTooltip(tooltipText);
         toggleButton?.setAttribute('aria-label', tooltipText);
-        toggleButton?.setAttribute('label-text', tooltipText);
+        toggleButton?.setAttribute('label', tooltipText);
     }
 
     getToggleTooltip() {
@@ -109,7 +109,7 @@ class SideNav extends ArpaElement {
     }
 
     _initializeTooltip() {
-        const linksNode = this.getChild('links');
+        const linksNode = /** @type {HTMLElement} */ (this.getChild('links'));
         this.tooltip = new Tooltip({
             text: 'Thumbnails tooltip',
             className: 'sideNav__tooltip',
@@ -139,7 +139,7 @@ class SideNav extends ArpaElement {
     async _initializeAccordion() {
         if (!this.hasAccordion()) return;
         if (!this.accordion) {
-            const links = this.templateNodes.links;
+            const links = /** @type {HTMLElement} */ (this.templateNodes.links);
             setTimeout(() => {
                 links && (this.accordion = new Accordion(links, this._config.accordion?.config));
             });
