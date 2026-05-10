@@ -16,6 +16,7 @@
         "dev": "arpadroid-build --watch --storybook",
         "clean": "arpadroid-clean",
         "test": "arpadroid-test --storybook --jest",
+        "t": "npm run test -- --slim",
         "check:types": "arpadroid-check-types",
         "initialize": "arpadroid-initialize"
     },
