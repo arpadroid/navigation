@@ -48,7 +48,8 @@ class NavButton extends Button {
             tooltip: '',
             navClass: '',
             templateChildren: {
-                nav: { canRender: true }
+                nav: { canRender: true },
+                content: { canRender: false }
             }
         };
         return mergeObjects(super.getDefaultConfig(), conf);
