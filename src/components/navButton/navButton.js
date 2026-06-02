@@ -192,18 +192,15 @@ class NavButton extends Button {
             const isEl = child instanceof Element;
             return !isEl ? true : child.tagName?.toLowerCase() !== 'nav-link';
         });
-
-        this.promise.then(() => {
-            const remaining = /** @type {ListItem[]} */ (
-                this._childNodes?.filter(child => child instanceof HTMLElement && !child.isConnected)
-            );
-            if (remaining?.length) {
-                this.navigation?.addItemNodes(remaining);
-            }
-            this.hasCombo() && this._initializeInputCombo();
-            const buttonContentNode = this.querySelector('.arpaButton__content');
-            buttonContentNode?.append(...(contentNodes || []));
-        });
+        const remaining = /** @type {ListItem[]} */ (
+            this._childNodes?.filter(child => child instanceof HTMLElement && !child.isConnected)
+        );
+        if (remaining?.length) {
+            this.navigation?.addItemNodes(remaining);
+        }
+        this.hasCombo() && this._initializeInputCombo();
+        const buttonContentNode = this.querySelector('.arpaButton__content');
+        buttonContentNode?.append(...(contentNodes || []));
         return true;
     }
 
