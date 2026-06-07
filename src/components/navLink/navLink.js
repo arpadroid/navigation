@@ -68,7 +68,7 @@ class NavLink extends ListItem {
      * @returns {string} The name of the parameter.
      */
     getParamName() {
-        return this.grabList()?.getProperty('param-name') || this.getProperty('param-name');
+        return this.grabList()?.getProp('param-name') || this.getProp('param-name');
     }
 
     /**
@@ -76,7 +76,7 @@ class NavLink extends ListItem {
      * @returns {string} The value of the parameter.
      */
     getParamValue() {
-        return this.getProperty('param-value');
+        return this.getProp('param-value');
     }
 
     /**
@@ -84,7 +84,7 @@ class NavLink extends ListItem {
      * @returns {string[]} The list of parameters to clear.
      */
     getParamClear() {
-        const arr = this.grabList()?.getArrayProperty('param-clear') || this.getArrayProperty('param-clear');
+        const arr = this.grabList()?.getArrayProp('param-clear') || this.getArrayProp('param-clear');
         return (Array.isArray(arr) && arr) || [];
     }
 
@@ -99,7 +99,7 @@ class NavLink extends ListItem {
             clear?.forEach(param => (params[param] = undefined));
             return editURL(location.href, params);
         }
-        this.link = this.getProperty('link');
+        this.link = this.getProp('link');
         return this.link;
     }
 
@@ -124,7 +124,7 @@ class NavLink extends ListItem {
     }
 
     getListDivider() {
-        return this.list.hasZone('divider') || this.list?.getProperty('divider');
+        return this.list.hasZone('divider') || this.list?.getProp('divider');
     }
 
     // #endregion Get
@@ -134,11 +134,11 @@ class NavLink extends ListItem {
     ////////////////////////
 
     hasRouter() {
-        return this.grabList()?.hasProperty('use-router') || this.hasAttribute('use-router');
+        return this.grabList()?.hasProp('use-router') || this.hasAttribute('use-router');
     }
 
     isSelected() {
-        return this.getProperty('selected');
+        return this.getProp('selected');
     }
 
     /**
@@ -188,7 +188,7 @@ class NavLink extends ListItem {
         this.linkNode = /** @type {HTMLAnchorElement} */ (this.mainNode);
         this.getParamName() && this.linkNode && (this.linkNode.href = this.getLink());
         this.list && this.linkNode.setAttribute('role', 'menuitem');
-        const label = this.getProperty('label');
+        const label = this.getProp('label');
         label && this.removeAttribute('label');
         attr(this.linkNode, {
             ...(this._config.handlerAttributes ?? {}),
@@ -249,10 +249,10 @@ class NavLink extends ListItem {
     }
 
     _addTooltip() {
-        const tooltip = this.getProperty('tooltip') || '';
+        const tooltip = this.getProp('tooltip') || '';
         const tooltipZone = this.getZone('tooltip-content');
         if (tooltipZone || tooltip) {
-            const position = this.getProperty('tooltip-position') || 'left';
+            const position = this.getProp('tooltip-position') || 'left';
             this.tooltip = renderNode(
                 html`<arpa-tooltip handler="a" class="navLink__tooltip" position="${position}">
                     <zone name="tooltip-content">${tooltip}</zone>

@@ -49,7 +49,7 @@ class NavButton extends Button {
             navClass: '',
             templateChildren: {
                 nav: { canRender: true },
-                content: { canRender: false }
+                content: { canRender: false, isContent: true }
             }
         };
         return mergeObjects(super.getDefaultConfig(), conf);
@@ -63,7 +63,7 @@ class NavButton extends Button {
 
     getAriaLabel() {
         return (
-            this.getProperty('button-aria') || this.getProperty('button-label') || this.getProperty('tooltip')
+            this.getProp('button-aria') || this.getProp('button-label') || this.getProp('tooltip')
         );
     }
 
@@ -75,7 +75,7 @@ class NavButton extends Button {
      */
     preProcessNode(node) {
         this.hasCombo() && node?.classList.add('comboBox__item');
-        !this.getProperty('has-tab-index') &&
+        !this.getProp('has-tab-index') &&
             node &&
             Array.from(node.querySelectorAll('a, button')).forEach(node =>
                 node.setAttribute('tabindex', '-1')
@@ -84,7 +84,7 @@ class NavButton extends Button {
     }
 
     getId() {
-        return this.getProperty('id') || 'IconMenu-' + Math.random().toString(36).substr(2, 9);
+        return this.getProp('id') || 'IconMenu-' + Math.random().toString(36).substr(2, 9);
     }
 
     getNavigationClass() {
@@ -104,7 +104,7 @@ class NavButton extends Button {
     }
 
     getNavType() {
-        return this.getProperty('nav-type') || 'combo';
+        return this.getProp('nav-type') || 'combo';
     }
 
     // #endregion Get
@@ -160,7 +160,7 @@ class NavButton extends Button {
      * @returns {string}
      */
     renderNav() {
-        const btnClasses = this.getArrayProperty('button-classes') || [];
+        const btnClasses = this.getArrayProp('button-classes') || [];
         return html`<nav-list
             ${attrString({
                 itemTag: 'nav-link',
@@ -169,7 +169,7 @@ class NavButton extends Button {
                     ...btnClasses,
                     this.getNavigationClass(),
                     this.hasCombo() && 'comboBox',
-                    this.getProperty('nav-class')
+                    this.getProp('nav-class')
                 )
             })}
         ></nav-list>`;
@@ -234,9 +234,9 @@ class NavButton extends Button {
 
     getInputComboConfig() {
         const defaults = {
-            closeOnClick: this.hasProperty('close-on-click'),
-            closeOnBlur: this.hasProperty('close-on-blur'),
-            position: this.hasProperty('menu-position') && this.getProperty('menu-position'),
+            closeOnClick: this.hasProp('close-on-click'),
+            closeOnBlur: this.hasProp('close-on-blur'),
+            position: this.hasProp('menu-position') && this.getProp('menu-position'),
             containerSelector: 'nav-link'
         };
         return mergeObjects(defaults, this._config?.inputComboConfig || {});

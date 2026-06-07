@@ -75,7 +75,7 @@ class SideNav extends ArpaElement {
      * @param {Event} _event
      */
     toggleNav(_event) {
-        const className = this.getProperty('collapsed-class');
+        const className = this.getProp('collapsed-class');
 
         const toggleButton = /** @type {IconButton | undefined} */ (this.getChild('toggleButton'));
 
@@ -94,13 +94,13 @@ class SideNav extends ArpaElement {
     }
 
     getToggleTooltip() {
-        const className = this.getProperty('collapsed-class');
+        const className = this.getProp('collapsed-class');
         if (!className) return 'Collapse';
         return this.classList.contains(className) ? 'Expand' : 'Collapse';
     }
 
     hasAccordion() {
-        return this.hasProperty('has-accordion') || this._config.accordion?.enabled;
+        return this.hasProp('has-accordion') || this._config.accordion?.enabled;
     }
 
     async _onComplete() {
@@ -111,7 +111,7 @@ class SideNav extends ArpaElement {
     _initializeTooltip() {
         const linksNode = /** @type {HTMLElement} */ (this.getChild('links'));
         this.tooltip = new Tooltip({
-            text: 'Thumbnails tooltip',
+            content: 'Thumbnails tooltip',
             className: 'sideNav__tooltip',
             handler: linksNode,
             position: 'cursor',
