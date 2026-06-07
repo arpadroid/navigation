@@ -21,7 +21,7 @@ class SideNavButton extends NavButton {
         return this.closest('side-nav');
     }
 
-    _onConnected() {
+    $onConnected() {
         this.sideNav = this.getSideNav();
     }
 }

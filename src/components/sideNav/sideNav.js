@@ -66,7 +66,7 @@ class SideNav extends ArpaElement {
         return super.getDefaultConfig(conf);
     }
 
-    _getTemplate() {
+    $renderTemplate() {
         return html`{header}{links}{footer}`;
     }
 
@@ -103,7 +103,7 @@ class SideNav extends ArpaElement {
         return this.hasProp('has-accordion') || this._config.accordion?.enabled;
     }
 
-    async _onComplete() {
+    async $onComplete() {
         this._initializeAccordion();
         this._initializeTooltip();
     }

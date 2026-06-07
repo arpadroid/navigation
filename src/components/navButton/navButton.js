@@ -151,8 +151,8 @@ class NavButton extends Button {
         };
     }
 
-    _getTemplate() {
-        return html`${super._getTemplate()}{nav}`;
+    $renderTemplate() {
+        return html`${super.$renderTemplate()}{nav}`;
     }
 
     /**
@@ -181,11 +181,11 @@ class NavButton extends Button {
     // #region Lifecycle
     ////////////////////
 
-    async _initializeNodes() {
+    async $initializeNodes() {
         /** @type {HTMLButtonElement | undefined | null} */
         this.button = this.querySelector('button');
         this._initializeNavigation();
-        await super._initializeNodes();
+        await super.$initializeNodes();
         this.hasAccordion() && this._initializeAccordion();
 
         const contentNodes = this._childNodes?.filter(child => {

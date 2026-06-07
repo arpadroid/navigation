@@ -41,8 +41,8 @@ class NavList extends List {
         return mergeObjects(super.getDefaultConfig(), conf);
     }
 
-    async _initializeNodes() {
-        await super._initializeNodes();
+    async $initializeNodes() {
+        await super.$initializeNodes();
         this.itemsNode?.setAttribute('role', 'navigation');
         return true;
     }

@@ -36,7 +36,7 @@ class NavLink extends ListItem {
         return mergeObjects(super.getDefaultConfig(), conf);
     }
 
-    _initialize() {
+    $initialize() {
         const { router } = this._config;
         this.router = /** @type {Router} */ (router || getService('router'));
     }
@@ -181,9 +181,9 @@ class NavLink extends ListItem {
     // #region Render
     /////////////////
 
-    async _initializeNodes() {
+    async $initializeNodes() {
         this.nav = /** @type {NavList | undefined} */ (this.grabList());
-        await super._initializeNodes();
+        await super.$initializeNodes();
         /** @type {HTMLAnchorElement} */
         this.linkNode = /** @type {HTMLAnchorElement} */ (this.mainNode);
         this.getParamName() && this.linkNode && (this.linkNode.href = this.getLink());
@@ -302,8 +302,8 @@ class NavLink extends ListItem {
         this.router?.go(this.getLink(false));
     }
 
-    _onDestroy() {
-        super._onDestroy();
+    $onDestroy() {
+        super.$onDestroy();
         // this.linkNode?.removeEventListener('click', this._onHandleRouter);
         // this.router?.off('route_changed', this._onRouteChange);
     }
