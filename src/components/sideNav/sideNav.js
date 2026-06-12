@@ -77,7 +77,7 @@ class SideNav extends ArpaElement {
     toggleNav(_event) {
         const className = this.getProp('collapsed-class');
 
-        const toggleButton = /** @type {IconButton | undefined} */ (this.getChild('toggleButton'));
+        const toggleButton = /** @type {IconButton | undefined} */ (this.getNode('toggleButton'));
 
         if (!className) return;
         if (this.classList.contains(className)) {
@@ -109,7 +109,7 @@ class SideNav extends ArpaElement {
     }
 
     _initializeTooltip() {
-        const linksNode = /** @type {HTMLElement} */ (this.getChild('links'));
+        const linksNode = /** @type {HTMLElement} */ (this.getNode('links'));
         this.tooltip = new Tooltip({
             content: 'Thumbnails tooltip',
             className: 'sideNav__tooltip',
