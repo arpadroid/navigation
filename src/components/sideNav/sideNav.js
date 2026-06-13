@@ -42,7 +42,7 @@ class SideNav extends ArpaElement {
                     isCollapsed: true
                 }
             },
-            templateChildren: {
+            nodesConfig: {
                 header: { content: '{titleContainer}{headerContent}' },
                 headerContent: {},
                 titleContainer: { content: '{title}{toggleButton}' },
@@ -139,7 +139,7 @@ class SideNav extends ArpaElement {
     async _initializeAccordion() {
         if (!this.hasAccordion()) return;
         if (!this.accordion) {
-            const links = /** @type {HTMLElement} */ (this.templateNodes.links);
+            const links = /** @type {HTMLElement} */ (this.nodes.links);
             setTimeout(() => {
                 links && (this.accordion = new Accordion(links, this._config.accordion?.config));
             });

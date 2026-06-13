@@ -47,7 +47,7 @@ class NavButton extends Button {
             links: [],
             tooltip: '',
             navClass: '',
-            templateChildren: {
+            nodesConfig: {
                 nav: { canRender: true },
                 content: { canRender: false, isContent: true }
             }
