@@ -88,7 +88,7 @@ class SideNav extends ArpaElement {
             this.classList.add(className);
         }
         const tooltipText = this.getToggleTooltip();
-        toggleButton?.setTooltip(tooltipText);
+        toggleButton?.setProp('tooltip', tooltipText);
         toggleButton?.setAttribute('aria-label', tooltipText);
         toggleButton?.setAttribute('label', tooltipText);
     }

@@ -62,9 +62,7 @@ class NavButton extends Button {
     ////////////////////
 
     getAriaLabel() {
-        return (
-            this.getProp('button-aria') || this.getProp('button-label') || this.getProp('tooltip')
-        );
+        return this.getProp('button-aria') || this.getProp('button-label') || this.getProp('tooltip');
     }
 
     /**
@@ -119,16 +117,6 @@ class NavButton extends Button {
      */
     setNavType(type) {
         this._config.navType = type;
-    }
-
-    /**
-     * Sets the icon for the button.
-     * @param {string} icon
-     */
-    setIcon(icon) {
-        /** @type {IconButton | null} */
-        const button = this.querySelector('.arpaButton__button');
-        button?.setIcon(icon);
     }
 
     /**
