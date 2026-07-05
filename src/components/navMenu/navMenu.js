@@ -27,11 +27,10 @@ class NavMenu extends List {
 
     _initializeContent() {
         super._initializeContent();
-        // const navButtons = this.querySelectorAll('nav-button');
-        // const links = this.querySelectorAll('nav-link');
-        // console.log('navButtons', navButtons);
-        // console.log('links', links);
-        // console.log('NavMenu initialized', this);
+        this.navButtons = this.querySelectorAll('nav-button');
+        // this.links = this.querySelectorAll('nav-link');
+        // this.linksFrag = document.createDocumentFragment();
+        // this.linksFrag.append(...this.links);
     }
 
     /**

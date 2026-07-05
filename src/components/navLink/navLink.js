@@ -2,6 +2,7 @@
  * @typedef {import('./navLink.types').NavLinkConfigType} NavLinkConfigType
  * @typedef {import('@arpadroid/services').Router} Router
  * @typedef {import('../navList/navList.js').default} NavList
+ * @typedef {import('@arpadroid/ui').TooltipConfigType} TooltipConfigType
  */
 import { renderNode, editURL, mergeObjects, attr, sanitizeURL, mechanize } from '@arpadroid/tools';
 import { getURLParam, defineCustomElement } from '@arpadroid/tools';
@@ -28,8 +29,9 @@ class NavLink extends ListItem {
         const conf = {
             link: '',
             role: '',
-            className: 'navLink',
+            className: 'listItem',
             listSelector: 'nav-menu, nav-list',
+            classNames: ['navLink'],
             selected: false,
             handlerAttributes: {}
         };
@@ -252,10 +254,11 @@ class NavLink extends ListItem {
         const tooltip = this.getProp('tooltip') || '';
         const tooltipZone = this.getZone('tooltip-content');
         if (tooltipZone || tooltip) {
-            const position = this.getProp('tooltip-position') || 'left';
+            const position =
+                /** @type {TooltipConfigType['position']} */ (this.getProp('tooltipPosition')) || 'left';
             this.tooltip = renderNode(
                 html`<arpa-tooltip handler="a" class="navLink__tooltip" position="${position}">
-                    <zone name="tooltip-content">${tooltip}</zone>
+                    <arpa-zone name="tooltip-content">${tooltip}</arpa-zone>
                 </arpa-tooltip>`
             );
             this.tooltip && this.mainNode?.append(this.tooltip);

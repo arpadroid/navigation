@@ -4,37 +4,8 @@
  * @typedef {import('./navList.js').default} NavList
  */
 
-import { expect, fn, waitFor, within } from 'storybook/test';
+import { fn, within } from 'storybook/test';
 import { editURL } from '@arpadroid/tools';
-
-/**
- * Gets the default args for the nav list story.
- * @returns {Args}
- */
-export function getArgs() {
-    return {
-        id: 'nav-list',
-        divider: '',
-        variant: ''
-    };
-}
-
-/**
- * Gets the default arg types for the nav list story.
- * @param {string} [category]
- * @returns {import('@storybook/web-components-vite').ArgTypes}
- */
-export function getArgTypes(category = 'Nav List Props') {
-    return {
-        id: { control: { type: 'text' }, table: { category } },
-        divider: { control: { type: 'text' }, table: { category } },
-        variant: {
-            options: ['horizontal', 'vertical', ''],
-            control: { type: 'select' },
-            table: { category }
-        }
-    };
-}
 
 /**
  * Sets up the play function for the nav list story.

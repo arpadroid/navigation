@@ -3,6 +3,7 @@ import { NavLinkConfigType } from '../navLink/navLink.types';
 import { InputComboConfigType } from '@arpadroid/ui';
 
 export type NavButtonConfigType = ButtonConfigType & {
+    id?: string;
     closeOnClick?: boolean;
     closeOnBlur?: boolean;
     hasTabIndex?: boolean;

@@ -1,53 +1,52 @@
 /**
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('./navButton.types').NavButtonConfigType} NavButtonConfigType
+ * @typedef {import('../navLink/navLink.types').NavLinkConfigType} NavLinkConfigType
+ * @typedef {import('@arpadroid/lists').ListItem} ListItem
+ * @typedef {import('../navList/navList.js').default} NavList
+ * @typedef {import('@storybook/web-components-vite').Meta<NavButtonConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<NavButtonConfigType>} Story
  */
 
 import { expect, fireEvent, waitFor } from 'storybook/test';
 import { attrString } from '@arpadroid/tools';
 import { getArgs, getArgTypes, playSetup } from './navButton.stories.util.js';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
 
 const html = String.raw;
 
 /** @type {Meta} */
 const NavButtonStory = {
+    component: 'nav-button',
     title: 'Navigation/Nav Button',
     tags: [],
     render: args => {
-        delete args.text;
-        return html`
-            <div class="container" style="display:flex; width: 100%;">
-                <nav-button ${attrString(args)}>
-                    Menu
+        return html`<div class="container" style="display:flex; width: 100%;">
+            <nav-button ${attrString(args)}>
+                Menu
+                <arpa-zone name="nav">
                     <nav-link link="/home" icon="home">Home</nav-link>
                     <nav-link link="/settings" icon="settings">Settings</nav-link>
                     <nav-link link="/user" icon="smart_toy">User</nav-link>
-                </nav-button>
-            </div>
-        `;
+                </arpa-zone>
+            </nav-button>
+        </div>`;
     }
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Default = {
     name: 'Render',
-    parameters: {},
+    parameters: defaultParams,
     argTypes: getArgTypes(),
     args: { ...getArgs() }
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Test = {
     args: {
         ...Default.args
     },
-    parameters: {
-        controls: { disable: true },
-        usage: { disable: true },
-        options: { selectedPanel: 'storybook/interactions/panel' }
-    },
+    parameters: testParams,
     play: async ({ canvasElement, step }) => {
         const setup = await playSetup(canvasElement);
         const { canvas, menuNode, navigationNode } = setup;

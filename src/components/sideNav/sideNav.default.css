@@ -7,14 +7,11 @@
     --side-nav-expanded-width: 320px;
     --side-nav-width: var(--side-nav-expanded-width);
     --side-nav-link-height: 2.7rem;
-
     --side-nav-child-padding: 0.8rem;
     --side-nav-link-padding: 0.5rem 0.75rem 0.5rem 1rem;
-
     --side-nav-collapsed-button-width: var(--sidenav-collapsed-width);
     --side-nav-collapsed-button-height: 2.5rem;
     --side-nav-collapsed-header-height: 3rem;
-
     --side-nav-gap: 0.25rem;
     --side-nav-button-radius: 8px;
 
@@ -25,7 +22,6 @@
     --side-nav-selected-bg-color: var(--lavender);
     --side-nav-link-bg-color: var(--grey-50);
     --side-nav-hover-bg-color: var(--lavender-light);
-
     --side-nav-link-text-color: var(--grey-600);
     --side-nav-link-text-color-hover: var(--grey-700);
     --side-nav-icon-color: var(--grey-400);
@@ -52,21 +48,26 @@
 
 .sideNav {
     --icon-size: 1.7rem;
+    gap: 0.25rem;
 
     display: flex;
-    flex-direction: column;
     flex: 1 1 auto;
-    gap: 1rem;
+    flex-direction: column;
+
     justify-content: flex-start;
+    width: var(--side-nav-width);
     max-width: var(--side-nav-width);
-    overflow: auto;
     padding: 0.5rem;
+    overflow: auto;
     scrollbar-width: none;
     transition: var(--side-nav-transition-shrink);
-    width: var(--side-nav-width);
 
     &::-webkit-scrollbar {
         display: none;
+    }
+
+    .navLink {
+        flex: 0 0 auto;
     }
 
     /**
@@ -75,20 +76,20 @@
     .iconButton__button,
     .listItem__link,
     button.navButton__button {
-        width: 100%;
-        align-items: center;
-        outline: none;
         position: relative;
-        background-color: var(--side-nav-link-bg-color);
-        border-radius: var(--side-nav-button-radius);
-        border: 0px solid transparent;
-        cursor: pointer;
         display: flex;
         gap: 0.5rem;
-        padding: var(--side-nav-link-padding);
+        align-items: center;
+        width: 100%;
         min-height: var(--side-nav-link-height);
-        transition: var(--theme-transition);
+        padding: var(--side-nav-link-padding);
+        cursor: pointer;
+        outline: none;
+        background-color: var(--side-nav-link-bg-color);
+        border: 0 solid transparent;
+        border-radius: var(--side-nav-button-radius);
         box-shadow: none !important;
+        transition: var(--theme-transition);
 
         .arpaButton__rhsIcon {
             opacity: var(--side-nav-animation-opacity);
@@ -97,18 +98,17 @@
 
         .arpaButton__content,
         .listItem__content {
-            color: var(--side-nav-link-text-color);
-            font-weight: var(--side-nav-link-text-weight);
             font-family: var(--font-quicksand);
+            font-weight: var(--side-nav-link-text-weight);
+            color: var(--side-nav-link-text-color);
             text-align: left;
-            cursor: pointer;
-
+            text-decoration-thickness: var(--side-nav-underline-height);
             text-decoration-color: var(--side-nav-underline-color) !important;
             text-underline-offset: var(--side-nav-underline-offset);
-            text-decoration-thickness: var(--side-nav-underline-height);
-
+            cursor: pointer;
             opacity: var(--side-nav-animation-opacity);
             transition: var(--side-nav-transition-fade);
+
             @starting-style {
                 opacity: 0;
             }
@@ -121,12 +121,13 @@
 
         &:focus,
         &:hover {
-            border: 0px solid transparent;
             background-color: var(--side-nav-hover-bg-color);
+            border: 0 solid transparent;
+
             .arpaButton__content,
             .listItem__content {
-                color: var(--side-nav-link-text-color-hover);
                 font-weight: 700;
+                color: var(--side-nav-link-text-color-hover);
             }
 
             arpa-icon {
@@ -137,9 +138,11 @@
         &:focus {
             outline: none;
             border: none;
+
             &::before {
                 background-color: var(--blue-neon-lightest);
             }
+
             arpa-icon {
                 color: var(--lavender-dark) !important;
             }
@@ -177,12 +180,13 @@
 
 .sideNav__links {
     position: relative;
+
     --listItem-hover-color: var(--blue-neon-dark);
 
     .navList {
-        width: 100%;
         display: flex;
         flex-direction: column;
+        width: 100%;
     }
 
     .navButton {
@@ -198,26 +202,20 @@
 .sideNav__links {
     .listItem__link::before,
     .navButton__button::before {
-        transition: var(--theme-transition);
-        content: '';
-        display: block;
         position: absolute;
-
-        background-color: var(--grey-150);
-
-        left: 4px;
+        inset: 4px auto 4px 4px;
+        display: block;
         width: 6px;
-        top: 4px;
-        bottom: 4px;
-
-        right: auto;
-        border-radius: 10px 0px 0px 10px;
+        content: '';
+        background-color: var(--grey-150);
+        border-radius: 10px 0 0 10px;
+        transition: var(--theme-transition);
     }
 
     .listItem__link::before {
         right: 4px;
         left: auto;
-        border-radius: 0px 10px 10px 0px;
+        border-radius: 0 10px 10px 0;
     }
 }
 
@@ -233,8 +231,8 @@
 
 .sideNav__titleContainer {
     display: flex;
-    align-items: center;
     flex-wrap: nowrap;
+    align-items: center;
 }
 
 .sideNav__title {
@@ -245,19 +243,19 @@
 .sideNav__tooltip {
     .tooltip__content.tooltip__content {
         position: relative;
-        margin-top: -0.8rem;
         padding-left: 0.5rem !important;
+        margin-top: -0.8rem;
         font-size: 0.875rem;
-        color: var(--grey-600);
         font-weight: 500;
+        color: var(--grey-600);
     }
 }
 
 .sideNav__links,
 .sideNav__links .navList {
-    gap: var(--side-nav-gap);
     display: flex;
     flex-direction: column;
+    gap: var(--side-nav-gap);
 }
 
 /** -----------
@@ -273,19 +271,18 @@
     --side-nav-shrink-ease: var(--easeInOutSine);
     --side-nav-grow-ease: var(--easeInOutSine);
     --side-nav-transform-duration: 0.3s;
-
     --side-nav-transition-fade: opacity 0.2s var(--easeOutSine);
     --side-nav-transition-height: height var(--side-nav-transform-duration) var(--side-nav-shrink-ease)
         var(--side-nav-transition-delay);
-
-    --side-nav-transition-shrink: width var(--side-nav-transform-duration) var(--side-nav-shrink-ease)
+    --side-nav-transition-shrink:
+        width var(--side-nav-transform-duration) var(--side-nav-shrink-ease)
             var(--side-nav-transition-width-delay),
         max-width var(--side-nav-transform-duration) var(--side-nav-shrink-ease)
             var(--side-nav-transition-width-delay),
         opacity 0.3s var(--side-nav-shrink-ease), gap 0.3s var(--side-nav-transition-delay),
         padding 0.3s var(--side-nav-transition-delay);
-
-    --side-nav-transition-grow: width var(--side-nav-transform-duration) var(--side-nav-grow-ease),
+    --side-nav-transition-grow:
+        width var(--side-nav-transform-duration) var(--side-nav-grow-ease),
         max-width var(--side-nav-transform-duration) var(--side-nav-grow-ease),
         opacity 0.3s var(--side-nav-grow-ease), gap 0.3s var(--side-nav-grow-ease),
         padding 0.3s var(--side-nav-grow-ease);
@@ -296,9 +293,11 @@
 .listItem__contentWrapper,
 .sideNav__headerContent {
     height: auto;
-    transition: var(--side-nav-transition-height), var(--side-nav-transition-fade),
-        width var(--side-nav-transform-duration) var(--side-nav-grow-ease);
     opacity: var(--side-nav-animation-opacity);
+    transition:
+        var(--side-nav-transition-height),
+        var(--side-nav-transition-fade),
+        width var(--side-nav-transform-duration) var(--side-nav-grow-ease);
 }
 
 /**
@@ -307,9 +306,10 @@
 
 .sideNav:not(.sideNav--collapsing) {
     min-width: var(--side-nav-width);
+
     .sideNav__links .navList .listItem__link {
-        padding-left: var(--side-nav-child-padding);
         height: auto;
+        padding-left: var(--side-nav-child-padding);
     }
 
     .sideNav__tooltip {
@@ -318,12 +318,13 @@
 }
 
 .sideNav--collapsing {
-    padding: 0;
-    --side-nav-animation-opacity: 0;
     gap: var(--side-nav-gap);
-    max-width: var(--sidenav-collapsed-width);
     width: var(--sidenav-collapsed-width);
+    max-width: var(--sidenav-collapsed-width);
+    padding: 0;
     overflow-x: hidden;
+
+    --side-nav-animation-opacity: 0;
 
     @starting-style {
         width: var(--side-nav-width);
@@ -357,8 +358,10 @@
 .sideNav--expanding.sideNav--expanding {
     --side-nav-transition-fade: opacity var(--side-nav-transform-duration) var(--easeOutSine)
         var(--side-nav-transition-delay);
-    transition: var(--side-nav-transition-grow);
+
     opacity: 1;
+    transition: var(--side-nav-transition-grow);
+
     @starting-style {
         opacity: 0;
     }
