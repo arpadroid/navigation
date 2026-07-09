@@ -288,9 +288,9 @@
         padding 0.3s var(--side-nav-grow-ease);
 }
 
+/* .listItem__contentWrapper, */
 .sideNav__title,
 .sideNav__footerContent,
-.listItem__contentWrapper,
 .sideNav__headerContent {
     height: auto;
     opacity: var(--side-nav-animation-opacity);
