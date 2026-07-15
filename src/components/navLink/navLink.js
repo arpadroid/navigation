@@ -4,7 +4,7 @@
  * @typedef {import('../navList/navList.js').default} NavList
  * @typedef {import('@arpadroid/ui').TooltipConfigType} TooltipConfigType
  */
-import { renderNode, editURL, mergeObjects, attr, sanitizeURL, mechanize } from '@arpadroid/tools';
+import { renderNode, editURL, mergeObjects, attr, sanitizeURL, mechanize, getAttributesWithPrefix } from '@arpadroid/tools';
 import { getURLParam, defineCustomElement } from '@arpadroid/tools';
 import { ListItem } from '@arpadroid/lists';
 import { getService } from '@arpadroid/context';
@@ -33,7 +33,8 @@ class NavLink extends ListItem {
             listSelector: 'nav-menu, nav-list',
             classNames: ['navLink'],
             selected: false,
-            handlerAttributes: {}
+            handlerAttributes: {},
+            tooltipPosition: 'left'
         };
         return mergeObjects(super.getDefaultConfig(), conf);
     }
@@ -183,6 +184,22 @@ class NavLink extends ListItem {
     // #region Render
     /////////////////
 
+    $renderTemplate() {
+        return html`
+            ${super.$renderTemplate()}
+            <arpa-zone name="main">
+                <arpa-node
+                    can-render="tooltip"
+                    tag="arpa-tooltip"
+                    name="tooltip"
+                    handler="a"
+                    class="navLink__tooltip"
+                    position="{tooltipPosition}"
+                ></arpa-node>
+            </arpa-zone>
+        `;
+    }
+
     async $initializeNodes() {
         this.nav = /** @type {NavList | undefined} */ (this.grabList());
         await super.$initializeNodes();
@@ -195,9 +212,9 @@ class NavLink extends ListItem {
         attr(this.linkNode, {
             ...(this._config.handlerAttributes ?? {}),
             'aria-current': this.getAriaCurrent(),
+            ...(getAttributesWithPrefix(this, 'handler-') ?? {}),
             'aria-label': label
         });
-        this._addTooltip();
         this._handleRouter();
         this._insertDivider();
         this._handleSelected();
@@ -248,21 +265,6 @@ class NavLink extends ListItem {
         typeof divider === 'string' && (node.textContent = divider);
         divider instanceof HTMLElement && (node.innerHTML = divider.innerHTML);
         return node;
-    }
-
-    _addTooltip() {
-        const tooltip = this.getProp('tooltip') || '';
-        const tooltipZone = this.getZone('tooltip-content');
-        if (tooltipZone || tooltip) {
-            const position =
-                /** @type {TooltipConfigType['position']} */ (this.getProp('tooltipPosition')) || 'left';
-            this.tooltip = renderNode(
-                html`<arpa-tooltip handler="a" class="navLink__tooltip" position="${position}">
-                    <arpa-zone name="tooltip-content">${tooltip}</arpa-zone>
-                </arpa-tooltip>`
-            );
-            this.tooltip && this.mainNode?.append(this.tooltip);
-        }
     }
 
     // #endregion

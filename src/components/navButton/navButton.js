@@ -3,6 +3,7 @@
  * @typedef {import('../navLink/navLink.types').NavLinkConfigType} NavLinkConfigType
  * @typedef {import('@arpadroid/lists').ListItem} ListItem
  * @typedef {import('../navList/navList.js').default} NavList
+ * @typedef {import('../navLink/navLink.js').default} NavLink
  */
 import { mergeObjects, classNames, defineCustomElement } from '@arpadroid/tools';
 import { Button, InputCombo } from '@arpadroid/ui';
@@ -16,6 +17,8 @@ class NavButton extends Button {
     accordion = null;
     /** @type {NavButtonConfigType} */
     _config = this._config;
+    /** @type {NavLink[] } */
+    initialLinks;
 
     /**
      * Returns default config.
@@ -43,6 +46,15 @@ class NavButton extends Button {
         };
         return mergeObjects(super.getDefaultConfig(), conf);
     }
+
+    $preInitialize() {
+        this.linksFrag = document.createDocumentFragment();
+        this.initialLinks = Array.from(this.querySelectorAll('nav-link'));
+        this.initialLinks.forEach(link => this.preProcessNode(link));
+        this.linksFrag.append(...this.initialLinks);
+        super.$preInitialize();
+    }
+
 
     ////////////////////
     // #region Get
@@ -125,10 +137,10 @@ class NavButton extends Button {
     $renderTemplate() {
         return html`
             ${super.$renderTemplate()}
-            <nav-list
-                zone="nav"
-                is-content="true"
-                item-tag="nav-link"
+            <arpa-node
+                tag="nav-list"
+                name="nav"
+                is-content
                 id="navList-{id}"
                 class="${classNames(
                     ...(this.getArrayProp('button-classes') || []),
@@ -136,7 +148,7 @@ class NavButton extends Button {
                     this.hasCombo() && 'comboBox',
                     this.getProp('nav-class')
                 )}"
-            ></nav-list>
+            ></arpa-node>
         `;
     }
 
@@ -156,8 +168,8 @@ class NavButton extends Button {
 
     async _initializeNavigation() {
         const { links = [] } = this._config;
-        const navClass = this.getNavigationClass();
-        this.navigation = /** @type {NavList} */ (this.querySelector(`.${navClass}`));
+        this.navigation = /** @type {NavList} */ (this.nodes.nav);
+        this.linksFrag && this.navigation.appendChild(this.linksFrag);
         this.zoneTarget = this.navigation;
         // @ts-ignore
         this.navigation.setPreProcessNode(this.preProcessNode);
