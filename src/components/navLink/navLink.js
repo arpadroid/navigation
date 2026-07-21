@@ -4,8 +4,8 @@
  * @typedef {import('../navList/navList.js').default} NavList
  * @typedef {import('@arpadroid/ui').TooltipConfigType} TooltipConfigType
  */
-import { renderNode, editURL, mergeObjects, attr, sanitizeURL, mechanize, getAttributesWithPrefix } from '@arpadroid/tools';
-import { getURLParam, defineCustomElement } from '@arpadroid/tools';
+import { renderNode, editURL, mergeObjects, attr, sanitizeURL, mechanize } from '@arpadroid/tools';
+import { getURLParam, defineCustomElement, getAttributesWithPrefix } from '@arpadroid/tools';
 import { ListItem } from '@arpadroid/lists';
 import { getService } from '@arpadroid/context';
 
@@ -61,10 +61,6 @@ class NavLink extends ListItem {
     ////////////////////////////////
     // #region Get
     ////////////////////////////////
-
-    getTagName() {
-        return 'nav-link';
-    }
 
     /**
      * Gets the name of the parameter to set when the link is clicked.
