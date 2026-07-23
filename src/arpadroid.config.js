@@ -2,6 +2,7 @@
 const config = {
     deps: ['lists'],
     buildTypes: true,
+    buildManifest: true,
     buildType: 'uiComponent',
     storybook_port: 6002,
     turbo: false

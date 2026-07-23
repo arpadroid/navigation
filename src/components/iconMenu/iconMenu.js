@@ -4,6 +4,8 @@
 import { mergeObjects, defineCustomElement } from '@arpadroid/tools';
 import NavButton from '../navButton/navButton';
 class IconMenu extends NavButton {
+    /** @type {IconMenuConfigType} */
+    _config = this._config;
     /**
      * Returns default config.
      * @returns {IconMenuConfigType}
