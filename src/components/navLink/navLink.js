@@ -197,12 +197,13 @@ class NavLink extends ListItem {
     }
 
     async $initializeNodes() {
+        const { action } = this._config;
         this.nav = /** @type {NavList | undefined} */ (this.grabList());
         await super.$initializeNodes();
         /** @type {HTMLAnchorElement} */
         this.linkNode = /** @type {HTMLAnchorElement} */ (this.mainNode);
         this.getParamName() && this.linkNode && (this.linkNode.href = this.getLink());
-        this.list && this.linkNode.setAttribute('role', 'menuitem');
+        this.list && !action && this.linkNode.setAttribute('role', 'menuitem');
         const label = this.getProp('label');
         label && this.removeAttribute('label');
         attr(this.linkNode, {

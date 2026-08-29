@@ -1,12 +1,12 @@
 /**
  * @typedef {import('./navList.types.js').NavListConfigType} NavListConfigType
+ * @typedef {import('./navList.js').default} NavList
  * @typedef {import('@storybook/web-components-vite').Meta<NavListConfigType>} Meta
  * @typedef {import('@storybook/web-components-vite').StoryObj<NavListConfigType>} Story
  */
 
-import { expect, waitFor, userEvent } from 'storybook/test';
+import { expect, waitFor, userEvent, fn } from 'storybook/test';
 import { attrString, editURL } from '@arpadroid/tools';
-import { playSetup, createTestLinks } from './navList.stories.util.js';
 import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
 
 const html = String.raw;
@@ -92,8 +92,32 @@ export const Test = {
         `;
     },
     parameters: testParams,
-    play: async ({ canvasElement, step }) => {
-        const { canvas, listNode } = await playSetup(canvasElement);
+    play: async ({ canvasElement, step, canvas }) => {
+        await customElements.whenDefined('nav-list');
+        /** @type {NavList | null} */
+        const listNode = canvasElement.querySelector('nav-list');
+        await listNode?.promise;
+        const url = window.parent.location.href;
+        const logoutAction = fn();
+        listNode?.setItems([
+            {
+                content: 'Settings',
+                icon: 'settings',
+                link: editURL(url, { section: 'settings' })
+            },
+            {
+                content: 'User',
+                icon: 'smart_toy',
+                link: editURL(url, { section: 'user' })
+            },
+            {
+                content: 'Logout',
+                icon: 'logout',
+                action: logoutAction
+            }
+        ]);
+        await listNode?.promise;
+
         await step('Renders the list', async () => {
             await waitFor(() => {
                 expect(listNode).toBeTruthy();
@@ -102,8 +126,7 @@ export const Test = {
         });
 
         await step('Adds new links to the list and verifies logout action callback', async () => {
-            if (!listNode) return;
-            const { logoutAction } = createTestLinks(listNode);
+            await listNode?.promise;
             await waitFor(() => {
                 expect(canvas.getByText('Settings')).toBeInTheDocument();
                 expect(canvas.getByText('User')).toBeInTheDocument();

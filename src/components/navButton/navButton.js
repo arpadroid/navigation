@@ -174,6 +174,7 @@ class NavButton extends Button {
         // @ts-ignore
         this.navigation.setPreProcessNode(this.preProcessNode);
         links?.length && this.navigation?.setItems(links, true);
+        await this.navigation?.promise;
     }
 
     /**

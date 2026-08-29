@@ -17,6 +17,7 @@ export async function playSetup(canvasElement) {
     await customElements.whenDefined('nav-list');
     /** @type {NavList | null} */
     const listNode = canvasElement.querySelector('nav-list');
+    await listNode?.promise;
     return { canvas, listNode };
 }
 
