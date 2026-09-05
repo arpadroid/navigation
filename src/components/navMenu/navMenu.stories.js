@@ -1,13 +1,13 @@
 /**
+ * @typedef {import('./navMenu.js').default} NavMenu
  * @typedef {import('../navButton/navButton.types').NavButtonConfigType} NavButtonConfigType
  * @typedef {import('@storybook/web-components-vite').Meta<NavButtonConfigType>} Meta
  * @typedef {import('@storybook/web-components-vite').StoryObj<NavButtonConfigType>} Story
  * @typedef {import('@storybook/web-components-vite').Args} Args
  */
 
-import { expect, waitFor } from 'storybook/test';
+import { expect, waitFor, userEvent } from 'storybook/test';
 import { attrString } from '@arpadroid/tools';
-import { playSetup } from './navMenu.stories.util.js';
 import '../navButton/navButton.js';
 import '../navLink/navLink.js';
 import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
@@ -76,20 +76,42 @@ const NavMenuStory = {
     }
 };
 
-/** @type {Story} */
 export const Render = {
     parameters: {
-        layout: 'padded'
-        // ...testParams
+        layout: 'padded',
+        ...defaultParams
+    }
+};
+
+/** @type {Story} */
+export const Test = {
+    parameters: {
+        layout: 'padded',
+        ...testParams
     },
-    play: async ({ canvasElement, step }) => {
-        const { canvas, navMenu, resource } = await playSetup(canvasElement);
+    beforeEach: async ({ canvasElement }) => {
+        canvasElement.querySelector('nav-menu')?.remove();
+        canvasElement.querySelector('nav-list')?.remove();
+    },
+    play: async ({ canvasElement, step, canvas }) => {
+        const navMenu = /** @type {NavMenu} */ (canvasElement.querySelector('nav-menu'));
+        await navMenu?.promise;
+
         await step('Renders the menu and items', async () => {
             await waitFor(() => {
+                const button = canvas.getByRole('button', { name: /nav menu/i });
                 expect(canvas.getByText('Nav Menu')).toBeInTheDocument();
-                expect(navMenu).toBeInTheDocument();
-                const items = resource?.getItems();
-                // expect(items && items.length).toBeGreaterThan(0);
+                expect(button).toBeInTheDocument();
+            });
+        });
+
+        await step('Click on the button and opens the navigation menu', async () => {
+            const button = canvas.getByRole('button', { name: /nav menu/i });
+            await userEvent.click(button);
+            await waitFor(() => {
+                expect(canvas.getByText('About')).toBeInTheDocument();
+                expect(canvas.getByText('Team')).toBeInTheDocument();
+                expect(canvas.getByText('Careers')).toBeInTheDocument();
             });
         });
     }

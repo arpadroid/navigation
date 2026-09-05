@@ -1,5 +1,6 @@
 /**
  * @typedef {import('./navMenu.types').NavMenuConfigType} NavMenuConfigType
+ * @typedef {import('../navButton/navButton').default} NavButton
  */
 import { mergeObjects, defineCustomElement } from '@arpadroid/tools';
 import { List } from '@arpadroid/lists';
@@ -27,10 +28,8 @@ class NavMenu extends List {
 
     _initializeContent() {
         super._initializeContent();
-        this.navButtons = this.querySelectorAll('nav-button');
-        // this.links = this.querySelectorAll('nav-link');
-        // this.linksFrag = document.createDocumentFragment();
-        // this.linksFrag.append(...this.links);
+        /** @type {NavButton[]} */
+        this.navButtons = Array.from(this.querySelectorAll('nav-button'));
     }
 
     /**

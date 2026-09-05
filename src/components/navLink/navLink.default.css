@@ -1,7 +1,7 @@
 li.navLink {
+    flex-direction: column;
     padding: 0;
     margin: 0;
-    flex-direction: column;
 }
 
 .navLink {
@@ -10,22 +10,28 @@ li.navLink {
 
     .listItem__main.listItem__main {
         border-radius: 8px;
+        flex: none;
+        align-items: flex-start;
+        justify-content: flex-start;
     }
 
     .listItem__content {
-        font-weight: 500;
-        font-size: 1rem;
-        color: var(--grey-500);
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
         padding-top: 2px;
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--grey-500);
     }
 
     .navLink__handler {
+        display: flex;
         width: 100%;
         height: 100%;
         padding: 8px 12px;
         color: var(--grey-600);
         text-decoration: none;
-        display: flex;
         background-color: transparent;
         border: none;
 

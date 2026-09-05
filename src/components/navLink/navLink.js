@@ -203,7 +203,7 @@ class NavLink extends ListItem {
         /** @type {HTMLAnchorElement} */
         this.linkNode = /** @type {HTMLAnchorElement} */ (this.mainNode);
         this.getParamName() && this.linkNode && (this.linkNode.href = this.getLink());
-        this.list && !action && this.linkNode.setAttribute('role', 'menuitem');
+        this.list && !action && this.linkNode?.setAttribute('role', 'menuitem');
         const label = this.getProp('label');
         label && this.removeAttribute('label');
         attr(this.linkNode, {

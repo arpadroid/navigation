@@ -52,9 +52,7 @@ class NavButton extends Button {
         this.initialLinks = Array.from(this.querySelectorAll('nav-link'));
         this.initialLinks.forEach(link => this.preProcessNode(link));
         this.linksFrag.append(...this.initialLinks);
-        super.$preInitialize();
     }
-
 
     ////////////////////
     // #region Get
@@ -158,23 +156,30 @@ class NavButton extends Button {
     // #region Lifecycle
     ////////////////////
 
-    async $initializeNodes() {
+    async $onComplete() {
         this._initializeNavigation();
-        await super.$initializeNodes();
-        this.hasAccordion() && this._initializeAccordion();
-        this.hasCombo() && this._initializeInputCombo();
         return true;
     }
 
     async _initializeNavigation() {
         const { links = [] } = this._config;
         this.navigation = /** @type {NavList} */ (this.nodes.nav);
-        this.linksFrag && this.navigation.appendChild(this.linksFrag);
+        if (!this.navigation) {
+            /** @todo Remove setTimeout hack. */
+            await new Promise(resolve => setTimeout(resolve, 10));
+            this.navigation = /** @type {NavList} */ (this.nodes.nav);
+        }
+
+        this.linksFrag && this.navigation?.appendChild(this.linksFrag);
         this.zoneTarget = this.navigation;
+
         // @ts-ignore
-        this.navigation.setPreProcessNode(this.preProcessNode);
+        this.navigation?.setPreProcessNode(this.preProcessNode);
         links?.length && this.navigation?.setItems(links, true);
-        await this.navigation?.promise;
+
+        this.hasAccordion() && this._initializeAccordion();
+        this.hasCombo() && this._initializeInputCombo();
+        return true;
     }
 
     /**
@@ -194,7 +199,9 @@ class NavButton extends Button {
         const defaults = {
             closeOnClick: this.hasProp('closeOnClick'),
             closeOnBlur: this.hasProp('closeOnBlur'),
-            position: this.hasProp('menuPosition') && this.getProp('menuPosition'),
+            position: {
+                position: this.hasProp('menuPosition') && this.getProp('menuPosition')
+            },
             containerSelector: 'nav-link'
         };
         return mergeObjects(defaults, this._config?.inputComboConfig || {});

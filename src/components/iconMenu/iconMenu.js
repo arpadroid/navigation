@@ -22,9 +22,7 @@ class IconMenu extends NavButton {
             icon: 'more_horiz',
             rhsIcon: ''
         };
-        const config = mergeObjects(defaultConfig, conf);
-
-        return config;
+        return mergeObjects(defaultConfig, conf);
     }
 }
 
