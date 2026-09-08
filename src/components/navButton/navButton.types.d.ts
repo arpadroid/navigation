@@ -10,7 +10,7 @@ export type NavButtonConfigType = ButtonConfigType & {
     icon?: string;
     links?: NavLinkConfigType[];
     tooltip?: string;
-    menuPosition?: 'left' | 'right' | 'top' | 'bottom' | 'false';
+    menuPosition?: 'left' | 'right' | 'top' | 'bottom' | 'false' | 'bottom-right';
     navClass?: string;
     inputComboConfig?: InputComboConfigType;
     navType?: 'combo' | 'accordion' | 'none';

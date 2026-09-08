@@ -11,14 +11,9 @@ import Accordion from '../accordion/accordion.js';
 
 const html = String.raw;
 class NavButton extends Button {
-    /** @type {NavList | null} */
-    navigation = null;
-    /** @type {Accordion | null} */
-    accordion = null;
     /** @type {NavButtonConfigType} */
     _config = this._config;
     /** @type {NavLink[] } */
-    initialLinks;
 
     /**
      * Returns default config.
@@ -50,7 +45,10 @@ class NavButton extends Button {
     $preInitialize() {
         this.linksFrag = document.createDocumentFragment();
         this.initialLinks = Array.from(this.querySelectorAll('nav-link'));
-        this.initialLinks.forEach(link => this.preProcessNode(link));
+
+        this.initialLinks
+            .filter(link => link instanceof HTMLElement)
+            .forEach(link => this.preProcessNode(link));
         this.linksFrag.append(...this.initialLinks);
     }
 
@@ -156,9 +154,15 @@ class NavButton extends Button {
     // #region Lifecycle
     ////////////////////
 
-    async $onComplete() {
-        this._initializeNavigation();
+    async $onRendered() {
+        await this._initializeNavigation();
         return true;
+    }
+
+    async getZoneTarget() {
+        await this.onRendered();
+        const target = this.navigation || this.nodes.nav || this.querySelector('nav-list');
+        return target;
     }
 
     async _initializeNavigation() {
@@ -169,14 +173,13 @@ class NavButton extends Button {
             await new Promise(resolve => setTimeout(resolve, 10));
             this.navigation = /** @type {NavList} */ (this.nodes.nav);
         }
-
-        this.linksFrag && this.navigation?.appendChild(this.linksFrag);
-        this.zoneTarget = this.navigation;
+        if (!this.navigation) return;
+        await this.navigation?.onRendered();
+        this.initialLinks?.length && this.navigation.append(...this.initialLinks);
 
         // @ts-ignore
         this.navigation?.setPreProcessNode(this.preProcessNode);
-        links?.length && this.navigation?.setItems(links, true);
-
+        links?.length && this.navigation.setItems(links, true);
         this.hasAccordion() && this._initializeAccordion();
         this.hasCombo() && this._initializeInputCombo();
         return true;
@@ -208,7 +211,6 @@ class NavButton extends Button {
     }
 
     async _initializeAccordion() {
-        await this.promise;
         if (this.accordion || !this.navigation) return;
         this.accordion = new Accordion(this, {
             contentSelector: 'nav-list',

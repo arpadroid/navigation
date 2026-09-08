@@ -95,7 +95,7 @@ export const Test = {
     },
     play: async ({ canvasElement, step, canvas }) => {
         const navMenu = /** @type {NavMenu} */ (canvasElement.querySelector('nav-menu'));
-        await navMenu?.promise;
+        await navMenu?.onRendered();
 
         await step('Renders the menu and items', async () => {
             await waitFor(() => {

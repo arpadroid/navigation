@@ -18,6 +18,7 @@ class IconMenu extends NavButton {
             className: 'iconMenu',
             classNames: (defaultConfig.classNames || []).concat(['iconButton']),
             buttonClass: 'iconButton__button',
+            menuPosition: 'bottom-right',
             navType: 'combo',
             icon: 'more_horiz',
             rhsIcon: ''

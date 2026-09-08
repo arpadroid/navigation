@@ -54,8 +54,8 @@ class NavLink extends ListItem {
     }
 
     getId() {
-        const link = this.getLink();
-        return link ? 'nav-link-' + mechanize(link) : undefined;
+        // const link = this.getLink();
+        return this.link ? 'nav-link-' + mechanize(this.link) : undefined;
     }
 
     ////////////////////////////////
@@ -67,7 +67,9 @@ class NavLink extends ListItem {
      * @returns {string} The name of the parameter.
      */
     getParamName() {
-        return this.grabList()?.getProp('param-name') || this.getProp('param-name');
+        const list = this.grabList();
+        const paramName = list?.getProp('param-name') || this.getProp('param-name');
+        return paramName;
     }
 
     /**
@@ -87,19 +89,20 @@ class NavLink extends ListItem {
         return (Array.isArray(arr) && arr) || [];
     }
 
-    getLink(memoized = true) {
-        if (memoized && this.link) return this.link;
+    async getLink() {
         const param = this.getParamName();
         const value = this.getParamValue();
         const clear = this.getParamClear();
+
+        let link = this.getProp('link');
         if (param && value) {
             /** @type {Record<string, unknown>} */
             const params = { [param]: value };
             clear?.forEach(param => (params[param] = undefined));
-            return editURL(location.href, params);
+            link = editURL(location.href, params);
         }
-        this.link = this.getProp('link');
-        return this.link;
+
+        return link;
     }
 
     getAriaCurrent() {
@@ -180,7 +183,13 @@ class NavLink extends ListItem {
     // #region Render
     /////////////////
 
+    async $preRender() {
+        this.link = await this.getLink();
+        return true;
+    }
+
     $renderTemplate() {
+        // this.link = this.getLink();
         return html`
             ${super.$renderTemplate()}
             <arpa-zone name="main">
@@ -202,7 +211,6 @@ class NavLink extends ListItem {
         await super.$initializeNodes();
         /** @type {HTMLAnchorElement} */
         this.linkNode = /** @type {HTMLAnchorElement} */ (this.mainNode);
-        this.getParamName() && this.linkNode && (this.linkNode.href = this.getLink());
         this.list && !action && this.linkNode?.setAttribute('role', 'menuitem');
         const label = this.getProp('label');
         label && this.removeAttribute('label');
@@ -299,9 +307,10 @@ class NavLink extends ListItem {
      * Handles the router.
      * @param {MouseEvent} event
      */
-    _onHandleRouter(event) {
+    async _onHandleRouter(event) {
         event.preventDefault();
-        this.router?.go(this.getLink(false));
+        const link = await this.getLink();
+        this.router?.go(link);
     }
 
     $onDestroy() {
