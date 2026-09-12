@@ -41,33 +41,35 @@ class SideNav extends ArpaElement {
                     handlerSelector: '.navButton > button',
                     isCollapsed: true
                 }
-            },
-            nodesConfig: {
-                header: { content: '{titleContainer}{headerContent}' },
-                headerContent: {},
-                titleContainer: { content: '{title}{toggleButton}' },
-                toggleButton: {
-                    tag: 'icon-button',
-                    attr: {
-                        icon: 'expand_more',
-                        onClick: ':toggleNav',
-                        tooltip: this.getToggleTooltip()
-                    },
-                    content: 'expand_more'
-                },
-                title: { tag: 'h2' },
-                links: {},
-                footer: {
-                    content: '{footerContent}'
-                },
-                footerContent: {}
             }
         };
         return super.getDefaultConfig(conf);
     }
 
     $renderTemplate() {
-        return html`{header}{links}{footer}`;
+        return html`
+            <arpa-node name="header">
+                <arpa-node name="titleContainer">
+                    <arpa-node name="title" tag="h2"></arpa-node>
+                    <arpa-node
+                        must-render
+                        name="toggleButton"
+                        tag="icon-button"
+                        icon="expand_more"
+                        on-click="{toggleNav}"
+                        tooltip="{toggleTooltip()}"
+                    >
+                        expand_more
+                    </arpa-node>
+                </arpa-node>
+                <arpa-node name="headerContent"></arpa-node>
+            </arpa-node>
+
+            <arpa-node name="links"></arpa-node>
+            <arpa-node name="footer">
+                <arpa-node name="footerContent"></arpa-node>
+            </arpa-node>
+        `;
     }
 
     /**
@@ -137,12 +139,11 @@ class SideNav extends ArpaElement {
     }
 
     async _initializeAccordion() {
+        await this.onNodesReady();
         if (!this.hasAccordion()) return;
-        if (!this.accordion) {
-            const links = /** @type {HTMLElement} */ (this.nodes.links);
-            setTimeout(() => {
-                links && (this.accordion = new Accordion(links, this._config.accordion?.config));
-            });
+        const links = /** @type {HTMLElement} */ (this.nodes.links);
+        if (!this.accordion && links) {
+            this.accordion = new Accordion(links, this._config.accordion?.config);
         }
     }
 }

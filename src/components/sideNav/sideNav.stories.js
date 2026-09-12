@@ -16,7 +16,8 @@ const SideNavStory = {
     title: 'Navigation/Side Nav',
     tags: [],
     parameters: {
-        layout: 'flexColumn'
+        layout: 'flexColumn',
+        hasAccordion: true
     },
     render: args => {
         delete args.text;
