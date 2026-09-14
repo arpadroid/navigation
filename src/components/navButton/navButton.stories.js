@@ -54,9 +54,6 @@ export const Test = {
             await menuNode?.promise;
             expect(menuNode).toBeTruthy();
             expect(navigationNode).not.toBeVisible();
-            /**
-             * @todo Fix flaky test, would not pass in CI.
-             */
             await waitFor(() => {
                 expect(canvas.getByText('Home')).toBeInTheDocument();
                 expect(canvas.getByText('Settings')).toBeInTheDocument();

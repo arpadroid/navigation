@@ -54,7 +54,6 @@ class NavLink extends ListItem {
     }
 
     getId() {
-        // const link = this.getLink();
         return this.link ? 'nav-link-' + mechanize(this.link) : undefined;
     }
 
@@ -67,8 +66,7 @@ class NavLink extends ListItem {
      * @returns {string} The name of the parameter.
      */
     getParamName() {
-        const list = this.grabList();
-        const paramName = list?.getProp('param-name') || this.getProp('param-name');
+        const paramName = this.list?.getProp?.('param-name') || this.getProp('param-name');
         return paramName;
     }
 
@@ -85,11 +83,16 @@ class NavLink extends ListItem {
      * @returns {string[]} The list of parameters to clear.
      */
     getParamClear() {
-        const arr = this.grabList()?.getArrayProp('param-clear') || this.getArrayProp('param-clear');
+        const arr = this.list?.getArrayProp?.('param-clear') || this.getArrayProp('param-clear');
         return (Array.isArray(arr) && arr) || [];
     }
 
     async getLink() {
+        if (!this.list) {
+            /** @todo Remove setTimeout hack. */
+            await new Promise(resolve => setTimeout(resolve, 0));
+            this.grabList();
+        }
         const param = this.getParamName();
         const value = this.getParamValue();
         const clear = this.getParamClear();
@@ -121,7 +124,7 @@ class NavLink extends ListItem {
     }
 
     getDivider() {
-        if (this.list) return this.list.getVariant() === 'horizontal' && this.getListDivider();
+        if (this.list) return this.list?.getVariant?.() === 'horizontal' && this.getListDivider();
         return this._config?.divider;
     }
 
@@ -136,7 +139,7 @@ class NavLink extends ListItem {
     ////////////////////////
 
     hasRouter() {
-        return this.grabList()?.hasProp('use-router') || this.hasAttribute('use-router');
+        return this.grabList()?.hasProp?.('use-router') || this.hasAttribute('use-router');
     }
 
     isSelected() {
@@ -183,13 +186,7 @@ class NavLink extends ListItem {
     // #region Render
     /////////////////
 
-    async $preRender() {
-        this.link = await this.getLink();
-        return true;
-    }
-
     $renderTemplate() {
-        // this.link = this.getLink();
         return html`
             ${super.$renderTemplate()}
             <arpa-zone name="main">
@@ -206,9 +203,10 @@ class NavLink extends ListItem {
     }
 
     async $initializeNodes() {
-        const { action } = this._config;
-        this.nav = /** @type {NavList | undefined} */ (this.grabList());
         await super.$initializeNodes();
+        const { action } = this._config;
+        this.grabList();
+        this.nav = /** @type {NavList | undefined} */ (this.grabList());
         /** @type {HTMLAnchorElement} */
         this.linkNode = /** @type {HTMLAnchorElement} */ (this.mainNode);
         this.list && !action && this.linkNode?.setAttribute('role', 'menuitem');
@@ -225,6 +223,7 @@ class NavLink extends ListItem {
         this._handleSelected();
         this.router?.on('route_changed', this._onRouteChange);
         this._handleInternalLinks();
+
         return true;
     }
 

@@ -169,16 +169,14 @@ class NavButton extends Button {
         const { links = [] } = this._config;
         this.navigation = /** @type {NavList} */ (this.nodes.nav);
         if (!this.navigation) {
-            /** @todo Remove setTimeout hack. */
-            await new Promise(resolve => setTimeout(resolve, 10));
             this.navigation = /** @type {NavList} */ (this.nodes.nav);
         }
         if (!this.navigation) return;
-        await this.navigation?.onRendered();
+        await this.navigation?.onRendered?.();
         this.initialLinks?.length && this.navigation.append(...this.initialLinks);
 
         // @ts-ignore
-        this.navigation?.setPreProcessNode(this.preProcessNode);
+        this.navigation?.setPreProcessNode?.(this.preProcessNode);
         links?.length && this.navigation.setItems(links, true);
         this.hasAccordion() && this._initializeAccordion();
         this.hasCombo() && this._initializeInputCombo();
