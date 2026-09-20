@@ -3,11 +3,12 @@
  * @typedef {import('../navLink/navLink.types').NavLinkConfigType} NavLinkConfigType
  * @typedef {import('@arpadroid/lists').ListItem} ListItem
  * @typedef {import('../navList/navList.js').default} NavList
- * @typedef {import('../navLink/navLink.js').default} NavLink
+ * @typedef {import('@arpadroid/ui').ArpaZone} ArpaZone
  */
 import { mergeObjects, classNames, defineCustomElement } from '@arpadroid/tools';
 import { Button, InputCombo } from '@arpadroid/ui';
 import Accordion from '../accordion/accordion.js';
+import NavLink from '../navLink/navLink.js';
 
 const html = String.raw;
 class NavButton extends Button {
@@ -154,15 +155,36 @@ class NavButton extends Button {
     // #region Lifecycle
     ////////////////////
 
-    async $onRendered() {
-        await this._initializeNavigation();
+    async $initializeNodes() {
+        await super.$initializeNodes();
+        this._initializeNavigation();
         return true;
     }
 
-    async getZoneTarget() {
-        await this.onRendered();
-        const target = this.navigation || this.nodes.nav || this.querySelector('nav-list');
+    /**
+     * @param {ArpaZone} zone
+     * @param {NodeList | Node[]} children
+     */
+    async getZoneTarget(zone, children = []) {
+        this.preprocessChildren(children);
+        await this.waitForNodes();
+        const target = this.nodes.nav;
         return target;
+    }
+
+    /**
+     * @param {NodeList | Node[]} children
+     */
+    preprocessChildren(children = []) {
+        [...children].forEach(node => {
+            if (node instanceof HTMLElement && node instanceof NavLink) {
+                if (this.navigation) {
+                    node._config.list = this.navigation;
+                }
+                this.preProcessNode(node);
+            }
+            return node;
+        });
     }
 
     async _initializeNavigation() {
@@ -174,7 +196,6 @@ class NavButton extends Button {
         if (!this.navigation) return;
         await this.navigation?.onRendered?.();
         this.initialLinks?.length && this.navigation.append(...this.initialLinks);
-
         // @ts-ignore
         this.navigation?.setPreProcessNode?.(this.preProcessNode);
         links?.length && this.navigation.setItems(links, true);

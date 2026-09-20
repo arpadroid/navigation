@@ -34,7 +34,8 @@ class NavLink extends ListItem {
             classNames: ['navLink'],
             selected: false,
             handlerAttributes: {},
-            tooltipPosition: 'left'
+            tooltipPosition: 'left',
+            renderOnConnected: true
         };
         return mergeObjects(super.getDefaultConfig(), conf);
     }
@@ -89,8 +90,6 @@ class NavLink extends ListItem {
 
     async getLink() {
         if (!this.list) {
-            /** @todo Remove setTimeout hack. */
-            await new Promise(resolve => setTimeout(resolve, 0));
             this.grabList();
         }
         const param = this.getParamName();
