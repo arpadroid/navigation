@@ -99,18 +99,21 @@ export const Test = {
         await listNode?.promise;
         const url = window.parent.location.href;
         const logoutAction = fn();
-        listNode?.setItems([
+        listNode?.addItems([
             {
+                id: 'settings',
                 content: 'Settings',
                 icon: 'settings',
                 link: editURL(url, { section: 'settings' })
             },
             {
+                id: 'user',
                 content: 'User',
                 icon: 'smart_toy',
                 link: editURL(url, { section: 'user' })
             },
             {
+                id: 'logout',
                 content: 'Logout',
                 icon: 'logout',
                 action: logoutAction

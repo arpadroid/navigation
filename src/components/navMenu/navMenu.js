@@ -37,7 +37,7 @@ class NavMenu extends List {
      * @param {NavLink} link - The nav link to process.
      */
     preProcessNavLink(link) {
-        console.log('Pre-processing nav link:', link);
+        // console.log('Pre-processing nav link:', link);
         // Implement any pre-processing logic for the nav link here.
     }
 }

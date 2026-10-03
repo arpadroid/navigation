@@ -108,6 +108,7 @@ class SideNav extends ArpaElement {
     async $onComplete() {
         this._initializeAccordion();
         this._initializeTooltip();
+        return true;
     }
 
     _initializeTooltip() {
