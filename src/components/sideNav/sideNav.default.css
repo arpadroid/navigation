@@ -224,9 +224,8 @@
  -------------- */
 
 .sideNav__toggleButton.sideNav__toggleButton {
-    --icon-button-size: var(--side-nav-collapsed-button-width);
-    --icon-button-hilight-border: 2px solid var(--color-primary);
-    --icon-button-border-radius: var(--side-nav-button-radius);
+    --size: var(--side-nav-collapsed-button-width);
+    --border-radius: var(--side-nav-button-radius);
 }
 
 .sideNav__titleContainer {
