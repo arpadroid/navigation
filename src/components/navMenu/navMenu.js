@@ -1,5 +1,6 @@
 /**
  * @typedef {import('./navMenu.types').NavMenuConfigType} NavMenuConfigType
+ * @typedef {import('../navButton/navButton').default} NavButton
  */
 import { mergeObjects, defineCustomElement } from '@arpadroid/tools';
 import { List } from '@arpadroid/lists';
@@ -27,11 +28,8 @@ class NavMenu extends List {
 
     _initializeContent() {
         super._initializeContent();
-        // const navButtons = this.querySelectorAll('nav-button');
-        // const links = this.querySelectorAll('nav-link');
-        // console.log('navButtons', navButtons);
-        // console.log('links', links);
-        // console.log('NavMenu initialized', this);
+        /** @type {NavButton[]} */
+        this.navButtons = Array.from(this.querySelectorAll('nav-button'));
     }
 
     /**
@@ -39,7 +37,7 @@ class NavMenu extends List {
      * @param {NavLink} link - The nav link to process.
      */
     preProcessNavLink(link) {
-        console.log('Pre-processing nav link:', link);
+        // console.log('Pre-processing nav link:', link);
         // Implement any pre-processing logic for the nav link here.
     }
 }

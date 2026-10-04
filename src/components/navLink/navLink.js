@@ -2,9 +2,10 @@
  * @typedef {import('./navLink.types').NavLinkConfigType} NavLinkConfigType
  * @typedef {import('@arpadroid/services').Router} Router
  * @typedef {import('../navList/navList.js').default} NavList
+ * @typedef {import('@arpadroid/ui').TooltipConfigType} TooltipConfigType
  */
 import { renderNode, editURL, mergeObjects, attr, sanitizeURL, mechanize } from '@arpadroid/tools';
-import { getURLParam, defineCustomElement } from '@arpadroid/tools';
+import { getURLParam, defineCustomElement, getAttributesWithPrefix } from '@arpadroid/tools';
 import { ListItem } from '@arpadroid/lists';
 import { getService } from '@arpadroid/context';
 
@@ -28,10 +29,13 @@ class NavLink extends ListItem {
         const conf = {
             link: '',
             role: '',
-            className: 'navLink',
+            className: 'listItem',
             listSelector: 'nav-menu, nav-list',
+            classNames: ['navLink'],
             selected: false,
-            handlerAttributes: {}
+            handlerAttributes: {},
+            tooltipPosition: 'left',
+            renderOnConnected: true
         };
         return mergeObjects(super.getDefaultConfig(), conf);
     }
@@ -51,24 +55,20 @@ class NavLink extends ListItem {
     }
 
     getId() {
-        const link = this.getLink();
-        return link ? 'nav-link-' + mechanize(link) : undefined;
+        return this.link ? 'nav-link-' + mechanize(this.link) : undefined;
     }
 
     ////////////////////////////////
     // #region Get
     ////////////////////////////////
 
-    getTagName() {
-        return 'nav-link';
-    }
-
     /**
      * Gets the name of the parameter to set when the link is clicked.
      * @returns {string} The name of the parameter.
      */
     getParamName() {
-        return this.grabList()?.getProp('param-name') || this.getProp('param-name');
+        const paramName = this.list?.getProp?.('param-name') || this.getProp('param-name');
+        return paramName;
     }
 
     /**
@@ -84,23 +84,27 @@ class NavLink extends ListItem {
      * @returns {string[]} The list of parameters to clear.
      */
     getParamClear() {
-        const arr = this.grabList()?.getArrayProp('param-clear') || this.getArrayProp('param-clear');
+        const arr = this.list?.getArrayProp?.('param-clear') || this.getArrayProp('param-clear');
         return (Array.isArray(arr) && arr) || [];
     }
 
-    getLink(memoized = true) {
-        if (memoized && this.link) return this.link;
+    async getLink() {
+        if (!this.list) {
+            this.grabList();
+        }
         const param = this.getParamName();
         const value = this.getParamValue();
         const clear = this.getParamClear();
+
+        let link = this.getProp('link');
         if (param && value) {
             /** @type {Record<string, unknown>} */
             const params = { [param]: value };
             clear?.forEach(param => (params[param] = undefined));
-            return editURL(location.href, params);
+            link = editURL(location.href, params);
         }
-        this.link = this.getProp('link');
-        return this.link;
+
+        return link;
     }
 
     getAriaCurrent() {
@@ -119,7 +123,7 @@ class NavLink extends ListItem {
     }
 
     getDivider() {
-        if (this.list) return this.list.getVariant() === 'horizontal' && this.getListDivider();
+        if (this.list) return this.list?.getVariant?.() === 'horizontal' && this.getListDivider();
         return this._config?.divider;
     }
 
@@ -134,7 +138,7 @@ class NavLink extends ListItem {
     ////////////////////////
 
     hasRouter() {
-        return this.grabList()?.hasProp('use-router') || this.hasAttribute('use-router');
+        return this.grabList()?.hasProp?.('use-router') || this.hasAttribute('use-router');
     }
 
     isSelected() {
@@ -181,26 +185,44 @@ class NavLink extends ListItem {
     // #region Render
     /////////////////
 
+    $renderTemplate() {
+        return html`
+            ${super.$renderTemplate()}
+            <arpa-zone name="main">
+                <arpa-node
+                    can-render="tooltip"
+                    tag="arpa-tooltip"
+                    name="tooltip"
+                    handler="a"
+                    class="navLink__tooltip"
+                    position="{tooltipPosition}"
+                ></arpa-node>
+            </arpa-zone>
+        `;
+    }
+
     async $initializeNodes() {
-        this.nav = /** @type {NavList | undefined} */ (this.grabList());
         await super.$initializeNodes();
+        const { action } = this._config;
+        this.grabList();
+        this.nav = /** @type {NavList | undefined} */ (this.grabList());
         /** @type {HTMLAnchorElement} */
         this.linkNode = /** @type {HTMLAnchorElement} */ (this.mainNode);
-        this.getParamName() && this.linkNode && (this.linkNode.href = this.getLink());
-        this.list && this.linkNode.setAttribute('role', 'menuitem');
+        this.list && !action && this.linkNode?.setAttribute('role', 'menuitem');
         const label = this.getProp('label');
         label && this.removeAttribute('label');
         attr(this.linkNode, {
             ...(this._config.handlerAttributes ?? {}),
             'aria-current': this.getAriaCurrent(),
+            ...(getAttributesWithPrefix(this, 'handler-') ?? {}),
             'aria-label': label
         });
-        this._addTooltip();
         this._handleRouter();
         this._insertDivider();
         this._handleSelected();
         this.router?.on('route_changed', this._onRouteChange);
         this._handleInternalLinks();
+
         return true;
     }
 
@@ -248,20 +270,6 @@ class NavLink extends ListItem {
         return node;
     }
 
-    _addTooltip() {
-        const tooltip = this.getProp('tooltip') || '';
-        const tooltipZone = this.getZone('tooltip-content');
-        if (tooltipZone || tooltip) {
-            const position = this.getProp('tooltip-position') || 'left';
-            this.tooltip = renderNode(
-                html`<arpa-tooltip handler="a" class="navLink__tooltip" position="${position}">
-                    <zone name="tooltip-content">${tooltip}</zone>
-                </arpa-tooltip>`
-            );
-            this.tooltip && this.mainNode?.append(this.tooltip);
-        }
-    }
-
     // #endregion
 
     ////////////////////////////
@@ -297,9 +305,10 @@ class NavLink extends ListItem {
      * Handles the router.
      * @param {MouseEvent} event
      */
-    _onHandleRouter(event) {
+    async _onHandleRouter(event) {
         event.preventDefault();
-        this.router?.go(this.getLink(false));
+        const link = await this.getLink();
+        this.router?.go(link);
     }
 
     $onDestroy() {

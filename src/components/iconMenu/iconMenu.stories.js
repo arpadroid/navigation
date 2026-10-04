@@ -1,62 +1,72 @@
 /**
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('./iconMenu.js').default} IconMenu
+ * @typedef {import('../navList/navList').default} NavList
+ * @typedef {import('./iconMenu.types.js').IconMenuConfigType} IconMenuConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta<IconMenuConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<IconMenuConfigType>} Story
  */
 
 import { expect, waitFor, userEvent } from 'storybook/test';
-import { attrString } from '@arpadroid/tools';
-import { getArgs, getArgTypes, playSetup } from './iconMenu.stories.util.js';
+import { $attr } from '@arpadroid/tools';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
 
 const html = String.raw;
 
+/**
+ * Sets up the play function for the icon menu story.
+ * @param {HTMLElement} canvasElement
+ * @returns {Promise<{menuNode: IconMenu | null, navigationNode: NavList | null}>}
+ */
+async function playSetup(canvasElement) {
+    await waitFor(() => expect(canvasElement.querySelector('nav-list')).toBeInTheDocument());
+    /** @type {IconMenu | null} */
+    const menuNode = canvasElement.querySelector('icon-menu');
+    /** @type {NavList | null} */
+    const navigationNode = canvasElement.querySelector('nav-list');
+    return { menuNode, navigationNode };
+}
+
 /** @type {Meta} */
 const IconMenuStory = {
+    component: 'icon-menu',
     title: 'Navigation/Icon Menu',
     tags: [],
-    render: (/** @type {Args} */ args) => {
-        delete args.text;
+    render: args => {
         return html`
             <div class="container" style="display:flex; width: 100%;">
-                <icon-menu ${attrString(args)}>
-                    <nav-link link="/home" icon="home">Home</nav-link>
-                    <nav-link link="/settings" icon="settings">Settings</nav-link>
-                    <nav-link link="/user" icon="smart_toy">User</nav-link>
-                    <!-- some content -->
+                <icon-menu ${$attr(args)}>
+                    <!-- @todo: remove the need to have this zone -->
+                    <arpa-zone name="nav">
+                        <nav-link link="/home" icon="home">Home</nav-link>
+                        <nav-link link="/settings" icon="settings">Settings</nav-link>
+                        <nav-link link="/user" icon="smart_toy">User</nav-link>
+                    </arpa-zone>
                 </icon-menu>
             </div>
         `;
     }
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Default = {
     name: 'Render',
-    parameters: {},
-    argTypes: getArgTypes(),
-    args: { ...getArgs() }
+    parameters: defaultParams,
+    args: { id: 'test-menu' }
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Test = {
     args: {
         ...Default.args
     },
-    parameters: {
-        controls: { disable: true },
-        usage: { disable: true },
-        options: { selectedPanel: 'storybook/interactions/panel' }
-    },
-    play: async ({ canvasElement, step }) => {
-        const { canvas, menuNode, navigationNode } = await playSetup(canvasElement);
+    parameters: testParams,
+    play: async ({ canvas, canvasElement, step }) => {
+        const { menuNode, navigationNode } = await playSetup(canvasElement);
         await step('Renders the menu', async () => {
             await menuNode?.promise;
             expect(menuNode).toBeTruthy();
             expect(navigationNode).not.toBeVisible();
-            /**
-             * @todo Fix flaky test, would not pass in CI.
-             */
+
             await waitFor(() => {
                 expect(canvas.getByText('Home')).toBeInTheDocument();
                 expect(canvas.getByText('Settings')).toBeInTheDocument();

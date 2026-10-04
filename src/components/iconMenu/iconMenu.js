@@ -4,6 +4,8 @@
 import { mergeObjects, defineCustomElement } from '@arpadroid/tools';
 import NavButton from '../navButton/navButton';
 class IconMenu extends NavButton {
+    /** @type {IconMenuConfigType} */
+    _config = this._config;
     /**
      * Returns default config.
      * @returns {IconMenuConfigType}
@@ -16,13 +18,12 @@ class IconMenu extends NavButton {
             className: 'iconMenu',
             classNames: (defaultConfig.classNames || []).concat(['iconButton']),
             buttonClass: 'iconButton__button',
+            menuPosition: 'bottom-right',
             navType: 'combo',
             icon: 'more_horiz',
             rhsIcon: ''
         };
-        const config = mergeObjects(defaultConfig, conf);
-
-        return config;
+        return mergeObjects(defaultConfig, conf);
     }
 }
 

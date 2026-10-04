@@ -6,5 +6,7 @@ export type NavLinkConfigType = ListItemConfigType & {
     selected?: boolean;
     handlerAttributes?: Record<string, string | number | boolean>;
     router?: Router;
+    tooltipPosition?: 'top' | 'bottom' | 'left' | 'right';
+    tooltip?: string;
     divider?: string;
 };

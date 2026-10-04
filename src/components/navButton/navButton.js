@@ -1,32 +1,20 @@
 /**
  * @typedef {import('./navButton.types').NavButtonConfigType} NavButtonConfigType
- * @typedef {import('@arpadroid/ui').ZoneToolPlaceZoneType} ZoneToolPlaceZoneType
- * @typedef {import('@arpadroid/ui').InputComboNodeType} InputComboNodeType
  * @typedef {import('../navLink/navLink.types').NavLinkConfigType} NavLinkConfigType
- * @typedef {import('@arpadroid/ui').Tooltip} Tooltip
- * @typedef {import('@arpadroid/ui').IconButton} IconButton
  * @typedef {import('@arpadroid/lists').ListItem} ListItem
  * @typedef {import('../navList/navList.js').default} NavList
- * @typedef {import('../navLink/navLink.js').default} NavLink
+ * @typedef {import('@arpadroid/ui').ArpaZone} ArpaZone
  */
-import { mergeObjects, attrString, classNames, defineCustomElement } from '@arpadroid/tools';
+import { mergeObjects, classNames, defineCustomElement } from '@arpadroid/tools';
 import { Button, InputCombo } from '@arpadroid/ui';
 import Accordion from '../accordion/accordion.js';
+import NavLink from '../navLink/navLink.js';
 
 const html = String.raw;
 class NavButton extends Button {
-    /** @type {NavList | null} */
-    navigation = null;
-    /** @type {Accordion | null} */
-    accordion = null;
-
-    // #endregion Lifecycle
-
     /** @type {NavButtonConfigType} */
     _config = this._config;
-    //////////////////////////
-    // #region Initialization
-    /////////////////////////
+    /** @type {NavLink[] } */
 
     /**
      * Returns default config.
@@ -37,7 +25,7 @@ class NavButton extends Button {
         /** @type {NavButtonConfigType} */
         const conf = {
             buttonClass: 'navButton__button arpaButton__button',
-            classNames: ['navButton', 'listItem__main'],
+            classNames: ['navButton'],
             menuPosition: 'bottom',
             navType: 'combo',
             rhsIcon: 'chevron_left',
@@ -49,13 +37,21 @@ class NavButton extends Button {
             navClass: '',
             nodesConfig: {
                 nav: { canRender: true },
-                content: { canRender: false, isContent: true }
+                content: { isContent: false }
             }
         };
         return mergeObjects(super.getDefaultConfig(), conf);
     }
 
-    // #endregion Initialization
+    $preInitialize() {
+        this.linksFrag = document.createDocumentFragment();
+        this.initialLinks = Array.from(this.querySelectorAll('nav-link'));
+
+        this.initialLinks
+            .filter(link => link instanceof HTMLElement)
+            .forEach(link => this.preProcessNode(link));
+        this.linksFrag.append(...this.initialLinks);
+    }
 
     ////////////////////
     // #region Get
@@ -89,10 +85,6 @@ class NavButton extends Button {
         return this.getClassName('navigation');
     }
 
-    getButtonClass() {
-        return this.getClassName('arpaButton');
-    }
-
     hasCombo() {
         return this.getNavType() === 'combo';
     }
@@ -102,7 +94,7 @@ class NavButton extends Button {
     }
 
     getNavType() {
-        return this.getProp('nav-type') || 'combo';
+        return this.getProp('navType') || 'combo';
     }
 
     // #endregion Get
@@ -135,32 +127,26 @@ class NavButton extends Button {
     getTemplateVars() {
         return {
             ...super.getTemplateVars(),
-            nav: this.renderNav()
+            id: this.getId()
         };
     }
 
     $renderTemplate() {
-        return html`${super.$renderTemplate()}{nav}`;
-    }
-
-    /**
-     * Renders the navigation component.
-     * @returns {string}
-     */
-    renderNav() {
-        const btnClasses = this.getArrayProp('button-classes') || [];
-        return html`<nav-list
-            ${attrString({
-                itemTag: 'nav-link',
-                id: `navList-${this.getId()}`,
-                class: classNames(
-                    ...btnClasses,
+        return html`
+            ${super.$renderTemplate()}
+            <arpa-node
+                tag="nav-list"
+                name="nav"
+                is-content
+                id="navList-{id}"
+                class="${classNames(
+                    ...(this.getArrayProp('button-classes') || []),
                     this.getNavigationClass(),
                     this.hasCombo() && 'comboBox',
                     this.getProp('nav-class')
-                )
-            })}
-        ></nav-list>`;
+                )}"
+            ></arpa-node>
+        `;
     }
 
     // #endregion Rendering
@@ -170,41 +156,52 @@ class NavButton extends Button {
     ////////////////////
 
     async $initializeNodes() {
-        /** @type {HTMLButtonElement | undefined | null} */
-        this.button = this.querySelector('button');
-        this._initializeNavigation();
         await super.$initializeNodes();
-        this.hasAccordion() && this._initializeAccordion();
-
-        const contentNodes = this._childNodes?.filter(child => {
-            const isEl = child instanceof Element;
-            return !isEl ? true : child.tagName?.toLowerCase() !== 'nav-link';
-        });
-        const remaining = /** @type {ListItem[]} */ (
-            this._childNodes?.filter(child => child instanceof HTMLElement && !child.isConnected)
-        );
-        if (remaining?.length) {
-            this.navigation?.addItemNodes(remaining);
-        }
-        this.hasCombo() && this._initializeInputCombo();
-        const buttonContentNode = this.querySelector('.arpaButton__content');
-        buttonContentNode?.append(...(contentNodes || []));
+        this._initializeNavigation();
         return true;
+    }
+
+    /**
+     * @param {ArpaZone} zone
+     * @param {NodeList | Node[]} children
+     */
+    async getZoneTarget(zone, children = []) {
+        this.preprocessChildren(children);
+        await this.waitForNodes();
+        const target = this.nodes.nav;
+        return target;
+    }
+
+    /**
+     * @param {NodeList | Node[]} children
+     */
+    preprocessChildren(children = []) {
+        [...children].forEach(node => {
+            if (node instanceof HTMLElement && node instanceof NavLink) {
+                if (this.navigation) {
+                    node._config.list = this.navigation;
+                }
+                this.preProcessNode(node);
+            }
+            return node;
+        });
     }
 
     async _initializeNavigation() {
         const { links = [] } = this._config;
-        const navClass = this.getNavigationClass();
-        this.navigation = /** @type {NavList} */ (this.querySelector(`.${navClass}`));
+        this.navigation = /** @type {NavList} */ (this.nodes.nav);
+        if (!this.navigation) {
+            this.navigation = /** @type {NavList} */ (this.nodes.nav);
+        }
+        if (!this.navigation) return;
+        await this.navigation?.onRendered?.();
+        this.initialLinks?.length && this.navigation.append(...this.initialLinks);
         // @ts-ignore
-        this.navigation.setPreProcessNode(this.preProcessNode);
-        links?.length && this.navigation?.setItems(links, true);
-    }
-
-    getLinksFromChildNodes() {
-        return this._childNodes?.filter(
-            child => child instanceof HTMLElement && child.tagName?.toLowerCase() === 'nav-link'
-        );
+        this.navigation?.setPreProcessNode?.(this.preProcessNode);
+        links?.length && this.navigation.setItems(links, true);
+        this.hasAccordion() && this._initializeAccordion();
+        this.hasCombo() && this._initializeInputCombo();
+        return true;
     }
 
     /**
@@ -222,16 +219,17 @@ class NavButton extends Button {
 
     getInputComboConfig() {
         const defaults = {
-            closeOnClick: this.hasProp('close-on-click'),
-            closeOnBlur: this.hasProp('close-on-blur'),
-            position: this.hasProp('menu-position') && this.getProp('menu-position'),
+            closeOnClick: this.hasProp('closeOnClick'),
+            closeOnBlur: this.hasProp('closeOnBlur'),
+            position: {
+                position: this.hasProp('menuPosition') && this.getProp('menuPosition')
+            },
             containerSelector: 'nav-link'
         };
         return mergeObjects(defaults, this._config?.inputComboConfig || {});
     }
 
     async _initializeAccordion() {
-        await this.promise;
         if (this.accordion || !this.navigation) return;
         this.accordion = new Accordion(this, {
             contentSelector: 'nav-list',
@@ -239,33 +237,6 @@ class NavButton extends Button {
             handlerSelector: '.navButton > button',
             isCollapsed: true
         });
-    }
-
-    /**
-     * Transfers the links from the icon menu component zone to the navigation component.
-     * @param {ZoneToolPlaceZoneType} payload - The payload object passed by the ZoneTool.
-     */
-    async _onPlaceZone(payload) {
-        const { zone } = payload;
-        const children = [...(zone?.childNodes || [])];
-
-        const links = /** @type {ListItem[]} */ (
-            children.filter(node => node instanceof HTMLElement && node.tagName === 'NAV-LINK')
-        );
-        if (!links.length) return;
-        links.forEach(link => link.remove());
-        this.onRenderReady(() => {
-            this.navigation = /** @type {NavList | null} */ (
-                this.querySelector(`.${this.getNavigationClass()}`)
-            );
-            this.navigation?.addItemNodes(links);
-        });
-    }
-
-    getContentNodes() {
-        return this._childNodes?.filter(
-            child => child instanceof HTMLElement && child.tagName?.toLowerCase() !== 'nav-link'
-        );
     }
 }
 

@@ -24,8 +24,9 @@ class Accordion {
 
     /**
      * Adds accordion functionality to a node and its children.
-     * @param {HTMLElement} node - The root element of the accordion.
+     * @param {HTMLElement} node
      * @param {AccordionConfigType} config
+     * @throws {Error} If the node is not provided.
      */
     constructor(node, config = {}) {
         if (!node) {
