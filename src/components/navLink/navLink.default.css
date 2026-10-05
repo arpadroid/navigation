@@ -8,16 +8,11 @@ li.navLink {
     display: flex;
     align-items: center;
 
-    .listItem__main.listItem__main {
-        flex: none;
-        border-radius: 8px;
-    }
-
     .listItem__content {
         display: flex;
         flex-direction: row;
         gap: 0.5rem;
-        padding-top: 2px;
+        padding-top: 0.125rem;
         font-size: 1rem;
         font-weight: 500;
         color: var(--grey-500);
@@ -27,7 +22,7 @@ li.navLink {
         display: flex;
         width: 100%;
         height: 100%;
-        padding: 8px 12px;
+        padding: 0.5rem 0.75rem;
         color: var(--grey-600);
         text-decoration: none;
         background-color: transparent;

@@ -67,9 +67,6 @@ export const HorizontalWithZoneDivider = {
         const userURL = editURL(url, { section: 'user' }, false);
         return html`
             <nav-list ${attrString(args)}>
-                <arpa-zone name="divider">
-                    <arpa-icon style="font-size: 22px;">more_vert</arpa-icon>
-                </arpa-zone>
                 <nav-link link="${homeURL}" icon="home">Home</nav-link>
                 <nav-link link="${settingsURL}" icon="settings">Settings</nav-link>
                 <nav-link link="${userURL}" icon="person">User</nav-link>
