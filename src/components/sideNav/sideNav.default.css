@@ -1,66 +1,97 @@
 :root {
+    interpolate-size: allow-keywords;
+}
+
+side-nav {
+    --button-outline-hover: none;
+
     /**
     * Sizing
     */
-
-    --sidenav-collapsed-width: 3.5rem;
-    --side-nav-expanded-width: 320px;
-    --side-nav-width: var(--side-nav-expanded-width);
-    --side-nav-link-height: 2.7rem;
-    --side-nav-child-padding: 0.8rem;
-    --side-nav-link-padding: 0.5rem 0.75rem 0.5rem 1rem;
-    --side-nav-collapsed-button-width: var(--sidenav-collapsed-width);
-    --side-nav-collapsed-button-height: 2.5rem;
-    --side-nav-collapsed-header-height: 3rem;
-    --side-nav-gap: 0.25rem;
-    --side-nav-button-radius: 8px;
+    --drop-color: var(--grey-100);
+    --collapsed-gap: 1px;
+    --collapsed-size: 2.5rem;
+    --collapsed-width: var(--collapsed-size);
+    --collapsed-height: var(--collapsed-size);
+    --expanded-width: min-content;
+    --width: var(--expanded-width);
+    --link-height: var(--collapsed-height);
+    --child-padding: 0.8rem;
+    --link-padding: 0rem .5rem 0rem 1.25rem;
+    --collapsed-button-width: var(--collapsed-width);
+    --collapsed-button-height: 2.5rem;
+    --collapsed-header-height: 3rem;
+    --gap: 0.125rem;
+    --button-radius: 0.5rem;
+    --link-border-color: transparent;
 
     /**
     * Colors
     */
 
-    --side-nav-selected-bg-color: var(--lavender);
-    --side-nav-link-bg-color: var(--grey-50);
-    --side-nav-hover-bg-color: var(--lavender-light);
-    --side-nav-link-text-color: var(--grey-600);
-    --side-nav-link-text-color-hover: var(--grey-700);
-    --side-nav-icon-color: var(--grey-400);
+    --link-bg-color: transparent;
+    --selected-bg-color: var(--link-bg-color);
+    --hover-bg-color: var(--link-bg-color);
+    --link-text-color: var(--grey-600);
+    --link-text-color-hover: var(--grey-700);
+    --icon-color: var(--grey-400);
 
     /**
     * Font
     */
 
-    --side-nav-link-text-weight: 600;
-    --side-nav-link-text-bold: 700;
-    --side-nav-underline: none;
-    --side-nav-underline-color: var(--grey-600);
-    --side-nav-underline-height: 2px;
-    --side-nav-underline-offset: 2px;
+    --link-text-weight: 600;
+    --link-text-bold: 700;
 
     /**
     * Icons
     */
 
-    --side-nav-icon-size: 1.5rem;
-    --side-nav-icon-hover-color: var(--grey-600);
-    --side-nav-icon-active-color: var(--blue-neon-dark);
+    --icon-hover-color: var(--grey-600);
+
+    /**
+    * Transitions
+    */
+    --animation-opacity: 1;
+    --transition-delay: 0.1s;
+    --transition-width-delay: 0.1s;
+
+    interpolate-size: allow-keywords;
+
+    --shrink-ease: var(--easeInSine);
+    --grow-ease: var(--easeInSine);
+    --transform-duration: 0.3s;
+    --transition-fade: opacity 0.2s var(--easeOutSine);
+    --transition-height: height var(--transform-duration) var(--shrink-ease) var(--transition-delay);
+    --transition-shrink:
+        width var(--transform-duration) var(--shrink-ease) var(--transition-width-delay),
+        max-width var(--transform-duration) var(--shrink-ease) var(--transition-width-delay),
+        opacity 0.3s var(--shrink-ease), gap 0.3s var(--transition-delay),
+        padding 0.3s var(--transition-delay);
+    --transition-grow:
+        width var(--transform-duration) var(--grow-ease),
+        max-width var(--transform-duration) var(--grow-ease), opacity 0.3s var(--grow-ease),
+        gap 0.3s var(--grow-ease), padding 0.3s var(--grow-ease);
 }
 
 .sideNav {
-    --icon-size: 1.7rem;
-    gap: 0.25rem;
+    /* --icon-size: 1.7rem; */
 
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-
+    gap: var(--gap);
     justify-content: flex-start;
-    width: var(--side-nav-width);
-    max-width: var(--side-nav-width);
-    padding: 0.5rem;
+    width: var(--width);
+    max-width: var(--width);
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
     overflow: auto;
     scrollbar-width: none;
-    transition: var(--side-nav-transition-shrink);
+    transition: var(--transition-shrink);
+
+    @starting-style {
+        width: var(--collapsed-size);
+    }
 
     &::-webkit-scrollbar {
         display: none;
@@ -68,6 +99,24 @@
 
     .navLink {
         flex: 0 0 auto;
+    }
+
+    /**
+    * Accordion item open state
+    */
+    .accordion__item--open {
+        > .navButton__button {
+            /* --link-bg-color: var(--selected-bg-color);
+            --link-text-weight: var(--link-text-bold);
+             */
+            /* --link-border-color: var(--color-primary-dark); */
+            --link-text-color: var(--grey-800);
+            --drop-color: var(--color-primary-dark);
+
+            .icon--chevron_left {
+                transform: rotate(270deg);
+            }
+        }
     }
 
     /**
@@ -81,95 +130,47 @@
         gap: 0.5rem;
         align-items: center;
         width: 100%;
-        min-height: var(--side-nav-link-height);
-        padding: var(--side-nav-link-padding);
+        min-height: var(--link-height);
+        padding: var(--link-padding);
         cursor: pointer;
         outline: none;
-        background-color: var(--side-nav-link-bg-color);
-        border: 0 solid transparent;
-        border-radius: var(--side-nav-button-radius);
+        background-color: var(--link-bg-color);
+        border: 0px solid var(--link-border-color);
+        border-radius: var(--button-radius);
         box-shadow: none !important;
         transition: var(--theme-transition);
 
         .arpaButton__rhsIcon {
-            opacity: var(--side-nav-animation-opacity);
-            transition: var(--side-nav-transition-fade);
+            opacity: var(--animation-opacity);
+            transition: var(--transition-fade);
         }
 
+        /* stylelint-disable-next-line no-descending-specificity */
         .arpaButton__content,
         .listItem__content {
             font-family: var(--font-quicksand);
-            font-weight: var(--side-nav-link-text-weight);
-            color: var(--side-nav-link-text-color);
+            font-weight: var(--link-text-weight);
+            color: var(--link-text-color);
             text-align: left;
-            text-decoration-thickness: var(--side-nav-underline-height);
-            text-decoration-color: var(--side-nav-underline-color) !important;
-            text-underline-offset: var(--side-nav-underline-offset);
             cursor: pointer;
-            opacity: var(--side-nav-animation-opacity);
-            transition: var(--side-nav-transition-fade);
+            background-color: transparent;
+            opacity: var(--animation-opacity);
+            transition: var(--transition-fade);
 
             @starting-style {
                 opacity: 0;
             }
         }
 
-        arpa-icon {
-            font-size: var(--side-nav-icon-size);
-            color: var(--side-nav-icon-color);
+        .icon {
+            font-size: var(--icon-size);
+            color: var(--icon-color);
         }
 
         &:focus,
         &:hover {
-            background-color: var(--side-nav-hover-bg-color);
-            border: 0 solid transparent;
-
-            .arpaButton__content,
-            .listItem__content {
-                font-weight: 700;
-                color: var(--side-nav-link-text-color-hover);
-            }
-
-            arpa-icon {
-                color: var(--side-nav-icon-hover-color);
-            }
-        }
-
-        &:focus {
-            outline: none;
-            border: none;
-
-            &::before {
-                background-color: var(--blue-neon-lightest);
-            }
-
-            arpa-icon {
-                color: var(--lavender-dark) !important;
-            }
-        }
-    }
-
-    .accordion__item--open {
-        > .navButton__button {
-            --side-nav-link-bg-color: var(--side-nav-selected-bg-color);
-            --side-nav-link-text-weight: var(--side-nav-link-text-bold);
-            --side-nav-link-text-color: var(--blue-neon-dark);
-
-            .arpaButton__content {
-                text-decoration: underline;
-            }
-
-            arpa-icon {
-                color: var(--side-nav-icon-active-color);
-            }
-
-            .icon--chevron_left {
-                transform: rotate(270deg);
-            }
-
-            &::before {
-                background-color: var(--lavender-medium);
-            }
+            background-color: transparent;
+            border: 0px solid var(--link-border-color);
         }
     }
 }
@@ -180,9 +181,6 @@
 
 .sideNav__links {
     position: relative;
-
-    --listItem-hover-color: var(--blue-neon-dark);
-
     .navList {
         display: flex;
         flex-direction: column;
@@ -190,32 +188,28 @@
     }
 
     .navButton {
-        gap: var(--side-nav-gap);
+        gap: var(--gap);
         padding: 0;
     }
-}
 
-/* ------------ 
- -- Button Drop
- -------------- */
-
-.sideNav__links {
+    /* .listItem__link::after, */
     .listItem__link::before,
     .navButton__button::before {
         position: absolute;
-        inset: 4px auto 4px 4px;
+        inset: 0.75rem auto 0.75rem 0.25rem;
         display: block;
-        width: 6px;
+        width: 0.275rem;
         content: '';
-        background-color: var(--grey-150);
-        border-radius: 10px 0 0 10px;
+        background-color: var(--drop-color);
+        border-radius: 0.625rem 0 0 0.625rem;
         transition: var(--theme-transition);
     }
 
     .listItem__link::before {
-        right: 4px;
+        right: 0.25rem;
         left: auto;
-        border-radius: 0 10px 10px 0;
+        background-color: transparent;
+        border-radius: 0 0.625rem 0.625rem 0;
     }
 }
 
@@ -224,14 +218,15 @@
  -------------- */
 
 .sideNav__toggleButton.sideNav__toggleButton {
-    --size: var(--side-nav-collapsed-button-width);
-    --border-radius: var(--side-nav-button-radius);
+    --size: var(--collapsed-button-width);
+    --border-radius: var(--button-radius);
 }
 
 .sideNav__titleContainer {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
+    gap: 1rem;
 }
 
 .sideNav__title {
@@ -254,37 +249,7 @@
 .sideNav__links .navList {
     display: flex;
     flex-direction: column;
-    gap: var(--side-nav-gap);
-}
-
-/** -----------
- -- Transitions
- -------------- */
-:root {
-    --side-nav-animation-opacity: 1;
-    --side-nav-transition-delay: 0.3s;
-    --side-nav-transition-width-delay: 0.3s;
-
-    interpolate-size: allow-keywords;
-
-    --side-nav-shrink-ease: var(--easeInOutSine);
-    --side-nav-grow-ease: var(--easeInOutSine);
-    --side-nav-transform-duration: 0.3s;
-    --side-nav-transition-fade: opacity 0.2s var(--easeOutSine);
-    --side-nav-transition-height: height var(--side-nav-transform-duration) var(--side-nav-shrink-ease)
-        var(--side-nav-transition-delay);
-    --side-nav-transition-shrink:
-        width var(--side-nav-transform-duration) var(--side-nav-shrink-ease)
-            var(--side-nav-transition-width-delay),
-        max-width var(--side-nav-transform-duration) var(--side-nav-shrink-ease)
-            var(--side-nav-transition-width-delay),
-        opacity 0.3s var(--side-nav-shrink-ease), gap 0.3s var(--side-nav-transition-delay),
-        padding 0.3s var(--side-nav-transition-delay);
-    --side-nav-transition-grow:
-        width var(--side-nav-transform-duration) var(--side-nav-grow-ease),
-        max-width var(--side-nav-transform-duration) var(--side-nav-grow-ease),
-        opacity 0.3s var(--side-nav-grow-ease), gap 0.3s var(--side-nav-grow-ease),
-        padding 0.3s var(--side-nav-grow-ease);
+    gap: var(--gap);
 }
 
 /* .listItem__contentWrapper, */
@@ -292,11 +257,11 @@
 .sideNav__footerContent,
 .sideNav__headerContent {
     height: auto;
-    opacity: var(--side-nav-animation-opacity);
+    opacity: var(--animation-opacity);
     transition:
-        var(--side-nav-transition-height),
-        var(--side-nav-transition-fade),
-        width var(--side-nav-transform-duration) var(--side-nav-grow-ease);
+        var(--transition-height),
+        var(--transition-fade),
+        width var(--transform-duration) var(--grow-ease);
 }
 
 /**
@@ -304,29 +269,69 @@
 */
 
 .sideNav:not(.sideNav--collapsing) {
-    min-width: var(--side-nav-width);
+    min-width: var(--width);
+    padding-right: 0.5rem;
+    border-right: 1px solid var(--grey-150);
 
     .sideNav__links .navList .listItem__link {
         height: auto;
-        padding-left: var(--side-nav-child-padding);
+        padding-left: var(--child-padding);
     }
 
     .sideNav__tooltip {
         display: none;
     }
+
+    .iconButton__button,
+    .listItem__link,
+    button.navButton__button {
+        &:focus {
+            outline: none;
+        }
+    }
 }
 
 .sideNav--collapsing {
-    gap: var(--side-nav-gap);
-    width: var(--sidenav-collapsed-width);
-    max-width: var(--sidenav-collapsed-width);
+    --gap: var(--collapsed-gap);
+    --animation-opacity: 0;
+    --link-padding: 0rem 0.5rem 0rem 1.25rem;
+
+    width: var(--collapsed-width);
+    max-width: var(--collapsed-width);
+    height: var(--collapsed-height);
+
+    /* max-height: var(--collapsed-height); */
     padding: 0;
     overflow-x: hidden;
 
-    --side-nav-animation-opacity: 0;
+    .iconButton__button,
+    .listItem__link,
+    button.navButton__button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 100%;
+        height: var(--collapsed-height);
+        max-height: var(--collapsed-height);
+        padding: 0;
+        border: 0px;
+        border-radius: 8px;
+
+        .listItem__contentWrapper {
+            position: absolute;
+        }
+
+        .arpaButton__rhsIcon,
+        .arpaButton__content,
+        .arpaButton__rhsIcon,
+        &::before {
+            display: none;
+        }
+    }
 
     @starting-style {
-        width: var(--side-nav-width);
+        width: var(--width);
     }
 
     .listItem__contentWrapper,
@@ -355,11 +360,10 @@
 */
 
 .sideNav--expanding.sideNav--expanding {
-    --side-nav-transition-fade: opacity var(--side-nav-transform-duration) var(--easeOutSine)
-        var(--side-nav-transition-delay);
+    --transition-fade: opacity var(--transform-duration) var(--easeOutSine) var(--transition-delay);
 
     opacity: 1;
-    transition: var(--side-nav-transition-grow);
+    transition: var(--transition-grow);
 
     @starting-style {
         opacity: 0;

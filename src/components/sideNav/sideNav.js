@@ -115,7 +115,7 @@ class SideNav extends ArpaElement {
         const linksNode = /** @type {HTMLElement} */ (this.getNode('links'));
         this.tooltip = new Tooltip({
             content: 'Thumbnails tooltip',
-            className: 'sideNav__tooltip',
+            classNames: ['sideNav__tooltip'],
             handler: linksNode,
             position: 'cursor',
             hasCursorPosition: true,
