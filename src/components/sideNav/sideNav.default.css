@@ -17,7 +17,7 @@ side-nav {
     --width: var(--expanded-width);
     --link-height: var(--collapsed-height);
     --child-padding: 0.8rem;
-    --link-padding: 0rem .5rem 0rem 1.25rem;
+    --link-padding: 0rem 0.5rem 0rem 1.25rem;
     --collapsed-button-width: var(--collapsed-width);
     --collapsed-button-height: 2.5rem;
     --collapsed-header-height: 3rem;
@@ -101,6 +101,19 @@ side-nav {
         flex: 0 0 auto;
     }
 
+    .navList {
+        nav-link::before {
+            padding-left: 0rem;
+            font-weight: 700;
+            color: var(--grey-6100);
+            content: '-';
+        }
+
+        .navLink a {
+            padding-left: 0;
+        }
+    }
+
     /**
     * Accordion item open state
     */
@@ -181,6 +194,7 @@ side-nav {
 
 .sideNav__links {
     position: relative;
+
     .navList {
         display: flex;
         flex-direction: column;
@@ -275,7 +289,6 @@ side-nav {
 
     .sideNav__links .navList .listItem__link {
         height: auto;
-        padding-left: var(--child-padding);
     }
 
     .sideNav__tooltip {
