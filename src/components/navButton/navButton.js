@@ -164,6 +164,7 @@ class NavButton extends Button {
     /**
      * @param {ArpaZone} zone
      * @param {NodeList | Node[]} children
+     * @returns {Promise<import('@arpadroid/ui').ArpaElementContentNodeType>}
      */
     async getZoneTarget(zone, children = []) {
         this.preprocessChildren(children);
