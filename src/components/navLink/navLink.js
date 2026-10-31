@@ -34,8 +34,7 @@ class NavLink extends ListItem {
             classNames: ['navLink'],
             selected: false,
             handlerAttributes: {},
-            tooltipPosition: 'left',
-            renderOnConnected: true
+            tooltipPosition: 'left'
         };
         return mergeObjects(super.getDefaultConfig(), conf);
     }
@@ -48,7 +47,6 @@ class NavLink extends ListItem {
     // #endregion
 
     register() {
-        this.grabList();
         const id = this.getId();
         const payload = { id, ...this.getPayload() };
         this.listResource?.registerItem(payload, this);
@@ -88,10 +86,7 @@ class NavLink extends ListItem {
         return (Array.isArray(arr) && arr) || [];
     }
 
-    async getLink() {
-        if (!this.list) {
-            this.grabList();
-        }
+    getLink() {
         const param = this.getParamName();
         const value = this.getParamValue();
         const clear = this.getParamClear();
@@ -138,7 +133,7 @@ class NavLink extends ListItem {
     ////////////////////////
 
     hasRouter() {
-        return this.grabList()?.hasProp?.('use-router') || this.hasAttribute('use-router');
+        return this.list?.hasProp?.('use-router') || this.hasAttribute('use-router');
     }
 
     isSelected() {
@@ -152,7 +147,7 @@ class NavLink extends ListItem {
      */
     isSelectedLink(memoized = true) {
         /** @type {NavList} */
-        this.nav = /** @type {NavList} */ (this.grabList());
+        this.nav = /** @type {NavList} */ (this.list);
 
         if (memoized && this._isSelectedLink) return this._isSelectedLink;
         if (this.link) {
@@ -204,8 +199,7 @@ class NavLink extends ListItem {
     async $initializeNodes() {
         await super.$initializeNodes();
         const { action } = this._config;
-        this.grabList();
-        this.nav = /** @type {NavList | undefined} */ (this.grabList());
+        this.nav = /** @type {NavList | undefined} */ (this.list);
         /** @type {HTMLAnchorElement} */
         this.linkNode = /** @type {HTMLAnchorElement} */ (this.mainNode);
         this.list && !action && this.linkNode?.setAttribute('role', 'menuitem');
@@ -307,7 +301,7 @@ class NavLink extends ListItem {
      */
     async _onHandleRouter(event) {
         event.preventDefault();
-        const link = await this.getLink();
+        const link = this.getLink();
         this.router?.go(link);
     }
 
