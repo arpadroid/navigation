@@ -7,7 +7,7 @@
  * @typedef {import('@storybook/web-components-vite').StoryObj<NavButtonConfigType>} Story
  */
 
-import { expect, fireEvent, waitFor } from 'storybook/test';
+import { expect, waitFor, userEvent } from 'storybook/test';
 import { attrString } from '@arpadroid/tools';
 import { getArgs, getArgTypes, playSetup } from './navButton.stories.util.js';
 import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
@@ -62,14 +62,12 @@ export const Test = {
         });
 
         await step('Opens the menu', async () => {
-            await new Promise(resolve => setTimeout(resolve, 100));
-            canvas.getByRole('button').click();
+            await userEvent.click(canvas.getByRole('button', { delay: 50 }));
             await waitFor(() => expect(navigationNode).toBeVisible());
         });
 
         await step('Closes the menu', async () => {
-            await new Promise(resolve => setTimeout(resolve, 100));
-            await fireEvent.click(canvas.getByRole('button'));
+            await userEvent.click(canvas.getByRole('button', { delay: 50 }));
             await waitFor(() => {
                 expect(navigationNode).not.toBeVisible();
             });
