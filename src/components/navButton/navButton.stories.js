@@ -50,8 +50,9 @@ export const Test = {
     play: async ({ canvasElement, step }) => {
         const setup = await playSetup(canvasElement);
         const { canvas, menuNode, navigationNode } = setup;
+        await menuNode?.onRendered();
+        await navigationNode?.onRendered();
         await step('Renders the menu', async () => {
-            await menuNode?.promise;
             expect(menuNode).toBeTruthy();
             expect(navigationNode).not.toBeVisible();
             await waitFor(() => {
@@ -62,12 +63,15 @@ export const Test = {
         });
 
         await step('Opens the menu', async () => {
-            await userEvent.click(canvas.getByRole('button', { delay: 50 }));
+            await waitFor(() => {
+                expect(canvas.getByRole('button')).toBeInTheDocument();
+            });
+            await userEvent.click(canvas.getByRole('button'), { delay: 50 });
             await waitFor(() => expect(navigationNode).toBeVisible());
         });
 
         await step('Closes the menu', async () => {
-            await userEvent.click(canvas.getByRole('button', { delay: 50 }));
+            await userEvent.click(canvas.getByRole('button', { delay: 100 }));
             await waitFor(() => {
                 expect(navigationNode).not.toBeVisible();
             });
