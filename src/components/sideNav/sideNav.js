@@ -2,6 +2,7 @@
  * @typedef {import('./sideNav.types.js').SideNavConfigType} SideNavConfigType
  * @typedef {import('../navButton/navButton.js').default} NavButton
  * @typedef {import('@arpadroid/ui').IconButton} IconButton
+ * @typedef {import('./components/sideNavButton/sideNavButton.js').default} SideNavButton
  */
 import { observerMixin, dummySignal, dummyListener, defineCustomElement } from '@arpadroid/tools';
 import { ArpaElement, Tooltip } from '@arpadroid/ui';
@@ -57,12 +58,12 @@ class SideNav extends ArpaElement {
                         tag="icon-button"
                         icon="expand_more"
                         on-click="{toggleNav}"
-                        tooltip="{toggleTooltip()}"
+                        aria-label="{toggleTooltip()}"
                     >
                         expand_more
                     </arpa-node>
                 </arpa-node>
-                <arpa-node name="headerContent"></arpa-node>
+                <arpa-node name="headerContent"> </arpa-node>
             </arpa-node>
 
             <arpa-node name="links"></arpa-node>
@@ -134,8 +135,17 @@ class SideNav extends ArpaElement {
         const tagName = target?.tagName.toLowerCase();
         const tags = ['button', 'a'];
         if (!tags.includes(tagName || '')) return;
-        const content =
+        let content =
             target.querySelector('.arpaButton__content, .listItem__content')?.textContent?.trim() || ' ';
+
+        const sideNavButton = /** @type {SideNavButton} */ (target.closest('side-nav-button'));
+        if (sideNavButton) {
+            const parentContent = sideNavButton.getContentNode()?.textContent?.trim();
+            if (parentContent && parentContent !== content) {
+                content = `${parentContent} / ${content}`;
+            }
+        }
+
         this.tooltip?.setContent(content);
     }
 

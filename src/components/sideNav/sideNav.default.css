@@ -1,68 +1,64 @@
-:root {
-    interpolate-size: allow-keywords;
-}
-
+/* stylelint-disable no-descending-specificity */
 side-nav {
     --button-outline-hover: none;
 
     /**
     * Sizing
     */
-    --drop-color: var(--grey-100);
-    --collapsed-gap: 1px;
-    --collapsed-size: 2.5rem;
-    --collapsed-width: var(--collapsed-size);
-    --collapsed-height: var(--collapsed-size);
-    --expanded-width: min-content;
-    --width: var(--expanded-width);
-    --link-height: var(--collapsed-height);
-    --child-padding: 0.8rem;
-    --link-padding: 0rem 0.5rem 0rem 1.25rem;
-    --collapsed-button-width: var(--collapsed-width);
-    --collapsed-button-height: 2.5rem;
-    --collapsed-header-height: 3rem;
-    --gap: 0.125rem;
     --button-radius: 0.5rem;
-    --link-border-color: transparent;
+    --child-padding: 0.8rem;
+    --expanded-width: min-content;
+    --gap: 0.125rem;
+    --width: var(--expanded-width);
 
-    /**
-    * Colors
-    */
+    /* Collapsed */
 
-    --link-bg-color: transparent;
-    --selected-bg-color: var(--link-bg-color);
-    --hover-bg-color: var(--link-bg-color);
-    --link-text-color: var(--grey-600);
-    --link-text-color-hover: var(--grey-700);
-    --icon-color: var(--grey-400);
+    --collapsed-button-height: 2.5rem;
+    --collapsed-button-width: var(--collapsed-width);
+    --collapsed-gap: 0.125rem;
+    --collapsed-header-height: 3rem;
+    --collapsed-height: var(--collapsed-size);
+    --collapsed-size: 2.75rem;
+    --collapsed-width: var(--collapsed-size);
 
-    /**
-    * Font
-    */
-
+    /* Font */
     --link-text-weight: 600;
     --link-text-bold: 700;
 
-    /**
-    * Icons
-    */
+    /* Colors */
+    --drop-color: var(--grey-200);
+    --icon-color: var(--grey-450);
+    --link-bg-color: transparent;
+    --link-bg-color-hover: transparent;
+    --link-border-width: 0.125rem;
+    --link-border-color: transparent;
+    --link-text-color: var(--grey-600);
 
-    --icon-hover-color: var(--grey-600);
+    /* Hover */
+    --link-color-hover: var(--color-primary);
+    --icon-color-hover: var(--color-primary);
+    --link-text-color-hover: var(--link-color-hover);
+    --button-color-hover: var(--link-color-hover);
 
-    /**
-    * Transitions
-    */
+    /* Links */
+    --link-height: var(--collapsed-height);
+    --link-padding: 0rem 0.75rem 0rem 1rem;
+    --link-padding-collapsed: 0 0.675rem;
+    --link-gap: 0.75rem;
+
+    /** Transitions */
     --animation-opacity: 1;
-    --transition-delay: 0.1s;
+    --transition-delay: 0.3s;
     --transition-width-delay: 0.1s;
 
     interpolate-size: allow-keywords;
 
-    --shrink-ease: var(--easeInSine);
-    --grow-ease: var(--easeInSine);
+    --shrink-ease: var(--easeOutSine);
+    --grow-ease: var(--easeOutSine);
     --transform-duration: 0.3s;
     --transition-fade: opacity 0.2s var(--easeOutSine);
-    --transition-height: height var(--transform-duration) var(--shrink-ease) var(--transition-delay);
+    --transition-height:
+        height var(--transform-duration) var(--shrink-ease) var(--transition-delay), opacity 0.1s;
     --transition-shrink:
         width var(--transform-duration) var(--shrink-ease) var(--transition-width-delay),
         max-width var(--transform-duration) var(--shrink-ease) var(--transition-width-delay),
@@ -75,8 +71,6 @@ side-nav {
 }
 
 .sideNav {
-    /* --icon-size: 1.7rem; */
-
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
@@ -84,71 +78,56 @@ side-nav {
     justify-content: flex-start;
     width: var(--width);
     max-width: var(--width);
-    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    padding: 0.5rem 0.5rem 0.5rem 0.125rem;
     overflow: auto;
     scrollbar-width: none;
+    box-shadow: 0.125rem 0 1rem rgb(0 0 0 / 20%);
     transition: var(--transition-shrink);
 
     @starting-style {
-        width: var(--collapsed-size);
+        /* width: var(--collapsed-size); */
     }
 
     &::-webkit-scrollbar {
         display: none;
     }
 
-    .navLink {
-        flex: 0 0 auto;
+    side-nav-button .listItem__content {
+        align-self: flex-end;
     }
 
-    .navList {
-        nav-link::before {
-            padding-left: 0rem;
-            font-weight: 700;
-            color: var(--grey-6100);
-            content: '-';
-        }
+    .sideNav__tooltip {
+        display: none;
 
-        .navLink a {
-            padding-left: 0;
+        .tooltip__content {
+            margin-left: 1rem;
         }
     }
 
     /**
-    * Accordion item open state
+    *  LINKS and BUTTONS
     */
-    .accordion__item--open {
-        > .navButton__button {
-            /* --link-bg-color: var(--selected-bg-color);
-            --link-text-weight: var(--link-text-bold);
-             */
-            /* --link-border-color: var(--color-primary-dark); */
-            --link-text-color: var(--grey-800);
-            --drop-color: var(--color-primary-dark);
 
-            .icon--chevron_left {
-                transform: rotate(270deg);
-            }
-        }
+    nav-link:has(.listItem__iconRight) .listItem__icon {
+        opacity: var(--animation-opacity);
+        transition: var(--transition-shrink);
     }
 
-    /**
-    * Common styles for NAV LINKS and BUTTONS
-    */
     .iconButton__button,
     .listItem__link,
     button.navButton__button {
         position: relative;
         display: flex;
-        gap: 0.5rem;
+        gap: var(--link-gap);
         align-items: center;
         width: 100%;
+        height: auto;
         min-height: var(--link-height);
         padding: var(--link-padding);
         cursor: pointer;
         outline: none;
         background-color: var(--link-bg-color);
-        border: 0px solid var(--link-border-color);
+        border: var(--link-border-width) solid var(--link-border-color);
         border-radius: var(--button-radius);
         box-shadow: none !important;
         transition: var(--theme-transition);
@@ -158,7 +137,6 @@ side-nav {
             transition: var(--transition-fade);
         }
 
-        /* stylelint-disable-next-line no-descending-specificity */
         .arpaButton__content,
         .listItem__content {
             font-family: var(--font-quicksand);
@@ -180,10 +158,44 @@ side-nav {
             color: var(--icon-color);
         }
 
-        &:focus,
         &:hover {
-            background-color: transparent;
-            border: 0px solid var(--link-border-color);
+            --link-text-color: var(--link-text-color-hover);
+            --icon-color: var(--icon-color-hover);
+            --drop-color: var(--color-primary);
+
+            background-color: var(--link-bg-color-hover);
+        }
+
+        &:focus {
+            --link-text-color: var(--color-primary);
+            --icon-color: var(--color-primary);
+            --drop-color: var(--color-primary);
+
+            background-color: var(--link-bg-color-hover);
+
+            .arpaButton__content,
+            .listItem__content {
+                text-decoration: underline;
+                text-decoration-thickness: 0.125rem;
+                text-decoration-style: dashed;
+                text-decoration-color: var(--color-primary);
+                text-underline-offset: 0.25rem;
+            }
+        }
+    }
+
+    /**
+    * Accordion Item open state
+    */
+    .accordion__item--open {
+        > .navButton__button {
+            --link-text-color: var(--color-primary-dark);
+            --icon-color: var(--color-primary-dark);
+            --drop-color: var(--color-primary-dark);
+
+            .icon--chevron_left {
+                transform: rotate(270deg);
+            }
         }
     }
 }
@@ -206,16 +218,15 @@ side-nav {
         padding: 0;
     }
 
-    /* .listItem__link::after, */
     .listItem__link::before,
     .navButton__button::before {
         position: absolute;
-        inset: 0.75rem auto 0.75rem 0.25rem;
+        inset: 0.5rem auto 0.5rem 0.125rem;
         display: block;
         width: 0.275rem;
         content: '';
         background-color: var(--drop-color);
-        border-radius: 0.625rem 0 0 0.625rem;
+        border-radius: 0.25rem 0 0 0.25rem;
         transition: var(--theme-transition);
     }
 
@@ -227,34 +238,42 @@ side-nav {
     }
 }
 
-/* ------------ 
- -- Elements
- -------------- */
-
 .sideNav__toggleButton.sideNav__toggleButton {
     --size: var(--collapsed-button-width);
     --border-radius: var(--button-radius);
+
+    position: relative;
+    align-self: flex-start;
+    margin-left: auto;
+
+    .tooltip__content {
+        position: fixed;
+        top: auto;
+    }
 }
 
 .sideNav__titleContainer {
     display: flex;
     flex-wrap: nowrap;
-    align-items: center;
     gap: 1rem;
+    align-items: center;
 }
 
 .sideNav__title {
     flex: 1 1 auto;
     min-width: 0;
+    padding: 0;
+    padding-left: 0.5rem;
+    margin: 0;
+    font-size: 1.25rem;
 }
 
 .sideNav__tooltip {
     .tooltip__content.tooltip__content {
         position: relative;
-        padding-left: 0.5rem !important;
-        margin-top: -0.8rem;
-        font-size: 0.875rem;
-        font-weight: 500;
+        margin-top: -1.5rem;
+        font-size: 0.9rem;
+        font-weight: 700;
         color: var(--grey-600);
     }
 }
@@ -266,7 +285,6 @@ side-nav {
     gap: var(--gap);
 }
 
-/* .listItem__contentWrapper, */
 .sideNav__title,
 .sideNav__footerContent,
 .sideNav__headerContent {
@@ -282,89 +300,62 @@ side-nav {
 * - Collapsed
 */
 
-.sideNav:not(.sideNav--collapsing) {
-    min-width: var(--width);
-    padding-right: 0.5rem;
-    border-right: 1px solid var(--grey-150);
+.sideNav--collapsing {
+    --gap: var(--collapsed-gap);
+    --animation-opacity: 0;
+    --link-padding: var(--link-padding-collapsed);
+    --link-border-color: var(--grey-100);
 
-    .sideNav__links .navList .listItem__link {
-        height: auto;
+    width: 3.4rem;
+    height: var(--collapsed-height);
+    padding: 0.25rem;
+    overflow-x: hidden;
+
+    nav-link:has(.listItem__iconRight) .listItem__icon {
+        width: 0;
+    }
+
+    .listItem__link {
+        gap: 0;
+    }
+
+    .sideNav__toggleButton {
+        .iconButton__button {
+            padding: 0;
+            margin: 0;
+        }
+
+        .icon--expand_more {
+            transform: rotate(-90deg);
+        }
     }
 
     .sideNav__tooltip {
+        display: block;
+    }
+
+    .sideNav__title {
+        width: 0;
+        height: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        opacity: 0;
+    }
+
+    .sideNav__titleContainer {
+        display: block;
+    }
+
+    .listItem__contentWrapper {
         display: none;
     }
 
     .iconButton__button,
     .listItem__link,
     button.navButton__button {
-        &:focus {
-            outline: none;
-        }
-    }
-}
-
-.sideNav--collapsing {
-    --gap: var(--collapsed-gap);
-    --animation-opacity: 0;
-    --link-padding: 0rem 0.5rem 0rem 1.25rem;
-
-    width: var(--collapsed-width);
-    max-width: var(--collapsed-width);
-    height: var(--collapsed-height);
-
-    /* max-height: var(--collapsed-height); */
-    padding: 0;
-    overflow-x: hidden;
-
-    .iconButton__button,
-    .listItem__link,
-    button.navButton__button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        max-width: 100%;
         height: var(--collapsed-height);
         max-height: var(--collapsed-height);
-        padding: 0;
-        border: 0px;
-        border-radius: 8px;
-
-        .listItem__contentWrapper {
-            position: absolute;
-        }
-
-        .arpaButton__rhsIcon,
-        .arpaButton__content,
-        .arpaButton__rhsIcon,
-        &::before {
-            display: none;
-        }
-    }
-
-    @starting-style {
-        width: var(--width);
-    }
-
-    .listItem__contentWrapper,
-    .sideNav__title,
-    .sideNav__footerContent,
-    .sideNav__headerContent {
-        height: 0;
-        overflow: hidden;
-    }
-
-    .sideNav__titleContainer {
-        gap: 0;
-    }
-
-    .sideNav__toggleButton .icon--expand_more {
-        transform: rotate(-90deg);
-    }
-
-    .navButton {
-        overflow: hidden;
+        border-radius: 0.5rem;
     }
 }
 
