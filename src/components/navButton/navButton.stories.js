@@ -63,9 +63,6 @@ export const Test = {
         });
 
         await step('Opens the menu', async () => {
-            await waitFor(() => {
-                expect(canvas.getByRole('button')).toBeInTheDocument();
-            });
             await userEvent.click(canvas.getByRole('button'), { delay: 50 });
             await waitFor(() => expect(navigationNode).toBeVisible());
         });
