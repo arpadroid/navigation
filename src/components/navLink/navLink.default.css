@@ -12,7 +12,6 @@ li.navLink {
         display: flex;
         flex-direction: row;
         gap: 0.5rem;
-        padding-top: 0.125rem;
         font-size: 1rem;
         font-weight: 500;
         color: var(--grey-500);
