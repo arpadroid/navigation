@@ -62,13 +62,13 @@ export const Test = {
             });
         });
 
+        await userEvent.click(canvas.getByRole('button'), { delay: 50 });
         await step('Opens the menu', async () => {
-            await userEvent.click(canvas.getByRole('button'), { delay: 50 });
             await waitFor(() => expect(navigationNode).toBeVisible());
         });
 
         await step('Closes the menu', async () => {
-            await userEvent.click(canvas.getByRole('button', { delay: 100 }));
+            await userEvent.click(canvas.getByRole('button', { delay: 150 }));
             await waitFor(() => {
                 expect(navigationNode).not.toBeVisible();
             });
