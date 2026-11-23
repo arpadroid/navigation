@@ -15,5 +15,5 @@ export type NavListConfigType = Omit<ListConfigType, 'itemComponent'> & {
     divider?: string;
     links?: NavLinkConfigType[];
     itemComponent?: typeof NavLink;
-    isItemSelected?: (payload: SelectedCallbackPayloadType) => boolean;
+    isItemSelected?: (payload: SelectedCallbackPayloadType) => boolean | undefined;
 };
