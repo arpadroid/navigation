@@ -6,7 +6,7 @@
  * @typedef {import('@arpadroid/ui').ArpaZone} ArpaZone
  */
 import { mergeObjects, classNames, defineCustomElement } from '@arpadroid/tools';
-import { Button, InputCombo } from '@arpadroid/ui';
+import { Button } from '@arpadroid/ui';
 import Accordion from '../accordion/accordion.js';
 import NavLink from '../navLink/navLink.js';
 
@@ -33,8 +33,10 @@ class NavButton extends Button {
             closeOnBlur: true,
             hasTabIndex: false,
             links: [],
+            popover: 'auto',
             tooltip: '',
             navClass: '',
+            buttonAttributes: { popovertarget: 'navList-{id}' },
             nodesConfig: {
                 nav: { canRender: true },
                 content: { isContent: false }
@@ -139,6 +141,7 @@ class NavButton extends Button {
                 name="nav"
                 is-content
                 id="navList-{id}"
+                popover="{popover}"
                 class="${classNames(
                     ...(this.getArrayProp('button-classes') || []),
                     this.getNavigationClass(),
@@ -201,21 +204,7 @@ class NavButton extends Button {
         this.navigation?.setPreProcessNode?.(this.preProcessNode);
         links?.length && this.navigation.setItems(links, true);
         this.hasAccordion() && this._initializeAccordion();
-        this.hasCombo() && this._initializeInputCombo();
         return true;
-    }
-
-    /**
-     * Initializes the input combo component.
-     */
-    async _initializeInputCombo() {
-        if (!this.button || !this.navigation) return;
-        if (this.inputCombo) {
-            this.inputCombo.input = this.button;
-            this.inputCombo.combo = this.navigation;
-            return;
-        }
-        this.inputCombo = new InputCombo(this.button, this.navigation, this.getInputComboConfig());
     }
 
     getInputComboConfig() {

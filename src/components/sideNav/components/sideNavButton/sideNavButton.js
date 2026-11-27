@@ -12,7 +12,8 @@ class SideNavButton extends NavButton {
     getDefaultConfig() {
         /** @type {NavButtonConfigType} */
         const conf = {
-            navType: 'none'
+            navType: 'none',
+            popover: false
         };
         return mergeObjects(super.getDefaultConfig(), conf);
     }

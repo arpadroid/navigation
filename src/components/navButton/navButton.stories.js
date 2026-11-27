@@ -1,8 +1,5 @@
 /**
  * @typedef {import('./navButton.types').NavButtonConfigType} NavButtonConfigType
- * @typedef {import('../navLink/navLink.types').NavLinkConfigType} NavLinkConfigType
- * @typedef {import('@arpadroid/lists').ListItem} ListItem
- * @typedef {import('../navList/navList.js').default} NavList
  * @typedef {import('@storybook/web-components-vite').Meta<NavButtonConfigType>} Meta
  * @typedef {import('@storybook/web-components-vite').StoryObj<NavButtonConfigType>} Story
  */
@@ -19,8 +16,11 @@ const NavButtonStory = {
     component: 'nav-button',
     title: 'Navigation/Nav Button',
     tags: [],
+    parameters: defaultParams,
+    argTypes: getArgTypes(),
+    args: getArgs(),
     render: args => {
-        return html`<div class="container" style="display:flex; width: 100%;">
+        return html`
             <nav-button ${attrString(args)}>
                 Menu
                 <arpa-zone name="nav">
@@ -29,23 +29,15 @@ const NavButtonStory = {
                     <nav-link link="/user" icon="smart_toy">User</nav-link>
                 </arpa-zone>
             </nav-button>
-        </div>`;
+        `;
     }
 };
 
 /** @type {Story} */
-export const Default = {
-    name: 'Render',
-    parameters: defaultParams,
-    argTypes: getArgTypes(),
-    args: { ...getArgs() }
-};
+export const Render = {};
 
 /** @type {Story} */
 export const Test = {
-    args: {
-        ...Default.args
-    },
     parameters: testParams,
     play: async ({ canvasElement, step }) => {
         const setup = await playSetup(canvasElement);

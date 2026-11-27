@@ -20,7 +20,7 @@ const NavMenuStory = {
     component: 'nav-menu',
     tags: [],
     parameters: {
-        layout: 'padded'
+        layout: 'centered'
     },
     args: {
         id: 'test-menu',
@@ -78,7 +78,6 @@ const NavMenuStory = {
 
 export const Render = {
     parameters: {
-        layout: 'padded',
         ...defaultParams
     }
 };
@@ -86,7 +85,6 @@ export const Render = {
 /** @type {Story} */
 export const Test = {
     parameters: {
-        layout: 'padded',
         ...testParams
     },
     beforeEach: async ({ canvasElement }) => {
@@ -99,8 +97,8 @@ export const Test = {
 
         await step('Renders the menu and items', async () => {
             await waitFor(() => {
-                const button = canvas.getByRole('button', { name: /nav menu/i });
                 expect(canvas.getByText('Nav Menu')).toBeInTheDocument();
+                const button = canvas.getByRole('button', { name: /nav menu/i });
                 expect(button).toBeInTheDocument();
             });
         });

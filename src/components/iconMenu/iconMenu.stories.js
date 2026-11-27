@@ -81,7 +81,7 @@ export const Test = {
 
         await step('Closes the menu', async () => {
             await new Promise(resolve => setTimeout(resolve, 200));
-            await userEvent.click(document.body);
+            await userEvent.click(canvas.getByRole('button'));
             await waitFor(() => {
                 expect(navigationNode).not.toBeVisible();
             });

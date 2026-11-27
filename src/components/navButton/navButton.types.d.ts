@@ -8,6 +8,7 @@ export type NavButtonConfigType = ButtonConfigType & {
     closeOnBlur?: boolean;
     hasTabIndex?: boolean;
     icon?: string;
+    popover?: 'auto' | 'manual' | 'hint' | false | 'false';
     links?: NavLinkConfigType[];
     tooltip?: string;
     menuPosition?: 'left' | 'right' | 'top' | 'bottom' | 'false' | 'bottom-right';

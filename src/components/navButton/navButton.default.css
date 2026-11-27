@@ -1,5 +1,15 @@
 .navButton {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    anchor-name: --nav-box;
+    anchor-scope: --nav-box;
+
+    > nav-list {
+        margin: 0.5rem 0;
+        position-area: bottom span-left;
+        position-anchor: --nav-box;
+        position-try-fallbacks: flip-block;
+    }
 }
